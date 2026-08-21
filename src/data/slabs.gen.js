@@ -4,491 +4,491 @@
  */
 export const SLABS = {
   "beige/beige-p002-1.webp": {
-    "base": "beige/beige-p002-1",
-    "width": 1308,
-    "height": 684
+    base: "beige/beige-p002-1",
+    width: 1308,
+    height: 684,
   },
   "beige/beige-p003-1.webp": {
-    "base": "beige/beige-p003-1",
-    "width": 1035,
-    "height": 715
+    base: "beige/beige-p003-1",
+    width: 1035,
+    height: 715,
   },
   "beige/beige-p004-1.webp": {
-    "base": "beige/beige-p004-1",
-    "width": 1360,
-    "height": 718
+    base: "beige/beige-p004-1",
+    width: 1360,
+    height: 718,
   },
   "beige/beige-p005-1.webp": {
-    "base": "beige/beige-p005-1",
-    "width": 1114,
-    "height": 669
+    base: "beige/beige-p005-1",
+    width: 1114,
+    height: 669,
   },
   "beige/beige-p006-1.webp": {
-    "base": "beige/beige-p006-1",
-    "width": 1102,
-    "height": 673
+    base: "beige/beige-p006-1",
+    width: 1102,
+    height: 673,
   },
   "beige/beige-p007-1.webp": {
-    "base": "beige/beige-p007-1",
-    "width": 875,
-    "height": 686
+    base: "beige/beige-p007-1",
+    width: 875,
+    height: 686,
   },
   "beige/beige-p008-1.webp": {
-    "base": "beige/beige-p008-1",
-    "width": 1265,
-    "height": 679
+    base: "beige/beige-p008-1",
+    width: 1265,
+    height: 679,
   },
   "beige/beige-p009-1.webp": {
-    "base": "beige/beige-p009-1",
-    "width": 1350,
-    "height": 697
+    base: "beige/beige-p009-1",
+    width: 1350,
+    height: 697,
   },
   "beige/beige-p010-1.webp": {
-    "base": "beige/beige-p010-1",
-    "width": 1199,
-    "height": 683
+    base: "beige/beige-p010-1",
+    width: 1199,
+    height: 683,
   },
   "beige/beige-p011-1.webp": {
-    "base": "beige/beige-p011-1",
-    "width": 1217,
-    "height": 694
+    base: "beige/beige-p011-1",
+    width: 1217,
+    height: 694,
   },
   "beige/beige-p012-1.webp": {
-    "base": "beige/beige-p012-1",
-    "width": 1349,
-    "height": 700
+    base: "beige/beige-p012-1",
+    width: 1349,
+    height: 700,
   },
   "beige/beige-p013-1.webp": {
-    "base": "beige/beige-p013-1",
-    "width": 1080,
-    "height": 688
+    base: "beige/beige-p013-1",
+    width: 1080,
+    height: 688,
   },
   "beige/beige-p014-1.webp": {
-    "base": "beige/beige-p014-1",
-    "width": 1427,
-    "height": 688
+    base: "beige/beige-p014-1",
+    width: 1427,
+    height: 688,
   },
   "beige/beige-p015-1.webp": {
-    "base": "beige/beige-p015-1",
-    "width": 1346,
-    "height": 740
+    base: "beige/beige-p015-1",
+    width: 1346,
+    height: 740,
   },
   "beige/beige-p016-1.webp": {
-    "base": "beige/beige-p016-1",
-    "width": 1098,
-    "height": 698
+    base: "beige/beige-p016-1",
+    width: 1098,
+    height: 698,
   },
   "beige/beige-p017-1.webp": {
-    "base": "beige/beige-p017-1",
-    "width": 1448,
-    "height": 671
+    base: "beige/beige-p017-1",
+    width: 1448,
+    height: 671,
   },
   "beige/beige-p018-1.webp": {
-    "base": "beige/beige-p018-1",
-    "width": 1193,
-    "height": 701
+    base: "beige/beige-p018-1",
+    width: 1193,
+    height: 701,
   },
   "beige/beige-p019-1.webp": {
-    "base": "beige/beige-p019-1",
-    "width": 913,
-    "height": 710
+    base: "beige/beige-p019-1",
+    width: 913,
+    height: 710,
   },
   "beige/beige-p020-1.webp": {
-    "base": "beige/beige-p020-1",
-    "width": 1067,
-    "height": 717
+    base: "beige/beige-p020-1",
+    width: 1067,
+    height: 717,
   },
   "beige/beige-p021-1.webp": {
-    "base": "beige/beige-p021-1",
-    "width": 1412,
-    "height": 664
+    base: "beige/beige-p021-1",
+    width: 1412,
+    height: 664,
   },
   "beige/beige-p022-1.webp": {
-    "base": "beige/beige-p022-1",
-    "width": 985,
-    "height": 726
+    base: "beige/beige-p022-1",
+    width: 985,
+    height: 726,
   },
   "beige/beige-p023-1.webp": {
-    "base": "beige/beige-p023-1",
-    "width": 1208,
-    "height": 712
+    base: "beige/beige-p023-1",
+    width: 1208,
+    height: 712,
   },
   "beige/beige-p024-1.webp": {
-    "base": "beige/beige-p024-1",
-    "width": 966,
-    "height": 734
+    base: "beige/beige-p024-1",
+    width: 966,
+    height: 734,
   },
   "beige/beige-p025-1.webp": {
-    "base": "beige/beige-p025-1",
-    "width": 1125,
-    "height": 715
+    base: "beige/beige-p025-1",
+    width: 1125,
+    height: 715,
   },
   "beige/beige-p026-1.webp": {
-    "base": "beige/beige-p026-1",
-    "width": 1004,
-    "height": 725
+    base: "beige/beige-p026-1",
+    width: 1004,
+    height: 725,
   },
   "beige/beige-p027-1.webp": {
-    "base": "beige/beige-p027-1",
-    "width": 930,
-    "height": 730
+    base: "beige/beige-p027-1",
+    width: 930,
+    height: 730,
   },
   "beige/beige-p028-1.webp": {
-    "base": "beige/beige-p028-1",
-    "width": 1233,
-    "height": 716
+    base: "beige/beige-p028-1",
+    width: 1233,
+    height: 716,
   },
   "beige/beige-p029-1.webp": {
-    "base": "beige/beige-p029-1",
-    "width": 1098,
-    "height": 722
+    base: "beige/beige-p029-1",
+    width: 1098,
+    height: 722,
   },
   "beige/beige-p030-1.webp": {
-    "base": "beige/beige-p030-1",
-    "width": 1177,
-    "height": 713
+    base: "beige/beige-p030-1",
+    width: 1177,
+    height: 713,
   },
   "beige/beige-p031-1.webp": {
-    "base": "beige/beige-p031-1",
-    "width": 1458,
-    "height": 913
+    base: "beige/beige-p031-1",
+    width: 1458,
+    height: 913,
   },
   "beige/beige-p032-1.webp": {
-    "base": "beige/beige-p032-1",
-    "width": 1194,
-    "height": 733
+    base: "beige/beige-p032-1",
+    width: 1194,
+    height: 733,
   },
   "beige/beige-p033-1.webp": {
-    "base": "beige/beige-p033-1",
-    "width": 1625,
-    "height": 689
+    base: "beige/beige-p033-1",
+    width: 1625,
+    height: 689,
   },
   "beige/beige-p034-1.webp": {
-    "base": "beige/beige-p034-1",
-    "width": 1098,
-    "height": 716
+    base: "beige/beige-p034-1",
+    width: 1098,
+    height: 716,
   },
   "beige/beige-p035-1.webp": {
-    "base": "beige/beige-p035-1",
-    "width": 1192,
-    "height": 727
+    base: "beige/beige-p035-1",
+    width: 1192,
+    height: 727,
   },
   "beige/beige-p036-1.webp": {
-    "base": "beige/beige-p036-1",
-    "width": 1659,
-    "height": 721
+    base: "beige/beige-p036-1",
+    width: 1659,
+    height: 721,
   },
   "beige/beige-p037-1.webp": {
-    "base": "beige/beige-p037-1",
-    "width": 1337,
-    "height": 709
+    base: "beige/beige-p037-1",
+    width: 1337,
+    height: 709,
   },
   "beige/beige-p038-1.webp": {
-    "base": "beige/beige-p038-1",
-    "width": 1285,
-    "height": 916
+    base: "beige/beige-p038-1",
+    width: 1285,
+    height: 916,
   },
   "beige/beige-p039-1.webp": {
-    "base": "beige/beige-p039-1",
-    "width": 1178,
-    "height": 723
+    base: "beige/beige-p039-1",
+    width: 1178,
+    height: 723,
   },
   "beige/beige-p040-1.webp": {
-    "base": "beige/beige-p040-1",
-    "width": 1645,
-    "height": 906
+    base: "beige/beige-p040-1",
+    width: 1645,
+    height: 906,
   },
   "beige/beige-p041-1.webp": {
-    "base": "beige/beige-p041-1",
-    "width": 1647,
-    "height": 713
+    base: "beige/beige-p041-1",
+    width: 1647,
+    height: 713,
   },
   "beige/beige-p042-1.webp": {
-    "base": "beige/beige-p042-1",
-    "width": 1359,
-    "height": 909
+    base: "beige/beige-p042-1",
+    width: 1359,
+    height: 909,
   },
   "beige/beige-p043-1.webp": {
-    "base": "beige/beige-p043-1",
-    "width": 1306,
-    "height": 908
+    base: "beige/beige-p043-1",
+    width: 1306,
+    height: 908,
   },
   "beige/beige-p044-1.webp": {
-    "base": "beige/beige-p044-1",
-    "width": 1284,
-    "height": 924
+    base: "beige/beige-p044-1",
+    width: 1284,
+    height: 924,
   },
   "beige/beige-p045-1.webp": {
-    "base": "beige/beige-p045-1",
-    "width": 1490,
-    "height": 868
+    base: "beige/beige-p045-1",
+    width: 1490,
+    height: 868,
   },
   "beige/beige-p046-1.webp": {
-    "base": "beige/beige-p046-1",
-    "width": 1511,
-    "height": 710
+    base: "beige/beige-p046-1",
+    width: 1511,
+    height: 710,
   },
   "beige/beige-p047-1.webp": {
-    "base": "beige/beige-p047-1",
-    "width": 1271,
-    "height": 855
+    base: "beige/beige-p047-1",
+    width: 1271,
+    height: 855,
   },
   "beige/beige-p048-1.webp": {
-    "base": "beige/beige-p048-1",
-    "width": 1336,
-    "height": 729
+    base: "beige/beige-p048-1",
+    width: 1336,
+    height: 729,
   },
   "beige/beige-p049-1.webp": {
-    "base": "beige/beige-p049-1",
-    "width": 1659,
-    "height": 739
+    base: "beige/beige-p049-1",
+    width: 1659,
+    height: 739,
   },
   "black/black-p002-1.webp": {
-    "base": "black/black-p002-1",
-    "width": 1420,
-    "height": 862
+    base: "black/black-p002-1",
+    width: 1420,
+    height: 862,
   },
   "black/black-p003-1.webp": {
-    "base": "black/black-p003-1",
-    "width": 877,
-    "height": 774
+    base: "black/black-p003-1",
+    width: 877,
+    height: 774,
   },
   "black/black-p004-1.webp": {
-    "base": "black/black-p004-1",
-    "width": 1312,
-    "height": 851
+    base: "black/black-p004-1",
+    width: 1312,
+    height: 851,
   },
   "black/black-p005-1.webp": {
-    "base": "black/black-p005-1",
-    "width": 1364,
-    "height": 827
+    base: "black/black-p005-1",
+    width: 1364,
+    height: 827,
   },
   "black/black-p006-1.webp": {
-    "base": "black/black-p006-1",
-    "width": 1378,
-    "height": 831
+    base: "black/black-p006-1",
+    width: 1378,
+    height: 831,
   },
   "black/black-p007-1.webp": {
-    "base": "black/black-p007-1",
-    "width": 1326,
-    "height": 538
+    base: "black/black-p007-1",
+    width: 1326,
+    height: 538,
   },
   "black/black-p008-1.webp": {
-    "base": "black/black-p008-1",
-    "width": 1335,
-    "height": 897
+    base: "black/black-p008-1",
+    width: 1335,
+    height: 897,
   },
   "black/black-p009-1.webp": {
-    "base": "black/black-p009-1",
-    "width": 1303,
-    "height": 798
+    base: "black/black-p009-1",
+    width: 1303,
+    height: 798,
   },
   "black/black-p010-1.webp": {
-    "base": "black/black-p010-1",
-    "width": 1484,
-    "height": 897
+    base: "black/black-p010-1",
+    width: 1484,
+    height: 897,
   },
   "black/black-p011-1.webp": {
-    "base": "black/black-p011-1",
-    "width": 1381,
-    "height": 804
+    base: "black/black-p011-1",
+    width: 1381,
+    height: 804,
   },
   "black/black-p012-1.webp": {
-    "base": "black/black-p012-1",
-    "width": 1303,
-    "height": 866
+    base: "black/black-p012-1",
+    width: 1303,
+    height: 866,
   },
   "black/black-p013-1.webp": {
-    "base": "black/black-p013-1",
-    "width": 1330,
-    "height": 834
+    base: "black/black-p013-1",
+    width: 1330,
+    height: 834,
   },
   "black/black-p014-1.webp": {
-    "base": "black/black-p014-1",
-    "width": 1408,
-    "height": 742
+    base: "black/black-p014-1",
+    width: 1408,
+    height: 742,
   },
   "black/black-p015-1.webp": {
-    "base": "black/black-p015-1",
-    "width": 1224,
-    "height": 834
+    base: "black/black-p015-1",
+    width: 1224,
+    height: 834,
   },
   "black/black-p017-1.webp": {
-    "base": "black/black-p017-1",
-    "width": 1344,
-    "height": 820
+    base: "black/black-p017-1",
+    width: 1344,
+    height: 820,
   },
   "black/black-p019-1.webp": {
-    "base": "black/black-p019-1",
-    "width": 1319,
-    "height": 830
+    base: "black/black-p019-1",
+    width: 1319,
+    height: 830,
   },
   "black/black-p020-1.webp": {
-    "base": "black/black-p020-1",
-    "width": 1324,
-    "height": 870
+    base: "black/black-p020-1",
+    width: 1324,
+    height: 870,
   },
   "black/black-p021-1.webp": {
-    "base": "black/black-p021-1",
-    "width": 1330,
-    "height": 824
+    base: "black/black-p021-1",
+    width: 1330,
+    height: 824,
   },
   "black/black-p022-1.webp": {
-    "base": "black/black-p022-1",
-    "width": 1324,
-    "height": 872
+    base: "black/black-p022-1",
+    width: 1324,
+    height: 872,
   },
   "black/black-p023-1.webp": {
-    "base": "black/black-p023-1",
-    "width": 1335,
-    "height": 897
+    base: "black/black-p023-1",
+    width: 1335,
+    height: 897,
   },
   "black/black-p024-1.webp": {
-    "base": "black/black-p024-1",
-    "width": 1364,
-    "height": 838
+    base: "black/black-p024-1",
+    width: 1364,
+    height: 838,
   },
   "black/black-p025-1.webp": {
-    "base": "black/black-p025-1",
-    "width": 1145,
-    "height": 897
+    base: "black/black-p025-1",
+    width: 1145,
+    height: 897,
   },
   "grey/grey-p002-1.webp": {
-    "base": "grey/grey-p002-1",
-    "width": 1374,
-    "height": 603
+    base: "grey/grey-p002-1",
+    width: 1374,
+    height: 603,
   },
   "grey/grey-p003-1.webp": {
-    "base": "grey/grey-p003-1",
-    "width": 1443,
-    "height": 827
+    base: "grey/grey-p003-1",
+    width: 1443,
+    height: 827,
   },
   "grey/grey-p004-1.webp": {
-    "base": "grey/grey-p004-1",
-    "width": 1244,
-    "height": 589
+    base: "grey/grey-p004-1",
+    width: 1244,
+    height: 589,
   },
   "grey/grey-p005-1.webp": {
-    "base": "grey/grey-p005-1",
-    "width": 1206,
-    "height": 589
+    base: "grey/grey-p005-1",
+    width: 1206,
+    height: 589,
   },
   "grey/grey-p006-1.webp": {
-    "base": "grey/grey-p006-1",
-    "width": 1222,
-    "height": 616
+    base: "grey/grey-p006-1",
+    width: 1222,
+    height: 616,
   },
   "grey/grey-p007-1.webp": {
-    "base": "grey/grey-p007-1",
-    "width": 1373,
-    "height": 616
+    base: "grey/grey-p007-1",
+    width: 1373,
+    height: 616,
   },
   "grey/grey-p008-1.webp": {
-    "base": "grey/grey-p008-1",
-    "width": 1319,
-    "height": 780
+    base: "grey/grey-p008-1",
+    width: 1319,
+    height: 780,
   },
   "grey/grey-p009-1.webp": {
-    "base": "grey/grey-p009-1",
-    "width": 1309,
-    "height": 579
+    base: "grey/grey-p009-1",
+    width: 1309,
+    height: 579,
   },
   "grey/grey-p010-1.webp": {
-    "base": "grey/grey-p010-1",
-    "width": 1286,
-    "height": 559
+    base: "grey/grey-p010-1",
+    width: 1286,
+    height: 559,
   },
   "grey/grey-p011-1.webp": {
-    "base": "grey/grey-p011-1",
-    "width": 1339,
-    "height": 806
+    base: "grey/grey-p011-1",
+    width: 1339,
+    height: 806,
   },
   "grey/grey-p012-1.webp": {
-    "base": "grey/grey-p012-1",
-    "width": 1296,
-    "height": 594
+    base: "grey/grey-p012-1",
+    width: 1296,
+    height: 594,
   },
   "grey/grey-p013-1.webp": {
-    "base": "grey/grey-p013-1",
-    "width": 1297,
-    "height": 596
+    base: "grey/grey-p013-1",
+    width: 1297,
+    height: 596,
   },
   "grey/grey-p014-1.webp": {
-    "base": "grey/grey-p014-1",
-    "width": 1363,
-    "height": 801
+    base: "grey/grey-p014-1",
+    width: 1363,
+    height: 801,
   },
   "grey/grey-p015-1.webp": {
-    "base": "grey/grey-p015-1",
-    "width": 1245,
-    "height": 799
+    base: "grey/grey-p015-1",
+    width: 1245,
+    height: 799,
   },
   "grey/grey-p016-1.webp": {
-    "base": "grey/grey-p016-1",
-    "width": 1330,
-    "height": 605
+    base: "grey/grey-p016-1",
+    width: 1330,
+    height: 605,
   },
   "grey/grey-p018-1.webp": {
-    "base": "grey/grey-p018-1",
-    "width": 1260,
-    "height": 677
+    base: "grey/grey-p018-1",
+    width: 1260,
+    height: 677,
   },
   "grey/grey-p019-1.webp": {
-    "base": "grey/grey-p019-1",
-    "width": 1158,
-    "height": 674
+    base: "grey/grey-p019-1",
+    width: 1158,
+    height: 674,
   },
   "grey/grey-p021-1.webp": {
-    "base": "grey/grey-p021-1",
-    "width": 1260,
-    "height": 677
+    base: "grey/grey-p021-1",
+    width: 1260,
+    height: 677,
   },
   "grey/grey-p022-1.webp": {
-    "base": "grey/grey-p022-1",
-    "width": 1160,
-    "height": 554
+    base: "grey/grey-p022-1",
+    width: 1160,
+    height: 554,
   },
   "grey/grey-p023-1.webp": {
-    "base": "grey/grey-p023-1",
-    "width": 1178,
-    "height": 558
+    base: "grey/grey-p023-1",
+    width: 1178,
+    height: 558,
   },
   "grey/grey-p024-1.webp": {
-    "base": "grey/grey-p024-1",
-    "width": 1158,
-    "height": 674
+    base: "grey/grey-p024-1",
+    width: 1158,
+    height: 674,
   },
   "grey/grey-p027-1.webp": {
-    "base": "grey/grey-p027-1",
-    "width": 1160,
-    "height": 554
+    base: "grey/grey-p027-1",
+    width: 1160,
+    height: 554,
   },
   "grey/grey-p028-1.webp": {
-    "base": "grey/grey-p028-1",
-    "width": 1213,
-    "height": 551
+    base: "grey/grey-p028-1",
+    width: 1213,
+    height: 551,
   },
   "grey/grey-p029-1.webp": {
-    "base": "grey/grey-p029-1",
-    "width": 1228,
-    "height": 656
+    base: "grey/grey-p029-1",
+    width: 1228,
+    height: 656,
   },
   "grey/grey-p030-1.webp": {
-    "base": "grey/grey-p030-1",
-    "width": 1178,
-    "height": 558
+    base: "grey/grey-p030-1",
+    width: 1178,
+    height: 558,
   },
   "grey/grey-p031-1.webp": {
-    "base": "grey/grey-p031-1",
-    "width": 1213,
-    "height": 551
+    base: "grey/grey-p031-1",
+    width: 1213,
+    height: 551,
   },
   "grey/grey-p033-1.webp": {
-    "base": "grey/grey-p033-1",
-    "width": 1228,
-    "height": 656
-  }
-}
+    base: "grey/grey-p033-1",
+    width: 1228,
+    height: 656,
+  },
+};
 
 /** Widths emitted for each slab, for building srcset. */
-export const SLAB_WIDTHS = [2000,1200,800,400]
+export const SLAB_WIDTHS = [2000, 1200, 800, 400];

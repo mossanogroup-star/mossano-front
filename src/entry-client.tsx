@@ -1,7 +1,11 @@
 import { StrictMode, useEffect, useState } from "react";
 import { hydrateRoot, createRoot } from "react-dom/client";
 import { BrowserRouter, useRoutes } from "react-router-dom";
-import { QueryClientProvider, HydrationBoundary, type DehydratedState } from "@tanstack/react-query";
+import {
+  QueryClientProvider,
+  HydrationBoundary,
+  type DehydratedState,
+} from "@tanstack/react-query";
 import { Toaster } from "sonner";
 
 import "./index.css";
@@ -56,7 +60,9 @@ const tree = (
   <StrictMode>
     <QueryClientProvider client={queryClient}>
       <HydrationBoundary state={dehydratedState}>
-        <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+        <BrowserRouter
+          future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+        >
           <App />
           <AfterHydration>
             <Toaster position="top-right" closeButton richColors />

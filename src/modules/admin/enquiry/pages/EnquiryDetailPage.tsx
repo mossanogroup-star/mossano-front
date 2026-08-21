@@ -9,9 +9,21 @@ import { useSiteConfig } from "@/shared/hooks/useSiteConfig";
 import { WhatsAppButton } from "@/shared/components/WhatsAppButton";
 import type { EnquiryStatus } from "@/shared/api/types";
 
-const PIPELINE: EnquiryStatus[] = ["new", "contacted", "interested", "reserved", "purchased"];
+const PIPELINE: EnquiryStatus[] = [
+  "new",
+  "contacted",
+  "interested",
+  "reserved",
+  "purchased",
+];
 
-function Row({ label, children }: { label: string; children: React.ReactNode }) {
+function Row({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) {
   if (!children) return null;
   return (
     <div className="flex gap-4 border-b border-ivory-dark py-2.5">
@@ -44,7 +56,8 @@ export function EnquiryDetailPage() {
   };
 
   const setStatus = useMutation({
-    mutationFn: (status: EnquiryStatus) => adminApi.setEnquiryStatus(id, status),
+    mutationFn: (status: EnquiryStatus) =>
+      adminApi.setEnquiryStatus(id, status),
     onSuccess: () => invalidate(),
   });
 
@@ -59,7 +72,8 @@ export function EnquiryDetailPage() {
 
   if (!enquiry) return <p className="label">Loading…</p>;
 
-  const stoneCode = enquiry.stone?.mossanoCode ?? enquiry.stoneSnapshot?.mossanoCode;
+  const stoneCode =
+    enquiry.stone?.mossanoCode ?? enquiry.stoneSnapshot?.mossanoCode;
   const stoneName = enquiry.stone?.name ?? enquiry.stoneSnapshot?.name;
 
   // Replies go to the customer's own number where they gave one, falling back
@@ -135,10 +149,14 @@ export function EnquiryDetailPage() {
             <Row label="Company">{enquiry.company}</Row>
             <Row label="Project">{enquiry.projectName}</Row>
             <Row label="Phone">
-              {enquiry.phone && <a href={`tel:${enquiry.phone}`}>{enquiry.phone}</a>}
+              {enquiry.phone && (
+                <a href={`tel:${enquiry.phone}`}>{enquiry.phone}</a>
+              )}
             </Row>
             <Row label="Email">
-              {enquiry.email && <a href={`mailto:${enquiry.email}`}>{enquiry.email}</a>}
+              {enquiry.email && (
+                <a href={`mailto:${enquiry.email}`}>{enquiry.email}</a>
+              )}
             </Row>
             <Row label="Came from">{enquiry.sourcePath}</Row>
           </dl>
@@ -158,7 +176,9 @@ export function EnquiryDetailPage() {
                 </span>
                 <span className="min-w-0">
                   <span className="block text-[0.9rem]">{stoneName}</span>
-                  <span className="block text-[0.75rem] text-ink-faint">{stoneCode}</span>
+                  <span className="block text-[0.75rem] text-ink-faint">
+                    {stoneCode}
+                  </span>
                   {enquiry.stone?.id && (
                     <Link
                       to={`/admin/stones/${enquiry.stone.id}`}
@@ -173,8 +193,8 @@ export function EnquiryDetailPage() {
                   still tells the team what was asked about. */}
               {!enquiry.stone && (
                 <p className="mt-2 text-[0.75rem] text-ink-faint">
-                  This lot is no longer in the catalogue. The code and name above are as they
-                  were when the enquiry was sent.
+                  This lot is no longer in the catalogue. The code and name
+                  above are as they were when the enquiry was sent.
                 </p>
               )}
             </>
@@ -222,7 +242,9 @@ export function EnquiryDetailPage() {
             <>
               <p className="label mb-4">What they wrote</p>
               {enquiry.requirement && (
-                <p className="mb-4 text-[0.9rem] leading-relaxed">{enquiry.requirement}</p>
+                <p className="mb-4 text-[0.9rem] leading-relaxed">
+                  {enquiry.requirement}
+                </p>
               )}
               {enquiry.message && (
                 <p className="whitespace-pre-wrap border-l border-ivory-dark pl-4 text-[0.9rem] leading-relaxed text-ink-soft">
@@ -257,9 +279,12 @@ export function EnquiryDetailPage() {
           <ul className="mt-8 space-y-5">
             {enquiry.notes.map((n) => (
               <li key={n.id} className="border-l border-ivory-dark pl-4">
-                <p className="whitespace-pre-wrap text-[0.88rem] leading-relaxed">{n.body}</p>
+                <p className="whitespace-pre-wrap text-[0.88rem] leading-relaxed">
+                  {n.body}
+                </p>
                 <p className="mt-1.5 text-[0.72rem] text-ink-faint">
-                  {n.authorName} · {new Date(n.createdAt).toLocaleString("en-IN")}
+                  {n.authorName} ·{" "}
+                  {new Date(n.createdAt).toLocaleString("en-IN")}
                 </p>
               </li>
             ))}

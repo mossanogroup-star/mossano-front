@@ -1,4 +1,4 @@
-import { BRAND_COLOURS } from './src/data/colours.js'
+import { BRAND_COLOURS } from "./src/data/colours.js";
 
 /**
  * Design tokens. Every value is justified in DESIGN.md — read it before adding
@@ -7,14 +7,14 @@ import { BRAND_COLOURS } from './src/data/colours.js'
  * @type {import('tailwindcss').Config}
  */
 export default {
-  content: ['./index.html', './src/**/*.{js,jsx,ts,tsx}'],
+  content: ["./index.html", "./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
       screens: {
         // Height-based, not width-based. A 1080p laptop at 125% Windows scaling
         // is ~1536px wide but only ~730px tall; a hero sized for a 1000px-tall
         // window pushes its call to action off the bottom of the screen.
-        short: { raw: '(max-height: 820px)' },
+        short: { raw: "(max-height: 820px)" },
       },
 
       colors: BRAND_COLOURS,
@@ -22,33 +22,33 @@ export default {
       fontFamily: {
         // Cinzel echoes MOSSANO's own painted wordmark — classical roman
         // capitals. Jost carries specification tables quietly underneath.
-        display: ['Cinzel', 'Trajan Pro', 'Georgia', 'serif'],
-        sans: ['Jost', 'system-ui', 'sans-serif'],
+        display: ["Cinzel", "Trajan Pro", "Georgia", "serif"],
+        sans: ["Jost", "system-ui", "sans-serif"],
       },
 
       // Slabs are cut rectangles. Nothing here is rounded.
       borderRadius: {
-        none: '0',
-        DEFAULT: '0',
-        sm: '0',
-        md: '0',
-        lg: '0',
-        xl: '0',
-        '2xl': '0',
-        full: '9999px', // circles only, for genuinely round things
+        none: "0",
+        DEFAULT: "0",
+        sm: "0",
+        md: "0",
+        lg: "0",
+        xl: "0",
+        "2xl": "0",
+        full: "9999px", // circles only, for genuinely round things
       },
 
       letterSpacing: {
-        wordmark: '0.22em',
-        label: '0.18em',
-        wide: '0.12em',
+        wordmark: "0.22em",
+        label: "0.18em",
+        wide: "0.12em",
       },
 
       maxWidth: {
-        shell: '86rem',
-        prose: '38rem',
+        shell: "86rem",
+        prose: "38rem",
       },
     },
   },
   plugins: [],
-}
+};

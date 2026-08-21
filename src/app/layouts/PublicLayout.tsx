@@ -2,6 +2,7 @@ import { Outlet } from "react-router-dom";
 import { Header } from "./Header";
 import { Footer } from "./Footer";
 import { ScrollToTop } from "./ScrollToTop";
+import { Chatbot } from "@/modules/chatbot/components/Chatbot";
 
 export function PublicLayout() {
   return (
@@ -20,6 +21,8 @@ export function PublicLayout() {
         <Outlet />
       </main>
       <Footer />
+      {/* Website Notes, second drop. Public pages only — never /admin. */}
+      <Chatbot />
     </>
   );
 }

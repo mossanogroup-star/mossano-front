@@ -15,8 +15,12 @@ export function PageHeader({
   return (
     <header className="mb-8 flex flex-wrap items-end justify-between gap-4 border-b border-ivory-dark pb-6">
       <div>
-        <h1 className="font-display text-[1.35rem] uppercase tracking-wide">{title}</h1>
-        {subtitle && <p className="mt-1.5 text-[0.85rem] text-ink-soft">{subtitle}</p>}
+        <h1 className="font-display text-[1.35rem] uppercase tracking-wide">
+          {title}
+        </h1>
+        {subtitle && (
+          <p className="mt-1.5 text-[0.85rem] text-ink-soft">{subtitle}</p>
+        )}
       </div>
       {actions && <div className="flex flex-wrap gap-3">{actions}</div>}
     </header>
@@ -80,7 +84,10 @@ export function AvailabilitySelect({
   return (
     <span className="inline-flex items-center gap-2">
       <span
-        className={cn("h-1.5 w-1.5 shrink-0 rounded-full", AVAILABILITY_DOT[value])}
+        className={cn(
+          "h-1.5 w-1.5 shrink-0 rounded-full",
+          AVAILABILITY_DOT[value],
+        )}
         aria-hidden="true"
       />
       <select
@@ -141,7 +148,11 @@ export function DataTable({
                 and keying on the text collides on the empty string. The header
                 is static and never reorders, so the index is stable. */}
             {head.map((h, i) => (
-              <th key={i} scope="col" className="label whitespace-nowrap py-3 pr-6 font-normal">
+              <th
+                key={i}
+                scope="col"
+                className="label whitespace-nowrap py-3 pr-6 font-normal"
+              >
                 {h}
               </th>
             ))}
@@ -155,12 +166,19 @@ export function DataTable({
 }
 
 export function TableEmpty({ message }: { message: string }) {
-  return <p className="border-t border-ivory-dark py-16 text-center text-[0.9rem] text-ink-faint">{message}</p>;
+  return (
+    <p className="border-t border-ivory-dark py-16 text-center text-[0.9rem] text-ink-faint">
+      {message}
+    </p>
+  );
 }
 
 export function AdminError({ error }: { error: unknown }) {
   return (
-    <p className="border border-[#b23b2e]/30 bg-[#b23b2e]/5 px-4 py-3 text-[0.85rem] text-[#b23b2e]" role="alert">
+    <p
+      className="border border-[#b23b2e]/30 bg-[#b23b2e]/5 px-4 py-3 text-[0.85rem] text-[#b23b2e]"
+      role="alert"
+    >
       {error instanceof Error ? error.message : "Something went wrong."}
     </p>
   );

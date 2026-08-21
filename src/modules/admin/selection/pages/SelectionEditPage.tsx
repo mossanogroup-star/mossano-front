@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate, useSearchParams, Link } from "react-router-dom";
+import {
+  useParams,
+  useNavigate,
+  useSearchParams,
+  Link,
+} from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { X, Copy } from "lucide-react";
@@ -78,14 +83,19 @@ export function SelectionEditPage() {
 
   const save = useMutation({
     mutationFn: (body: unknown) =>
-      isNew ? adminApi.createSelection(body) : adminApi.updateSelection(id!, body),
+      isNew
+        ? adminApi.createSelection(body)
+        : adminApi.updateSelection(id!, body),
     onSuccess: (saved) => {
       toast.success(isNew ? `Selection ${saved.reference} created` : "Saved");
       queryClient.invalidateQueries({ queryKey: ["admin-selections"] });
-      queryClient.invalidateQueries({ queryKey: ["admin-selection", saved.id] });
+      queryClient.invalidateQueries({
+        queryKey: ["admin-selection", saved.id],
+      });
       if (isNew) navigate(`/admin/selections/${saved.id}`, { replace: true });
     },
-    onError: (err) => toast.error(err instanceof Error ? err.message : "Could not save"),
+    onError: (err) =>
+      toast.error(err instanceof Error ? err.message : "Could not save"),
   });
 
   const regenerate = useMutation({
@@ -105,7 +115,10 @@ export function SelectionEditPage() {
       introduction: form.introduction || undefined,
       // Sent as annotated items, so the per-stone note travels with the stone
       // and stays in the curated order.
-      items: items.map(({ stoneId, note }) => ({ stone: stoneId, note: note || undefined })),
+      items: items.map(({ stoneId, note }) => ({
+        stone: stoneId,
+        note: note || undefined,
+      })),
       imageIds,
       sourceEnquiry: search.get("enquiry") ?? undefined,
     });
@@ -113,7 +126,11 @@ export function SelectionEditPage() {
   return (
     <>
       <PageHeader
-        title={isNew ? "New private selection" : (selection?.customerName ?? "Selection")}
+        title={
+          isNew
+            ? "New private selection"
+            : (selection?.customerName ?? "Selection")
+        }
         subtitle={
           isNew
             ? "Pick stones from the catalogue and share a private link."
@@ -124,7 +141,12 @@ export function SelectionEditPage() {
             <Link to="/admin/selections" className="btn-outline">
               Back
             </Link>
-            <button type="button" className="btn-solid" onClick={submit} disabled={save.isPending}>
+            <button
+              type="button"
+              className="btn-solid"
+              onClick={submit}
+              disabled={save.isPending}
+            >
               {save.isPending ? "Saving…" : "Save"}
             </button>
           </>
@@ -144,7 +166,12 @@ export function SelectionEditPage() {
             <Copy className="h-3.5 w-3.5" strokeWidth={1.3} />
             Copy
           </button>
-          <a href={selection.pdfUrl} target="_blank" rel="noopener noreferrer" className="label hover:text-ink">
+          <a
+            href={selection.pdfUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="label hover:text-ink"
+          >
             PDF
           </a>
           <button
@@ -158,7 +185,8 @@ export function SelectionEditPage() {
           {selection.isRevoked && <Pill tone="muted">Revoked</Pill>}
           {selection.expiresAt && (
             <Pill tone="muted">
-              Expires {new Date(selection.expiresAt).toLocaleDateString("en-IN")}
+              Expires{" "}
+              {new Date(selection.expiresAt).toLocaleDateString("en-IN")}
             </Pill>
           )}
         </div>
@@ -167,18 +195,31 @@ export function SelectionEditPage() {
       <div className="grid gap-x-12 lg:grid-cols-2">
         <section>
           <p className="label mb-5">Who it is for</p>
-          <Field label="Prepared for" htmlFor="customerName" required hint="e.g. XYZ Architects">
+          <Field
+            label="Prepared for"
+            htmlFor="customerName"
+            required
+            hint="e.g. XYZ Architects"
+          >
             <TextInput
               id="customerName"
               value={form.customerName}
-              onChange={(e) => setForm({ ...form, customerName: e.target.value })}
+              onChange={(e) =>
+                setForm({ ...form, customerName: e.target.value })
+              }
             />
           </Field>
-          <Field label="Project" htmlFor="projectName" hint="e.g. Mumbai Residence">
+          <Field
+            label="Project"
+            htmlFor="projectName"
+            hint="e.g. Mumbai Residence"
+          >
             <TextInput
               id="projectName"
               value={form.projectName}
-              onChange={(e) => setForm({ ...form, projectName: e.target.value })}
+              onChange={(e) =>
+                setForm({ ...form, projectName: e.target.value })
+              }
             />
           </Field>
           <Field label="Selection title" htmlFor="title" required>
@@ -196,7 +237,9 @@ export function SelectionEditPage() {
                 id="customerEmail"
                 type="email"
                 value={form.customerEmail}
-                onChange={(e) => setForm({ ...form, customerEmail: e.target.value })}
+                onChange={(e) =>
+                  setForm({ ...form, customerEmail: e.target.value })
+                }
               />
             </Field>
             <Field label="Their phone" htmlFor="customerPhone">
@@ -204,16 +247,24 @@ export function SelectionEditPage() {
                 id="customerPhone"
                 type="tel"
                 value={form.customerPhone}
-                onChange={(e) => setForm({ ...form, customerPhone: e.target.value })}
+                onChange={(e) =>
+                  setForm({ ...form, customerPhone: e.target.value })
+                }
               />
             </Field>
           </div>
 
-          <Field label="Introduction" htmlFor="introduction" hint="Shown at the top of their page">
+          <Field
+            label="Introduction"
+            htmlFor="introduction"
+            hint="Shown at the top of their page"
+          >
             <TextArea
               id="introduction"
               value={form.introduction}
-              onChange={(e) => setForm({ ...form, introduction: e.target.value })}
+              onChange={(e) =>
+                setForm({ ...form, introduction: e.target.value })
+              }
             />
           </Field>
 
@@ -223,7 +274,9 @@ export function SelectionEditPage() {
             <input
               type="checkbox"
               checked={form.isPublished}
-              onChange={(e) => setForm({ ...form, isPublished: e.target.checked })}
+              onChange={(e) =>
+                setForm({ ...form, isPublished: e.target.checked })
+              }
               className="mt-1 h-3.5 w-3.5 shrink-0 appearance-none border border-ink/30 checked:border-ink checked:bg-ink"
             />
             <span>
@@ -275,16 +328,28 @@ export function SelectionEditPage() {
                     </span>
                     <span className="slab-frame h-10 w-14 shrink-0">
                       {item.imageUrl && (
-                        <img src={item.imageUrl} alt="" className="h-full w-full object-cover" />
+                        <img
+                          src={item.imageUrl}
+                          alt=""
+                          className="h-full w-full object-cover"
+                        />
                       )}
                     </span>
                     <span className="min-w-0 flex-1">
-                      <span className="block truncate text-[0.88rem]">{item.name}</span>
-                      <span className="text-[0.72rem] text-ink-faint">{item.code}</span>
+                      <span className="block truncate text-[0.88rem]">
+                        {item.name}
+                      </span>
+                      <span className="text-[0.72rem] text-ink-faint">
+                        {item.code}
+                      </span>
                     </span>
                     <button
                       type="button"
-                      onClick={() => setItems((prev) => prev.filter((x) => x.stoneId !== item.stoneId))}
+                      onClick={() =>
+                        setItems((prev) =>
+                          prev.filter((x) => x.stoneId !== item.stoneId),
+                        )
+                      }
                       className="shrink-0 text-ink-faint hover:text-ink"
                       aria-label={`Remove ${item.name}`}
                     >
@@ -302,7 +367,9 @@ export function SelectionEditPage() {
                     onChange={(e) =>
                       setItems((prev) =>
                         prev.map((x) =>
-                          x.stoneId === item.stoneId ? { ...x, note: e.target.value } : x,
+                          x.stoneId === item.stoneId
+                            ? { ...x, note: e.target.value }
+                            : x,
                         ),
                       )
                     }
@@ -322,7 +389,12 @@ export function SelectionEditPage() {
         <Link to="/admin/selections" className="btn-outline">
           Cancel
         </Link>
-        <button type="button" className="btn-solid" onClick={submit} disabled={save.isPending}>
+        <button
+          type="button"
+          className="btn-solid"
+          onClick={submit}
+          disabled={save.isPending}
+        >
           {save.isPending ? "Saving…" : "Save selection"}
         </button>
       </div>

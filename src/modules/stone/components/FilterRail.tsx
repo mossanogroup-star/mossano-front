@@ -35,7 +35,13 @@ interface Props {
   className?: string;
 }
 
-export function FilterRail({ facets, selected, onToggle, onClear, className }: Props) {
+export function FilterRail({
+  facets,
+  selected,
+  onToggle,
+  onClear,
+  className,
+}: Props) {
   const { taxonomies } = useSiteConfig();
 
   /** Facet values are slugs; the labels come from the shared taxonomy. */
@@ -49,17 +55,30 @@ export function FilterRail({ facets, selected, onToggle, onClear, className }: P
       finish: taxonomies.finishes,
     };
     if (param === "availability") {
-      return taxonomies.availability[value as keyof typeof taxonomies.availability] ?? value;
+      return (
+        taxonomies.availability[
+          value as keyof typeof taxonomies.availability
+        ] ?? value
+      );
     }
     return lists[param]?.find((t) => t.slug === value)?.label ?? value;
   };
 
-  const activeCount = Object.values(selected).reduce((n, list) => n + list.length, 0);
+  const activeCount = Object.values(selected).reduce(
+    (n, list) => n + list.length,
+    0,
+  );
 
   const visible = GROUPS.map((group) => ({
     ...group,
-    buckets: (facets?.[group.key] ?? []).filter((b: FacetBucket) => b.count > 0),
-  })).filter((group) => group.buckets.length > 1 || (group.buckets.length === 1 && selected[group.param]?.length));
+    buckets: (facets?.[group.key] ?? []).filter(
+      (b: FacetBucket) => b.count > 0,
+    ),
+  })).filter(
+    (group) =>
+      group.buckets.length > 1 ||
+      (group.buckets.length === 1 && selected[group.param]?.length),
+  );
 
   return (
     <aside className={cn("space-y-10", className)} aria-label="Filter stone">
@@ -81,7 +100,8 @@ export function FilterRail({ facets, selected, onToggle, onClear, className }: P
           <legend className="label mb-3">{group.title}</legend>
           <ul className="space-y-2">
             {group.buckets.map((bucket) => {
-              const isOn = selected[group.param]?.includes(bucket.value) ?? false;
+              const isOn =
+                selected[group.param]?.includes(bucket.value) ?? false;
               return (
                 <li key={bucket.value}>
                   <label className="flex cursor-pointer items-baseline justify-between gap-3 py-0.5 text-[0.85rem]">

@@ -18,7 +18,9 @@ export function useSubmitEnquiry() {
           ...input,
           sourcePath:
             input.sourcePath ??
-            (typeof window !== "undefined" ? window.location.pathname : undefined),
+            (typeof window !== "undefined"
+              ? window.location.pathname
+              : undefined),
         }),
       ),
   });

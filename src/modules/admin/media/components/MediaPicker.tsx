@@ -7,7 +7,8 @@ import { cn } from "@/shared/lib/cn";
 import type { Media } from "@/shared/api/types";
 
 interface Props {
-  kind: "slab" | "application" | "collection" | "selection" | "video" | "general";
+  kind:
+    "slab" | "application" | "collection" | "selection" | "video" | "general";
   /** Ordered — the sequence is the gallery order the customer sees. */
   value: string[];
   onChange: (ids: string[]) => void;
@@ -29,7 +30,14 @@ interface Props {
  * of them because the thirty-ninth was rejected is the wrong behaviour — the
  * server reports per-file errors and they are surfaced individually.
  */
-export function MediaPicker({ kind, value, onChange, label, hint, max = 40 }: Props) {
+export function MediaPicker({
+  kind,
+  value,
+  onChange,
+  label,
+  hint,
+  max = 40,
+}: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [dragIndex, setDragIndex] = useState<number | null>(null);
   const queryClient = useQueryClient();
@@ -55,15 +63,23 @@ export function MediaPicker({ kind, value, onChange, label, hint, max = 40 }: Pr
       queryClient.invalidateQueries({ queryKey: ["media"] });
 
       if (failed > 0) {
-        const errors = (res.meta?.errors ?? []) as Array<{ filename: string; message: string }>;
+        const errors = (res.meta?.errors ?? []) as Array<{
+          filename: string;
+          message: string;
+        }>;
         toast.warning(`${uploaded.length} uploaded, ${failed} could not be`, {
-          description: errors.map((e) => `${e.filename}: ${e.message}`).join("\n"),
+          description: errors
+            .map((e) => `${e.filename}: ${e.message}`)
+            .join("\n"),
         });
       } else {
-        toast.success(`${uploaded.length} image${uploaded.length === 1 ? "" : "s"} uploaded`);
+        toast.success(
+          `${uploaded.length} image${uploaded.length === 1 ? "" : "s"} uploaded`,
+        );
       }
     },
-    onError: (err) => toast.error(err instanceof Error ? err.message : "Upload failed"),
+    onError: (err) =>
+      toast.error(err instanceof Error ? err.message : "Upload failed"),
   });
 
   const move = (from: number, to: number) => {
@@ -122,7 +138,11 @@ export function MediaPicker({ kind, value, onChange, label, hint, max = 40 }: Pr
                 dragIndex === i && "opacity-40",
               )}
             >
-              <img src={media.thumbnailUrl} alt={media.alt} className="h-full w-full object-cover" />
+              <img
+                src={media.thumbnailUrl}
+                alt={media.alt}
+                className="h-full w-full object-cover"
+              />
 
               {/* The first image is what every card and link preview uses, so
                   it is labelled rather than left implicit. */}
@@ -152,7 +172,10 @@ export function MediaPicker({ kind, value, onChange, label, hint, max = 40 }: Pr
                 >
                   ←
                 </button>
-                <GripVertical className="h-3 w-3 text-ivory/50" aria-hidden="true" />
+                <GripVertical
+                  className="h-3 w-3 text-ivory/50"
+                  aria-hidden="true"
+                />
                 <button
                   type="button"
                   onClick={() => move(i, i + 1)}

@@ -3,7 +3,11 @@ import { useQuery } from "@tanstack/react-query";
 import { Link, useParams } from "react-router-dom";
 import { Download } from "lucide-react";
 import { publicQueries } from "@/shared/api/publicQueries";
-import { Section, SectionHeading, EmptyState } from "@/shared/components/Section";
+import {
+  Section,
+  SectionHeading,
+  EmptyState,
+} from "@/shared/components/Section";
 import { Slab } from "@/shared/components/Slab";
 import { AvailabilityBadge } from "@/shared/components/AvailabilityBadge";
 import { FavouriteButton } from "@/shared/components/FavouriteButton";
@@ -30,14 +34,21 @@ export function SelectionPage() {
   const { data, error, isLoading } = useQuery(publicQueries.selection(token));
   const [enquiring, setEnquiring] = useState(false);
 
-  if (isLoading) return <Section><div className="h-96" /></Section>;
+  if (isLoading)
+    return (
+      <Section>
+        <div className="h-96" />
+      </Section>
+    );
 
   if (error) {
     // The server distinguishes expired and revoked from "no such link", and
     // that distinction matters: an architect sent a legitimate selection three
     // months ago should be told it has expired, not that it never existed.
     const message =
-      error instanceof ApiError ? error.message : "This selection link is not valid.";
+      error instanceof ApiError
+        ? error.message
+        : "This selection link is not valid.";
     return (
       <Section className="pt-28">
         <EmptyState
@@ -60,7 +71,9 @@ export function SelectionPage() {
       <Section tone="dark" className="pt-28">
         <div className="max-w-2xl">
           <div className="rule" />
-          <p className="label mt-4 text-ivory/55">Private Selection · {data.reference}</p>
+          <p className="label mt-4 text-ivory/55">
+            Private Selection · {data.reference}
+          </p>
           <h1 className="h-display mt-2 text-ivory">{data.title}</h1>
 
           <dl className="mt-8 space-y-1 text-[0.95rem] text-ivory/75">
@@ -83,7 +96,11 @@ export function SelectionPage() {
           )}
 
           <div className="mt-10 flex flex-wrap gap-4">
-            <WhatsAppButton href={data.whatsapp} variant="light" label="WhatsApp MOSSANO" />
+            <WhatsAppButton
+              href={data.whatsapp}
+              variant="light"
+              label="WhatsApp MOSSANO"
+            />
             {/* A real navigation, not a scripted download: the PDF is served by
                 the API and must open even in a WhatsApp in-app browser. */}
             <a
@@ -92,7 +109,11 @@ export function SelectionPage() {
               rel="noopener noreferrer"
               className="btn-light"
             >
-              <Download className="h-4 w-4" strokeWidth={1.25} aria-hidden="true" />
+              <Download
+                className="h-4 w-4"
+                strokeWidth={1.25}
+                aria-hidden="true"
+              />
               Download as PDF
             </a>
           </div>
@@ -145,7 +166,11 @@ export function SelectionPage() {
                     {stone.specs.map((spec) => (
                       <div key={spec.label} className="spec">
                         <dt>{spec.label}</dt>
-                        <dd className={cn(spec.value === "On request" && "text-ink-faint")}>
+                        <dd
+                          className={cn(
+                            spec.value === "On request" && "text-ink-faint",
+                          )}
+                        >
                           {spec.value}
                         </dd>
                       </div>
@@ -156,7 +181,11 @@ export function SelectionPage() {
                     <Link to={stone.href} className="btn-outline">
                       Full details
                     </Link>
-                    <FavouriteButton slug={stone.slug} name={stone.name} withLabel />
+                    <FavouriteButton
+                      slug={stone.slug}
+                      name={stone.name}
+                      withLabel
+                    />
                   </div>
                 </div>
               </article>
@@ -189,10 +218,18 @@ export function SelectionPage() {
             />
           ) : (
             <div className="mt-10 flex flex-wrap gap-4">
-              <button type="button" onClick={() => setEnquiring(true)} className="btn-solid">
+              <button
+                type="button"
+                onClick={() => setEnquiring(true)}
+                className="btn-solid"
+              >
                 Request reservation
               </button>
-              <button type="button" onClick={() => setEnquiring(true)} className="btn-outline">
+              <button
+                type="button"
+                onClick={() => setEnquiring(true)}
+                className="btn-outline"
+              >
                 Ask for more information
               </button>
               <WhatsAppButton href={data.whatsapp} variant="outline" />

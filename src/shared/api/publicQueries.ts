@@ -101,8 +101,13 @@ export const publicQueries = {
     queryOptions({
       queryKey: ["look", slug] as const,
       queryFn: async () => {
-        const res = await api.get<StoneCard[]>(`/public/looks/${slug}`, { limit: 48 });
-        return { items: res.data, meta: res.meta as ApiMeta & { label: string } };
+        const res = await api.get<StoneCard[]>(`/public/looks/${slug}`, {
+          limit: 48,
+        });
+        return {
+          items: res.data,
+          meta: res.meta as ApiMeta & { label: string },
+        };
       },
     }),
 
@@ -116,9 +121,10 @@ export const publicQueries = {
     queryOptions({
       queryKey: ["application", slug] as const,
       queryFn: async () => {
-        const res = await api.get<{ projects: ApplicationProject[]; stones: StoneCard[] }>(
-          `/public/applications/${slug}`,
-        );
+        const res = await api.get<{
+          projects: ApplicationProject[];
+          stones: StoneCard[];
+        }>(`/public/applications/${slug}`);
         return { ...res.data, meta: res.meta as ApiMeta & { label: string } };
       },
     }),
@@ -126,7 +132,10 @@ export const publicQueries = {
   applicationProject: (slug: string) =>
     queryOptions({
       queryKey: ["application-project", slug] as const,
-      queryFn: () => unwrap<ApplicationProject>(api.get(`/public/applications/projects/${slug}`)),
+      queryFn: () =>
+        unwrap<ApplicationProject>(
+          api.get(`/public/applications/projects/${slug}`),
+        ),
     }),
 
   /**
@@ -140,14 +149,16 @@ export const publicQueries = {
   favourites: (slugs: string[]) =>
     queryOptions({
       queryKey: ["favourites", slugs] as const,
-      queryFn: () => unwrap<StoneCard[]>(api.post("/public/favourites", { slugs })),
+      queryFn: () =>
+        unwrap<StoneCard[]>(api.post("/public/favourites", { slugs })),
       enabled: slugs.length > 0,
     }),
 
   selection: (token: string) =>
     queryOptions({
       queryKey: ["selection", token] as const,
-      queryFn: () => unwrap<SelectionPayload>(api.get(`/public/selections/${token}`)),
+      queryFn: () =>
+        unwrap<SelectionPayload>(api.get(`/public/selections/${token}`)),
       // A private link is personal; never let it linger in a shared cache layer.
       gcTime: 0,
     }),

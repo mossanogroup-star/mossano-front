@@ -3,7 +3,12 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { adminApi } from "../../api/adminApi";
-import { PageHeader, DataTable, TableEmpty, Pill } from "../../components/AdminUi";
+import {
+  PageHeader,
+  DataTable,
+  TableEmpty,
+  Pill,
+} from "../../components/AdminUi";
 import { Field, TextInput } from "@/modules/enquiry/components/Field";
 import type { EditStatus } from "@/shared/api/types";
 
@@ -28,7 +33,8 @@ export function EditListPage() {
 
   const { data } = useQuery({
     queryKey: ["admin-edits"],
-    queryFn: async () => (await adminApi.edits({ includeArchived: true, limit: 60 })).data,
+    queryFn: async () =>
+      (await adminApi.edits({ includeArchived: true, limit: 60 })).data,
   });
 
   const create = useMutation({
@@ -38,7 +44,8 @@ export function EditListPage() {
       setTitle("");
       queryClient.invalidateQueries({ queryKey: ["admin-edits"] });
     },
-    onError: (err) => toast.error(err instanceof Error ? err.message : "Could not create"),
+    onError: (err) =>
+      toast.error(err instanceof Error ? err.message : "Could not create"),
   });
 
   const setStatus = useMutation({
@@ -49,14 +56,17 @@ export function EditListPage() {
       queryClient.invalidateQueries({ queryKey: ["admin-edits"] });
       queryClient.invalidateQueries({ queryKey: ["dashboard"] });
     },
-    onError: (err) => toast.error(err instanceof Error ? err.message : "Could not update"),
+    onError: (err) =>
+      toast.error(err instanceof Error ? err.message : "Could not update"),
   });
 
   const publish = useMutation({
     mutationFn: ({ id, isPublished }: { id: string; isPublished: boolean }) =>
       adminApi.updateEdit(id, { isPublished }),
     onSuccess: (edit) => {
-      toast.success(edit.isPublished ? `${edit.title} is live` : `${edit.title} hidden`);
+      toast.success(
+        edit.isPublished ? `${edit.title} is live` : `${edit.title} hidden`,
+      );
       queryClient.invalidateQueries({ queryKey: ["admin-edits"] });
       queryClient.invalidateQueries({ queryKey: ["dashboard"] });
     },
@@ -78,7 +88,12 @@ export function EditListPage() {
           if (title.trim()) create.mutate({ title: title.trim() });
         }}
       >
-        <Field label="New Edit" htmlFor="edit-title" className="min-w-[16rem] flex-1" hint="e.g. September 2026">
+        <Field
+          label="New Edit"
+          htmlFor="edit-title"
+          className="min-w-[16rem] flex-1"
+          hint="e.g. September 2026"
+        >
           <TextInput
             id="edit-title"
             value={title}
@@ -86,30 +101,46 @@ export function EditListPage() {
             placeholder="September 2026"
           />
         </Field>
-        <button type="submit" className="btn-solid mb-6" disabled={create.isPending || !title.trim()}>
+        <button
+          type="submit"
+          className="btn-solid mb-6"
+          disabled={create.isPending || !title.trim()}
+        >
           {create.isPending ? "Creating…" : "Create"}
         </button>
       </form>
 
       <DataTable
         head={["Edit", "Status", "Stones", "On the site", ""]}
-        empty={edits.length === 0 ? <TableEmpty message="No Edits yet." /> : undefined}
+        empty={
+          edits.length === 0 ? (
+            <TableEmpty message="No Edits yet." />
+          ) : undefined
+        }
       >
         {edits.map((edit) => (
           <tr key={edit.id} className="border-b border-ivory-dark/60">
             <td className="py-3 pr-6">
-              <Link to={`/admin/edits/${edit.id}`} className="text-[0.9rem] hover:text-brass">
+              <Link
+                to={`/admin/edits/${edit.id}`}
+                className="text-[0.9rem] hover:text-brass"
+              >
                 {edit.title}
               </Link>
               {edit.subtitle && (
-                <span className="block text-[0.75rem] text-ink-faint">{edit.subtitle}</span>
+                <span className="block text-[0.75rem] text-ink-faint">
+                  {edit.subtitle}
+                </span>
               )}
             </td>
             <td className="py-3 pr-6">
               <select
                 value={edit.status}
                 onChange={(e) =>
-                  setStatus.mutate({ id: edit.id, status: e.target.value as EditStatus })
+                  setStatus.mutate({
+                    id: edit.id,
+                    status: e.target.value as EditStatus,
+                  })
                 }
                 disabled={setStatus.isPending}
                 className="border-0 border-b border-transparent bg-transparent py-0.5 pr-5 text-[0.8rem] hover:border-ink/30 focus:border-ink focus:outline-none"
@@ -122,19 +153,33 @@ export function EditListPage() {
                 ))}
               </select>
             </td>
-            <td className="py-3 pr-6 text-[0.8rem] tabular-nums text-ink-soft">{edit.stoneCount}</td>
+            <td className="py-3 pr-6 text-[0.8rem] tabular-nums text-ink-soft">
+              {edit.stoneCount}
+            </td>
             <td className="py-3 pr-6">
               <button
                 type="button"
-                onClick={() => publish.mutate({ id: edit.id, isPublished: !edit.isPublished })}
+                onClick={() =>
+                  publish.mutate({
+                    id: edit.id,
+                    isPublished: !edit.isPublished,
+                  })
+                }
                 disabled={publish.isPending}
                 className="disabled:opacity-40"
               >
-                {edit.isPublished ? <Pill tone="brass">Live</Pill> : <Pill tone="muted">Draft</Pill>}
+                {edit.isPublished ? (
+                  <Pill tone="brass">Live</Pill>
+                ) : (
+                  <Pill tone="muted">Draft</Pill>
+                )}
               </button>
             </td>
             <td className="py-3">
-              <Link to={`/admin/edits/${edit.id}`} className="label underline-offset-4 hover:underline">
+              <Link
+                to={`/admin/edits/${edit.id}`}
+                className="label underline-offset-4 hover:underline"
+              >
                 Manage stones
               </Link>
             </td>

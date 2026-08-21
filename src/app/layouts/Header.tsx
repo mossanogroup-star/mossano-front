@@ -37,7 +37,10 @@ export function Header() {
   return (
     <header className="sticky top-0 z-40 border-b border-ivory-dark/60 bg-ivory/95 backdrop-blur-sm">
       <div className="shell flex h-16 items-center justify-between gap-6 sm:h-20">
-        <Link to="/" className="wordmark shrink-0 text-[0.95rem] sm:text-[1.05rem]">
+        <Link
+          to="/"
+          className="wordmark shrink-0 text-[0.95rem] sm:text-[1.05rem]"
+        >
           MOSSANO
         </Link>
 
@@ -66,7 +69,9 @@ export function Header() {
           >
             <Heart className="h-4 w-4" strokeWidth={1.25} aria-hidden="true" />
             {count > 0 && (
-              <span className="font-sans text-[0.66rem] tabular-nums tracking-wide">{count}</span>
+              <span className="font-sans text-[0.66rem] tabular-nums tracking-wide">
+                {count}
+              </span>
             )}
           </Link>
 

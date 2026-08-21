@@ -38,7 +38,9 @@ export function FavouriteButton({
         toggle(slug);
       }}
       aria-pressed={saved}
-      aria-label={saved ? `Remove ${name} from favourites` : `Save ${name} to favourites`}
+      aria-label={
+        saved ? `Remove ${name} from favourites` : `Save ${name} to favourites`
+      }
       className={cn(
         "inline-flex items-center gap-2 transition-colors duration-200",
         withLabel && "font-sans text-[0.66rem] uppercase tracking-label",

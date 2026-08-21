@@ -15,10 +15,14 @@ import { RequireAuth } from "./RequireAuth";
  * even by accident — the module graph enforces it rather than a convention.
  */
 const AdminLayout = lazy(() =>
-  import("@/modules/admin/layouts/AdminLayout").then((m) => ({ default: m.AdminLayout })),
+  import("@/modules/admin/layouts/AdminLayout").then((m) => ({
+    default: m.AdminLayout,
+  })),
 );
 const LoginPage = lazy(() =>
-  import("@/modules/admin/auth/pages/LoginPage").then((m) => ({ default: m.LoginPage })),
+  import("@/modules/admin/auth/pages/LoginPage").then((m) => ({
+    default: m.LoginPage,
+  })),
 );
 const DashboardPage = lazy(() =>
   import("@/modules/admin/dashboard/pages/DashboardPage").then((m) => ({
@@ -26,16 +30,24 @@ const DashboardPage = lazy(() =>
   })),
 );
 const StoneListPage = lazy(() =>
-  import("@/modules/admin/stone/pages/StoneListPage").then((m) => ({ default: m.StoneListPage })),
+  import("@/modules/admin/stone/pages/StoneListPage").then((m) => ({
+    default: m.StoneListPage,
+  })),
 );
 const StoneEditPage = lazy(() =>
-  import("@/modules/admin/stone/pages/StoneEditPage").then((m) => ({ default: m.StoneEditPage })),
+  import("@/modules/admin/stone/pages/StoneEditPage").then((m) => ({
+    default: m.StoneEditPage,
+  })),
 );
 const EditListPage = lazy(() =>
-  import("@/modules/admin/edit/pages/EditListPage").then((m) => ({ default: m.EditListPage })),
+  import("@/modules/admin/edit/pages/EditListPage").then((m) => ({
+    default: m.EditListPage,
+  })),
 );
 const EditDetailPage = lazy(() =>
-  import("@/modules/admin/edit/pages/EditDetailPage").then((m) => ({ default: m.EditDetailPage })),
+  import("@/modules/admin/edit/pages/EditDetailPage").then((m) => ({
+    default: m.EditDetailPage,
+  })),
 );
 const EnquiryListPage = lazy(() =>
   import("@/modules/admin/enquiry/pages/EnquiryListPage").then((m) => ({
@@ -68,7 +80,9 @@ const MediaLibraryPage = lazy(() =>
   })),
 );
 const TeamPage = lazy(() =>
-  import("@/modules/admin/team/pages/TeamPage").then((m) => ({ default: m.TeamPage })),
+  import("@/modules/admin/team/pages/TeamPage").then((m) => ({
+    default: m.TeamPage,
+  })),
 );
 
 function Loading() {
@@ -79,7 +93,9 @@ function Loading() {
   );
 }
 
-const wrap = (element: React.ReactNode) => <Suspense fallback={<Loading />}>{element}</Suspense>;
+const wrap = (element: React.ReactNode) => (
+  <Suspense fallback={<Loading />}>{element}</Suspense>
+);
 
 export const adminRoutes: RouteObject[] = [
   { path: "/admin/login", element: wrap(<LoginPage />) },

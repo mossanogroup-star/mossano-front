@@ -38,12 +38,20 @@ export function StoneCard({ stone, className, priority, sizes }: Props) {
             <h3 className="mt-1.5 font-display text-[1.05rem] uppercase leading-tight tracking-wide">
               {stone.name}
             </h3>
-            {stone.origin && <p className="mt-1 text-[0.8rem] text-ink-faint">{stone.origin}</p>}
+            {stone.origin && (
+              <p className="mt-1 text-[0.8rem] text-ink-faint">
+                {stone.origin}
+              </p>
+            )}
           </div>
 
           {/* Sits outside the Link's flow but inside the card, so the whole
               tile stays clickable without the button swallowing the click. */}
-          <FavouriteButton slug={stone.slug} name={stone.name} className="mt-1 shrink-0" />
+          <FavouriteButton
+            slug={stone.slug}
+            name={stone.name}
+            className="mt-1 shrink-0"
+          />
         </div>
 
         <AvailabilityBadge

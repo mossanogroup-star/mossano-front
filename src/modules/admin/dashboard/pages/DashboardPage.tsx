@@ -2,7 +2,13 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { adminApi } from "../../api/adminApi";
-import { PageHeader, Stat, Pill, DataTable, TableEmpty } from "../../components/AdminUi";
+import {
+  PageHeader,
+  Stat,
+  Pill,
+  DataTable,
+  TableEmpty,
+} from "../../components/AdminUi";
 import { useSiteConfig } from "@/shared/hooks/useSiteConfig";
 
 /**
@@ -17,7 +23,10 @@ export function DashboardPage() {
   const queryClient = useQueryClient();
   const { taxonomies } = useSiteConfig();
 
-  const { data } = useQuery({ queryKey: ["dashboard"], queryFn: () => adminApi.dashboard() });
+  const { data } = useQuery({
+    queryKey: ["dashboard"],
+    queryFn: () => adminApi.dashboard(),
+  });
   const { data: queue } = useQuery({
     queryKey: ["verification-queue"],
     queryFn: () => adminApi.verificationQueue(),
@@ -33,7 +42,8 @@ export function DashboardPage() {
   });
 
   const availabilityLabel = (slug: string) =>
-    taxonomies?.availability[slug as keyof typeof taxonomies.availability] ?? slug;
+    taxonomies?.availability[slug as keyof typeof taxonomies.availability] ??
+    slug;
 
   return (
     <>
@@ -56,14 +66,23 @@ export function DashboardPage() {
           hint={`Not checked in ${data?.stones.verificationStaleDays ?? 14} days`}
         />
         <Stat label="Stones in catalogue" value={data?.stones.total ?? 0} />
-        <Stat label="Live selections" value={data?.selections.active ?? 0} hint="Shared links" />
+        <Stat
+          label="Live selections"
+          value={data?.selections.active ?? 0}
+          hint="Shared links"
+        />
       </div>
 
       {/* ── The Current Edit ───────────────────────────────────────────── */}
       <section className="mt-14">
         <div className="flex items-baseline justify-between gap-4 border-b border-ivory-dark pb-3">
-          <h2 className="font-display text-[1rem] uppercase tracking-wide">Current Edit</h2>
-          <Link to="/admin/edits" className="label underline-offset-4 hover:underline">
+          <h2 className="font-display text-[1rem] uppercase tracking-wide">
+            Current Edit
+          </h2>
+          <Link
+            to="/admin/edits"
+            className="label underline-offset-4 hover:underline"
+          >
             Manage Edits
           </Link>
         </div>
@@ -102,7 +121,10 @@ export function DashboardPage() {
           <h2 className="font-display text-[1rem] uppercase tracking-wide">
             Availability to confirm
           </h2>
-          <Link to="/admin/stones" className="label underline-offset-4 hover:underline">
+          <Link
+            to="/admin/stones"
+            className="label underline-offset-4 hover:underline"
+          >
             All stones
           </Link>
         </div>
@@ -115,7 +137,11 @@ export function DashboardPage() {
         <div className="mt-5">
           <DataTable
             head={["Code", "Stone", "Status", "Last verified", ""]}
-            empty={queue?.length === 0 ? <TableEmpty message="Everything is up to date." /> : undefined}
+            empty={
+              queue?.length === 0 ? (
+                <TableEmpty message="Everything is up to date." />
+              ) : undefined
+            }
           >
             {(queue ?? []).slice(0, 10).map((stone) => (
               <tr key={stone.id} className="border-b border-ivory-dark/60">
@@ -123,7 +149,10 @@ export function DashboardPage() {
                   {stone.mossanoCode}
                 </td>
                 <td className="py-3 pr-6">
-                  <Link to={`/admin/stones/${stone.id}`} className="text-[0.88rem] hover:text-brass">
+                  <Link
+                    to={`/admin/stones/${stone.id}`}
+                    className="text-[0.88rem] hover:text-brass"
+                  >
                     {stone.name}
                   </Link>
                 </td>
@@ -154,8 +183,13 @@ export function DashboardPage() {
       {/* ── Recent enquiries ───────────────────────────────────────────── */}
       <section className="mt-14">
         <div className="flex items-baseline justify-between gap-4 border-b border-ivory-dark pb-3">
-          <h2 className="font-display text-[1rem] uppercase tracking-wide">Latest enquiries</h2>
-          <Link to="/admin/enquiries" className="label underline-offset-4 hover:underline">
+          <h2 className="font-display text-[1rem] uppercase tracking-wide">
+            Latest enquiries
+          </h2>
+          <Link
+            to="/admin/enquiries"
+            className="label underline-offset-4 hover:underline"
+          >
             All enquiries
           </Link>
         </div>
@@ -182,16 +216,24 @@ export function DashboardPage() {
                     {enquiry.name}
                   </Link>
                   {enquiry.company && (
-                    <span className="block text-[0.75rem] text-ink-faint">{enquiry.company}</span>
+                    <span className="block text-[0.75rem] text-ink-faint">
+                      {enquiry.company}
+                    </span>
                   )}
                 </td>
                 <td className="py-3 pr-6 text-[0.8rem] text-ink-soft">
-                  {enquiry.stone?.mossanoCode ?? enquiry.stoneSnapshot?.mossanoCode ?? "—"}
+                  {enquiry.stone?.mossanoCode ??
+                    enquiry.stoneSnapshot?.mossanoCode ??
+                    "—"}
                 </td>
                 <td className="py-3 pr-6">
-                  <Pill tone={enquiry.isHighIntent ? "brass" : "muted"}>{enquiry.typeLabel}</Pill>
+                  <Pill tone={enquiry.isHighIntent ? "brass" : "muted"}>
+                    {enquiry.typeLabel}
+                  </Pill>
                 </td>
-                <td className="py-3 pr-6 text-[0.8rem]">{enquiry.statusLabel}</td>
+                <td className="py-3 pr-6 text-[0.8rem]">
+                  {enquiry.statusLabel}
+                </td>
                 <td className="py-3 text-[0.78rem] text-ink-faint">
                   {new Date(enquiry.createdAt).toLocaleDateString("en-IN")}
                 </td>

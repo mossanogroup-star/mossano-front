@@ -104,7 +104,9 @@ export function LookDetailPage() {
           <StoneGrid stones={items} />
         ) : (
           <EmptyState
-            title={isError ? "Unknown look" : `No ${label} stone on the site yet`}
+            title={
+              isError ? "Unknown look" : `No ${label} stone on the site yet`
+            }
             body="MOSSANO's supplier network reaches well beyond what is listed here."
             action={
               <WhatsAppButton

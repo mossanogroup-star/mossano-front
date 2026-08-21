@@ -33,12 +33,21 @@ export function SectionHeading({
         className,
       )}
     >
-      <div className={cn("max-w-prose", align === "center" && "mx-auto text-center")}>
+      <div
+        className={cn(
+          "max-w-prose",
+          align === "center" && "mx-auto text-center",
+        )}
+      >
         <div className={cn("rule", align === "center" && "mx-auto")} />
         {label && (
-          <p className={cn("label mt-4", tone === "light" && "text-ivory/55")}>{label}</p>
+          <p className={cn("label mt-4", tone === "light" && "text-ivory/55")}>
+            {label}
+          </p>
         )}
-        <h2 className={cn("h-section mt-2", tone === "light" && "text-ivory")}>{title}</h2>
+        <h2 className={cn("h-section mt-2", tone === "light" && "text-ivory")}>
+          {title}
+        </h2>
         {intro && (
           <p
             className={cn(
@@ -114,8 +123,14 @@ export function EmptyState({
 }) {
   return (
     <div className="border-t border-ivory-dark py-20 text-center">
-      <p className="font-display text-[1.1rem] uppercase tracking-wide">{title}</p>
-      {body && <p className="mx-auto mt-3 max-w-prose text-[0.9rem] text-ink-soft">{body}</p>}
+      <p className="font-display text-[1.1rem] uppercase tracking-wide">
+        {title}
+      </p>
+      {body && (
+        <p className="mx-auto mt-3 max-w-prose text-[0.9rem] text-ink-soft">
+          {body}
+        </p>
+      )}
       {action && <div className="mt-8">{action}</div>}
     </div>
   );

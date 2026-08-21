@@ -52,7 +52,11 @@ export function Slab({
     // incomplete to the team rather than passable to a customer.
     return (
       <div
-        className={cn("slab-frame grid place-items-center", ASPECT[aspect], className)}
+        className={cn(
+          "slab-frame grid place-items-center",
+          ASPECT[aspect],
+          className,
+        )}
         aria-hidden="true"
       >
         <span className="label">Photography on request</span>

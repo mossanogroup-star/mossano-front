@@ -80,7 +80,8 @@ function buildHead(meta: RouteMeta, url: string, origin: string) {
 
   // Private selections and favourites are rendered for the person holding the
   // link and must not be indexed.
-  if (meta.noindex) tags.push(`<meta name="robots" content="noindex, nofollow" />`);
+  if (meta.noindex)
+    tags.push(`<meta name="robots" content="noindex, nofollow" />`);
 
   return tags.join("\n    ");
 }
@@ -103,8 +104,12 @@ export async function render({ url, template, origin }: RenderArgs) {
   const search = new URLSearchParams(rawSearch);
   const matches = matchRoutes(asRouteObjects(publicRoutes), pathname) ?? [];
 
-  const leaf = [...matches].reverse().find((m) => (m.route as PublicRoute).meta);
-  const routeWithData = [...matches].reverse().find((m) => (m.route as PublicRoute).prefetch);
+  const leaf = [...matches]
+    .reverse()
+    .find((m) => (m.route as PublicRoute).meta);
+  const routeWithData = [...matches]
+    .reverse()
+    .find((m) => (m.route as PublicRoute).prefetch);
 
   /**
    * Prefetch, but never let it take the page down.
@@ -117,9 +122,11 @@ export async function render({ url, template, origin }: RenderArgs) {
   await Promise.all([
     queryClient.prefetchQuery(publicQueries.config()).catch(() => undefined),
     routeWithData
-      ? (routeWithData.route as PublicRoute)
-          .prefetch!(queryClient, routeWithData.params as Record<string, string>, search)
-          .catch(() => undefined)
+      ? (routeWithData.route as PublicRoute).prefetch!(
+          queryClient,
+          routeWithData.params as Record<string, string>,
+          search,
+        ).catch(() => undefined)
       : Promise.resolve(),
   ]);
 
@@ -150,7 +157,10 @@ export async function render({ url, template, origin }: RenderArgs) {
   })();
 
   const meta: RouteMeta = leaf
-    ? (leaf.route as PublicRoute).meta!(queryClient, leaf.params as Record<string, string>)
+    ? (leaf.route as PublicRoute).meta!(
+        queryClient,
+        leaf.params as Record<string, string>,
+      )
     : { title: SITE_TITLE, description: SITE_DESCRIPTION };
 
   // A page that does not exist must not advertise itself for indexing, whatever

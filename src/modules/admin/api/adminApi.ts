@@ -33,35 +33,54 @@ export const adminApi = {
     unwrap<Session>(api.post("/auth/login", { email, password })),
   me: () => unwrap<User>(api.get("/auth/me", undefined, AUTH)),
   changePassword: (currentPassword: string, newPassword: string) =>
-    unwrap(api.post("/auth/change-password", { currentPassword, newPassword }, AUTH)),
+    unwrap(
+      api.post("/auth/change-password", { currentPassword, newPassword }, AUTH),
+    ),
 
   // ── Dashboard ──
-  dashboard: () => unwrap<DashboardSummary>(api.get("/dashboard", undefined, AUTH)),
+  dashboard: () =>
+    unwrap<DashboardSummary>(api.get("/dashboard", undefined, AUTH)),
   verificationQueue: () =>
-    unwrap<AdminStone[]>(api.get("/dashboard/verification-queue", undefined, AUTH)),
+    unwrap<AdminStone[]>(
+      api.get("/dashboard/verification-queue", undefined, AUTH),
+    ),
 
   // ── Stones ──
   stones: (query: Query = {}) =>
-    api.get<AdminStone[]>("/stones", query, AUTH) as Promise<ApiEnvelope<AdminStone[]>>,
+    api.get<AdminStone[]>("/stones", query, AUTH) as Promise<
+      ApiEnvelope<AdminStone[]>
+    >,
   stoneOptions: (query: Query = {}) =>
-    api.get<StoneCard[]>("/stones/options", query, AUTH) as Promise<ApiEnvelope<StoneCard[]>>,
-  stone: (id: string) => unwrap<AdminStone>(api.get(`/stones/${id}`, undefined, AUTH)),
-  createStone: (body: unknown) => unwrap<AdminStone>(api.post("/stones", body, AUTH)),
+    api.get<StoneCard[]>("/stones/options", query, AUTH) as Promise<
+      ApiEnvelope<StoneCard[]>
+    >,
+  stone: (id: string) =>
+    unwrap<AdminStone>(api.get(`/stones/${id}`, undefined, AUTH)),
+  createStone: (body: unknown) =>
+    unwrap<AdminStone>(api.post("/stones", body, AUTH)),
   updateStone: (id: string, body: unknown) =>
     unwrap<AdminStone>(api.patch(`/stones/${id}`, body, AUTH)),
   /** Admin Scope §2 — the edit the team makes from a list row. */
   setAvailability: (id: string, availability: Availability) =>
-    unwrap<AdminStone>(api.patch(`/stones/${id}/availability`, { availability }, AUTH)),
-  verifyStone: (id: string) => unwrap<AdminStone>(api.post(`/stones/${id}/verify`, {}, AUTH)),
+    unwrap<AdminStone>(
+      api.patch(`/stones/${id}/availability`, { availability }, AUTH),
+    ),
+  verifyStone: (id: string) =>
+    unwrap<AdminStone>(api.post(`/stones/${id}/verify`, {}, AUTH)),
   deleteStone: (id: string) => unwrap(api.delete(`/stones/${id}`, AUTH)),
   stoneFacets: () => unwrap(api.get("/stones/facets", undefined, AUTH)),
 
   // ── Edits ──
   edits: (query: Query = {}) =>
-    api.get<AdminEdit[]>("/edits", query, AUTH) as Promise<ApiEnvelope<AdminEdit[]>>,
-  edit: (id: string) => unwrap<AdminEdit>(api.get(`/edits/${id}`, undefined, AUTH)),
-  createEdit: (body: unknown) => unwrap<AdminEdit>(api.post("/edits", body, AUTH)),
-  updateEdit: (id: string, body: unknown) => unwrap<AdminEdit>(api.patch(`/edits/${id}`, body, AUTH)),
+    api.get<AdminEdit[]>("/edits", query, AUTH) as Promise<
+      ApiEnvelope<AdminEdit[]>
+    >,
+  edit: (id: string) =>
+    unwrap<AdminEdit>(api.get(`/edits/${id}`, undefined, AUTH)),
+  createEdit: (body: unknown) =>
+    unwrap<AdminEdit>(api.post("/edits", body, AUTH)),
+  updateEdit: (id: string, body: unknown) =>
+    unwrap<AdminEdit>(api.patch(`/edits/${id}`, body, AUTH)),
   setEditStatus: (id: string, status: EditStatus) =>
     unwrap<AdminEdit>(api.patch(`/edits/${id}/status`, { status }, AUTH)),
   addStonesToEdit: (id: string, stoneIds: string[]) =>
@@ -76,17 +95,25 @@ export const adminApi = {
       ApiEnvelope<AdminApplicationProject[]>
     >,
   application: (id: string) =>
-    unwrap<AdminApplicationProject>(api.get(`/applications/${id}`, undefined, AUTH)),
+    unwrap<AdminApplicationProject>(
+      api.get(`/applications/${id}`, undefined, AUTH),
+    ),
   createApplication: (body: unknown) =>
     unwrap<AdminApplicationProject>(api.post("/applications", body, AUTH)),
   updateApplication: (id: string, body: unknown) =>
-    unwrap<AdminApplicationProject>(api.patch(`/applications/${id}`, body, AUTH)),
-  deleteApplication: (id: string) => unwrap(api.delete(`/applications/${id}`, AUTH)),
+    unwrap<AdminApplicationProject>(
+      api.patch(`/applications/${id}`, body, AUTH),
+    ),
+  deleteApplication: (id: string) =>
+    unwrap(api.delete(`/applications/${id}`, AUTH)),
 
   // ── Enquiries ──
   enquiries: (query: Query = {}) =>
-    api.get<Enquiry[]>("/enquiries", query, AUTH) as Promise<ApiEnvelope<Enquiry[]>>,
-  enquiry: (id: string) => unwrap<Enquiry>(api.get(`/enquiries/${id}`, undefined, AUTH)),
+    api.get<Enquiry[]>("/enquiries", query, AUTH) as Promise<
+      ApiEnvelope<Enquiry[]>
+    >,
+  enquiry: (id: string) =>
+    unwrap<Enquiry>(api.get(`/enquiries/${id}`, undefined, AUTH)),
   setEnquiryStatus: (id: string, status: EnquiryStatus) =>
     unwrap<Enquiry>(api.patch(`/enquiries/${id}/status`, { status }, AUTH)),
   addEnquiryNote: (id: string, body: string) =>
@@ -96,17 +123,25 @@ export const adminApi = {
 
   // ── Selections ──
   selections: (query: Query = {}) =>
-    api.get<AdminSelection[]>("/selections", query, AUTH) as Promise<ApiEnvelope<AdminSelection[]>>,
-  selection: (id: string) => unwrap<AdminSelection>(api.get(`/selections/${id}`, undefined, AUTH)),
-  createSelection: (body: unknown) => unwrap<AdminSelection>(api.post("/selections", body, AUTH)),
+    api.get<AdminSelection[]>("/selections", query, AUTH) as Promise<
+      ApiEnvelope<AdminSelection[]>
+    >,
+  selection: (id: string) =>
+    unwrap<AdminSelection>(api.get(`/selections/${id}`, undefined, AUTH)),
+  createSelection: (body: unknown) =>
+    unwrap<AdminSelection>(api.post("/selections", body, AUTH)),
   updateSelection: (id: string, body: unknown) =>
     unwrap<AdminSelection>(api.patch(`/selections/${id}`, body, AUTH)),
-  revokeSelection: (id: string) => unwrap<AdminSelection>(api.post(`/selections/${id}/revoke`, {}, AUTH)),
+  revokeSelection: (id: string) =>
+    unwrap<AdminSelection>(api.post(`/selections/${id}/revoke`, {}, AUTH)),
   restoreSelection: (id: string) =>
     unwrap<AdminSelection>(api.post(`/selections/${id}/restore`, {}, AUTH)),
   regenerateSelectionLink: (id: string) =>
-    unwrap<AdminSelection>(api.post(`/selections/${id}/regenerate-link`, {}, AUTH)),
-  deleteSelection: (id: string) => unwrap(api.delete(`/selections/${id}`, AUTH)),
+    unwrap<AdminSelection>(
+      api.post(`/selections/${id}/regenerate-link`, {}, AUTH),
+    ),
+  deleteSelection: (id: string) =>
+    unwrap(api.delete(`/selections/${id}`, AUTH)),
 
   // ── Media ──
   media: (query: Query = {}) =>
@@ -123,12 +158,15 @@ export const adminApi = {
     if (meta.alt) form.append("alt", meta.alt);
     return api.upload<Media[]>("/media/bulk", form);
   },
-  updateMedia: (id: string, body: unknown) => unwrap<Media>(api.patch(`/media/${id}`, body, AUTH)),
+  updateMedia: (id: string, body: unknown) =>
+    unwrap<Media>(api.patch(`/media/${id}`, body, AUTH)),
   deleteMedia: (id: string) => unwrap(api.delete(`/media/${id}`, AUTH)),
 
   // ── Team ──
-  users: () => api.get<User[]>("/users", undefined, AUTH) as Promise<ApiEnvelope<User[]>>,
+  users: () =>
+    api.get<User[]>("/users", undefined, AUTH) as Promise<ApiEnvelope<User[]>>,
   createUser: (body: unknown) => unwrap<User>(api.post("/users", body, AUTH)),
-  updateUser: (id: string, body: unknown) => unwrap<User>(api.patch(`/users/${id}`, body, AUTH)),
+  updateUser: (id: string, body: unknown) =>
+    unwrap<User>(api.patch(`/users/${id}`, body, AUTH)),
   deleteUser: (id: string) => unwrap(api.delete(`/users/${id}`, AUTH)),
 };

@@ -92,7 +92,12 @@ export function FavouritesPage() {
           <EmptyState
             title="These stones are no longer listed"
             body="The lots you saved have been withdrawn. MOSSANO can suggest what has replaced them."
-            action={<WhatsAppButton href={whatsapp.general} label="Ask what is similar" />}
+            action={
+              <WhatsAppButton
+                href={whatsapp.general}
+                label="Ask what is similar"
+              />
+            }
           />
         )}
       </div>

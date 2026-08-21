@@ -1,7 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { publicQueries } from "@/shared/api/publicQueries";
-import { Section, SectionHeading, EmptyState } from "@/shared/components/Section";
+import {
+  Section,
+  SectionHeading,
+  EmptyState,
+} from "@/shared/components/Section";
 import { StoneGrid } from "@/shared/components/StoneCard";
 import { WhatsAppButton } from "@/shared/components/WhatsAppButton";
 import { useSiteConfig } from "@/shared/hooks/useSiteConfig";
@@ -31,7 +35,10 @@ function EditBand({ edit, index }: { edit: Edit; index: number }) {
       <div className="mt-14">
         {stones.length ? (
           <>
-            <StoneGrid stones={stones.slice(0, 9)} priorityCount={index === 0 ? 3 : 0} />
+            <StoneGrid
+              stones={stones.slice(0, 9)}
+              priorityCount={index === 0 ? 3 : 0}
+            />
             {stones.length > 9 && (
               <div className="mt-14 text-center">
                 <Link to={edit.href} className="btn-outline">
@@ -78,7 +85,12 @@ export function NewEditPage() {
           <EmptyState
             title="No Edit is published yet"
             body="The current selection is being verified before it goes live. MOSSANO can tell you what is in stock today."
-            action={<WhatsAppButton href={whatsapp.general} label="Ask what is available" />}
+            action={
+              <WhatsAppButton
+                href={whatsapp.general}
+                label="Ask what is available"
+              />
+            }
           />
         </Section>
       )}

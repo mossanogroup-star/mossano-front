@@ -2,7 +2,11 @@ import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { publicQueries } from "@/shared/api/publicQueries";
 import { useSiteConfig } from "@/shared/hooks/useSiteConfig";
-import { Section, SectionHeading, EmptyState } from "@/shared/components/Section";
+import {
+  Section,
+  SectionHeading,
+  EmptyState,
+} from "@/shared/components/Section";
 import { StoneGrid } from "@/shared/components/StoneCard";
 import { Slab } from "@/shared/components/Slab";
 import { WhatsAppButton } from "@/shared/components/WhatsAppButton";
@@ -19,7 +23,8 @@ export function HomePage() {
   const { data } = useQuery(publicQueries.home());
   const { brand, whatsapp } = useSiteConfig();
 
-  const hero = data?.currentEdit?.coverImage ?? data?.featured[0]?.primaryImage ?? null;
+  const hero =
+    data?.currentEdit?.coverImage ?? data?.featured[0]?.primaryImage ?? null;
   const heroUrl = hero?.url ?? data?.featured[0]?.primaryImageUrl ?? null;
 
   return (
@@ -95,7 +100,9 @@ export function HomePage() {
       <Section>
         <SectionHeading
           label={data?.isFeaturedFallback ? "Recently added" : "Featured"}
-          title={data?.isFeaturedFallback ? "Recently Added Stone" : "Featured Stone"}
+          title={
+            data?.isFeaturedFallback ? "Recently Added Stone" : "Featured Stone"
+          }
           action={{ to: "/shop", label: "All stone" }}
         />
         <div className="mt-14">
@@ -106,7 +113,10 @@ export function HomePage() {
               title="The catalogue is being prepared"
               body="MOSSANO's stock is being photographed and verified."
               action={
-                <WhatsAppButton href={whatsapp.general} label="Ask what is in stock" />
+                <WhatsAppButton
+                  href={whatsapp.general}
+                  label="Ask what is in stock"
+                />
               }
             />
           )}
@@ -189,10 +199,10 @@ export function HomePage() {
               tone="light"
             />
             <p className="mt-8 max-w-prose text-[0.95rem] leading-relaxed text-ivory/70">
-              MOSSANO MARMO sources marble, granite and natural stone from quarries
-              worldwide and curates what is worth specifying. Every lot is
-              photographed as it actually is, and its availability is verified
-              rather than assumed.
+              MOSSANO MARMO sources marble, granite and natural stone from
+              quarries worldwide and curates what is worth specifying. Every lot
+              is photographed as it actually is, and its availability is
+              verified rather than assumed.
             </p>
             <Link to="/about" className="btn-light mt-10">
               About MOSSANO
@@ -204,8 +214,8 @@ export function HomePage() {
             <p className="label mt-4 text-ivory/55">Talk to us</p>
             <h2 className="h-section mt-2 text-ivory">A Message Is Faster</h2>
             <p className="mt-6 max-w-prose text-[0.95rem] leading-relaxed text-ivory/70">
-              Send a requirement on WhatsApp and MOSSANO will come back with actual
-              slab photography and what is available now.
+              Send a requirement on WhatsApp and MOSSANO will come back with
+              actual slab photography and what is available now.
             </p>
             <div className="mt-10 flex flex-wrap gap-4">
               <WhatsAppButton href={whatsapp.general} />

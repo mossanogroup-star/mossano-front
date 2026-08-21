@@ -42,7 +42,9 @@ function parse(): string[] {
     // Anything could be under this key — another script, an older format, a
     // hand-edited value. Only a clean array of strings is accepted.
     if (!Array.isArray(parsed)) return [];
-    return parsed.filter((s): s is string => typeof s === "string").slice(0, MAX);
+    return parsed
+      .filter((s): s is string => typeof s === "string")
+      .slice(0, MAX);
   } catch {
     return [];
   }
@@ -109,11 +111,13 @@ export const favouritesStore = {
       snapshot = null;
       fn(read());
     };
-    if (typeof window !== "undefined") window.addEventListener("storage", onStorage);
+    if (typeof window !== "undefined")
+      window.addEventListener("storage", onStorage);
 
     return () => {
       listeners.delete(fn);
-      if (typeof window !== "undefined") window.removeEventListener("storage", onStorage);
+      if (typeof window !== "undefined")
+        window.removeEventListener("storage", onStorage);
     };
   },
 };

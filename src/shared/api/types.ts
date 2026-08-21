@@ -7,7 +7,8 @@
  * never invented, and a generator would emit it without saying so.
  */
 
-export type Availability = "available" | "on_hold" | "sold" | "verification_required";
+export type Availability =
+  "available" | "on_hold" | "sold" | "verification_required";
 
 export interface MediaSrc {
   width: number;
@@ -283,15 +284,11 @@ export type EnquiryType =
   | "sourcing"
   | "prebook"
   | "register_interest"
-  | "selection";
+  | "selection"
+  | "chatbot";
 
 export type EnquiryStatus =
-  | "new"
-  | "contacted"
-  | "interested"
-  | "reserved"
-  | "purchased"
-  | "closed";
+  "new" | "contacted" | "interested" | "reserved" | "purchased" | "closed";
 
 export interface SourcingBrief {
   material?: string;
@@ -356,7 +353,12 @@ export interface Enquiry {
   statusLabel: string;
   assignedTo: { id: string; name: string | null } | null;
   firstRespondedAt: string | null;
-  notes: Array<{ id: string; body: string; authorName: string | null; createdAt: string }>;
+  notes: Array<{
+    id: string;
+    body: string;
+    authorName: string | null;
+    createdAt: string;
+  }>;
   sourcePath: string | null;
   createdAt: string;
   updatedAt: string;
@@ -386,7 +388,12 @@ export interface AdminSelection {
   viewCount: number;
   firstViewedAt: string | null;
   lastViewedAt: string | null;
-  notes: Array<{ id: string; body: string; authorName: string | null; createdAt: string }>;
+  notes: Array<{
+    id: string;
+    body: string;
+    authorName: string | null;
+    createdAt: string;
+  }>;
   sourceEnquiry: { id: string; reference: string | null } | null;
   createdBy: string | null;
   createdAt: string;

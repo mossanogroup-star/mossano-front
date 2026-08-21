@@ -44,7 +44,9 @@ export function LoginPage() {
       // rather than a field, for the same reason.
       setError("root", {
         message:
-          err instanceof ApiError ? err.message : "Could not sign in. Please try again.",
+          err instanceof ApiError
+            ? err.message
+            : "Could not sign in. Please try again.",
       });
     }
   });
@@ -58,10 +60,20 @@ export function LoginPage() {
 
         <form onSubmit={onSubmit} className="mt-10" noValidate>
           <Field label="Email" htmlFor="email" error={errors.email?.message}>
-            <TextInput id="email" type="email" autoComplete="username" autoFocus {...register("email")} />
+            <TextInput
+              id="email"
+              type="email"
+              autoComplete="username"
+              autoFocus
+              {...register("email")}
+            />
           </Field>
 
-          <Field label="Password" htmlFor="password" error={errors.password?.message}>
+          <Field
+            label="Password"
+            htmlFor="password"
+            error={errors.password?.message}
+          >
             <TextInput
               id="password"
               type="password"
@@ -76,7 +88,11 @@ export function LoginPage() {
             </p>
           )}
 
-          <button type="submit" className="btn-solid w-full" disabled={isSubmitting}>
+          <button
+            type="submit"
+            className="btn-solid w-full"
+            disabled={isSubmitting}
+          >
             {isSubmitting ? "Signing in…" : "Sign in"}
           </button>
         </form>

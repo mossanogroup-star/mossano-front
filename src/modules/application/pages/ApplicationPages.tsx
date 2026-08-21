@@ -1,7 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { Link, useParams } from "react-router-dom";
 import { publicQueries } from "@/shared/api/publicQueries";
-import { Section, SectionHeading, EmptyState } from "@/shared/components/Section";
+import {
+  Section,
+  SectionHeading,
+  EmptyState,
+} from "@/shared/components/Section";
 import { StoneGrid } from "@/shared/components/StoneCard";
 import { Slab } from "@/shared/components/Slab";
 import { WhatsAppButton } from "@/shared/components/WhatsAppButton";
@@ -66,7 +70,11 @@ export function ApplicationIndexPage() {
         <p className="max-w-prose text-[0.9rem] leading-relaxed text-ink-soft">
           Working on something not listed here? MOSSANO sources for it.
         </p>
-        <WhatsAppButton href={whatsapp.general} className="mt-6" variant="outline" />
+        <WhatsAppButton
+          href={whatsapp.general}
+          className="mt-6"
+          variant="outline"
+        />
       </div>
     </Section>
   );
@@ -87,7 +95,10 @@ export function ApplicationDetailPage() {
         <header className="max-w-2xl">
           <div className="rule" />
           <p className="label mt-4">
-            <Link to="/application" className="underline-offset-4 hover:underline">
+            <Link
+              to="/application"
+              className="underline-offset-4 hover:underline"
+            >
               Shop by Application
             </Link>
           </p>
@@ -110,7 +121,9 @@ export function ApplicationDetailPage() {
                 </h2>
                 {(project.location || project.architect) && (
                   <p className="mt-1 text-[0.8rem] text-ink-faint">
-                    {[project.architect, project.location].filter(Boolean).join(" · ")}
+                    {[project.architect, project.location]
+                      .filter(Boolean)
+                      .join(" · ")}
                   </p>
                 )}
               </Link>
@@ -123,16 +136,26 @@ export function ApplicationDetailPage() {
         <SectionHeading
           label="Specify"
           title={`Stone for ${label}`}
-          action={{ to: `/shop?application=${slug}`, label: "Refine in the Stone Shop" }}
+          action={{
+            to: `/shop?application=${slug}`,
+            label: "Refine in the Stone Shop",
+          }}
         />
         <div className="mt-12">
           {stones.length ? (
             <StoneGrid stones={stones.slice(0, 9)} priorityCount={0} />
           ) : (
             <EmptyState
-              title={isError ? "Unknown application" : "Nothing tagged for this yet"}
+              title={
+                isError ? "Unknown application" : "Nothing tagged for this yet"
+              }
               body="MOSSANO can recommend from stock and from its supplier network."
-              action={<WhatsAppButton href={whatsapp.general} label="Ask for recommendations" />}
+              action={
+                <WhatsAppButton
+                  href={whatsapp.general}
+                  label="Ask for recommendations"
+                />
+              }
             />
           )}
         </div>
@@ -144,7 +167,9 @@ export function ApplicationDetailPage() {
 /** One photographed project, and the lots it used. */
 export function ApplicationProjectPage() {
   const { projectSlug = "" } = useParams();
-  const { data, isError } = useQuery(publicQueries.applicationProject(projectSlug));
+  const { data, isError } = useQuery(
+    publicQueries.applicationProject(projectSlug),
+  );
 
   if (isError) {
     return (
@@ -161,7 +186,12 @@ export function ApplicationProjectPage() {
     );
   }
 
-  if (!data) return <Section><div className="h-64" /></Section>;
+  if (!data)
+    return (
+      <Section>
+        <div className="h-64" />
+      </Section>
+    );
 
   return (
     <>

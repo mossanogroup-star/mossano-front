@@ -26,7 +26,12 @@ export function EditDetailPage() {
     );
   }
 
-  if (!data) return <Section><div className="h-64" /></Section>;
+  if (!data)
+    return (
+      <Section>
+        <div className="h-64" />
+      </Section>
+    );
 
   return (
     <>
@@ -50,7 +55,9 @@ export function EditDetailPage() {
             <p className="label mt-4 text-ivory/60">{data.statusLabel}</p>
             <h1 className="h-display mt-2 text-ivory">{data.title}</h1>
             {data.subtitle && (
-              <p className="mt-4 max-w-prose text-[0.95rem] text-ivory/75">{data.subtitle}</p>
+              <p className="mt-4 max-w-prose text-[0.95rem] text-ivory/75">
+                {data.subtitle}
+              </p>
             )}
           </div>
         </section>
@@ -60,7 +67,9 @@ export function EditDetailPage() {
           <p className="label mt-4">{data.statusLabel}</p>
           <h1 className="h-display mt-2">{data.title}</h1>
           {data.subtitle && (
-            <p className="mt-4 max-w-prose text-[0.95rem] text-ink-soft">{data.subtitle}</p>
+            <p className="mt-4 max-w-prose text-[0.95rem] text-ink-soft">
+              {data.subtitle}
+            </p>
           )}
         </Section>
       )}

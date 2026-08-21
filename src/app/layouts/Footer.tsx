@@ -88,7 +88,11 @@ export function Footer() {
               </p>
             </div>
 
-            <WhatsAppButton href={whatsapp.general} variant="light" className="mt-7" />
+            <WhatsAppButton
+              href={whatsapp.general}
+              variant="light"
+              className="mt-7"
+            />
           </div>
         </div>
 

@@ -37,11 +37,16 @@ page.on("console", (m) => {
   if (m.type() === "error") {
     if (expectingNotFound && /404|Failed to load resource/.test(text)) return;
     errors.push(text.slice(0, 200));
-  } else if (m.type() === "warning" && !/Download the React DevTools/.test(text)) {
+  } else if (
+    m.type() === "warning" &&
+    !/Download the React DevTools/.test(text)
+  ) {
     warnings.push(text.slice(0, 160));
   }
 });
-page.on("pageerror", (e) => errors.push(`PAGEERROR: ${e.message.slice(0, 200)}`));
+page.on("pageerror", (e) =>
+  errors.push(`PAGEERROR: ${e.message.slice(0, 200)}`),
+);
 page.on("requestfailed", (r) => {
   // Google Fonts can be blocked in a sandboxed CI runner; that is not our bug.
   if (r.url().includes("fonts.g")) return;
@@ -53,7 +58,9 @@ const step = async (label, fn) => {
   await fn();
   await page.waitForTimeout(500);
   const ok = errors.length === before;
-  console.log(`  ${ok ? "✓" : "✗"} ${label.padEnd(34)} ${page.url().replace(BASE, "") || "/"}`);
+  console.log(
+    `  ${ok ? "✓" : "✗"} ${label.padEnd(34)} ${page.url().replace(BASE, "") || "/"}`,
+  );
 };
 
 console.log(`\nMOSSANO nav audit — ${BASE}\n`);
@@ -74,7 +81,9 @@ const routes = [
 ];
 
 for (const route of routes) {
-  await step(route, () => page.goto(BASE + route, { waitUntil: "networkidle" }));
+  await step(route, () =>
+    page.goto(BASE + route, { waitUntil: "networkidle" }),
+  );
 }
 
 // ── Client-side navigation, which is what actually exercises cleanup ──────
@@ -91,7 +100,9 @@ for (const label of [
   "Contact",
 ]) {
   await step(`click "${label}"`, async () => {
-    const link = page.locator("header nav a", { hasText: new RegExp(`^${label}$`, "i") }).first();
+    const link = page
+      .locator("header nav a", { hasText: new RegExp(`^${label}$`, "i") })
+      .first();
     if (await link.count()) await link.click();
   });
 }
@@ -104,11 +115,15 @@ const card = page.locator('a[href^="/stone/"]').first();
 if (await card.count()) {
   await step("open a stone", () => card.click());
   await step("favourite it", async () => {
-    const fav = page.getByRole("button", { name: /save .* to favourites/i }).first();
+    const fav = page
+      .getByRole("button", { name: /save .* to favourites/i })
+      .first();
     if (await fav.count()) await fav.click();
   });
   await step("open the enquiry form", async () => {
-    const cta = page.getByRole("button", { name: /reserve this lot|enquire about this lot/i }).first();
+    const cta = page
+      .getByRole("button", { name: /reserve this lot|enquire about this lot/i })
+      .first();
     if (await cta.count()) await cta.click();
   });
   await step("back", () => page.goBack());
@@ -144,12 +159,16 @@ expectingNotFound = false;
 // ── The admin panel, if credentials are available ─────────────────────────
 if (ADMIN_EMAIL && ADMIN_PASSWORD) {
   console.log("\nAdmin panel");
-  await step("login page", () => page.goto(BASE + "/admin/login", { waitUntil: "networkidle" }));
+  await step("login page", () =>
+    page.goto(BASE + "/admin/login", { waitUntil: "networkidle" }),
+  );
   await step("sign in", async () => {
     await page.fill("#email", ADMIN_EMAIL);
     await page.fill("#password", ADMIN_PASSWORD);
     await page.getByRole("button", { name: /sign in/i }).click();
-    await page.waitForURL(/\/admin(?!\/login)/, { timeout: 15000 }).catch(() => {});
+    await page
+      .waitForURL(/\/admin(?!\/login)/, { timeout: 15000 })
+      .catch(() => {});
   });
 
   for (const [label, path] of [
@@ -167,7 +186,9 @@ if (ADMIN_EMAIL && ADMIN_PASSWORD) {
     });
   }
 } else {
-  console.log("\nAdmin panel — skipped (set SEED_ADMIN_EMAIL and SEED_ADMIN_PASSWORD to include it)");
+  console.log(
+    "\nAdmin panel — skipped (set SEED_ADMIN_EMAIL and SEED_ADMIN_PASSWORD to include it)",
+  );
 }
 
 await browser.close();

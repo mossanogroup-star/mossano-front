@@ -20,7 +20,9 @@ export function RequireAuth({ children }: { children: ReactNode }) {
   const location = useLocation();
 
   if (isAnonymous) {
-    return <Navigate to="/admin/login" state={{ from: location.pathname }} replace />;
+    return (
+      <Navigate to="/admin/login" state={{ from: location.pathname }} replace />
+    );
   }
 
   if (isLoading) {
@@ -32,7 +34,9 @@ export function RequireAuth({ children }: { children: ReactNode }) {
   }
 
   if (!isAuthenticated) {
-    return <Navigate to="/admin/login" state={{ from: location.pathname }} replace />;
+    return (
+      <Navigate to="/admin/login" state={{ from: location.pathname }} replace />
+    );
   }
 
   return <>{children}</>;

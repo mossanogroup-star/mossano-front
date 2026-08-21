@@ -2,14 +2,27 @@ import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { adminApi } from "../../api/adminApi";
-import { PageHeader, DataTable, TableEmpty, Pill } from "../../components/AdminUi";
+import {
+  PageHeader,
+  DataTable,
+  TableEmpty,
+  Pill,
+} from "../../components/AdminUi";
 import { Field, TextInput, Select } from "@/modules/enquiry/components/Field";
 import { useSession } from "../../auth/useSession";
 import type { Role } from "@/shared/api/types";
 
 const ROLES: Array<{ value: Role; label: string; hint: string }> = [
-  { value: "admin", label: "Admin", hint: "Everything, including team accounts" },
-  { value: "editor", label: "Editor", hint: "Stones, Edits, enquiries and selections" },
+  {
+    value: "admin",
+    label: "Admin",
+    hint: "Everything, including team accounts",
+  },
+  {
+    value: "editor",
+    label: "Editor",
+    hint: "Stones, Edits, enquiries and selections",
+  },
   { value: "viewer", label: "Viewer", hint: "Read only" },
 ];
 
@@ -17,14 +30,20 @@ const ROLES: Array<{ value: Role; label: string; hint: string }> = [
 export function TeamPage() {
   const queryClient = useQueryClient();
   const { user: me } = useSession();
-  const [form, setForm] = useState({ name: "", email: "", password: "", role: "editor" as Role });
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    password: "",
+    role: "editor" as Role,
+  });
 
   const { data } = useQuery({
     queryKey: ["admin-users"],
     queryFn: async () => (await adminApi.users()).data,
   });
 
-  const invalidate = () => queryClient.invalidateQueries({ queryKey: ["admin-users"] });
+  const invalidate = () =>
+    queryClient.invalidateQueries({ queryKey: ["admin-users"] });
 
   const create = useMutation({
     mutationFn: (body: unknown) => adminApi.createUser(body),
@@ -33,18 +52,21 @@ export function TeamPage() {
       setForm({ name: "", email: "", password: "", role: "editor" });
       invalidate();
     },
-    onError: (err) => toast.error(err instanceof Error ? err.message : "Could not add"),
+    onError: (err) =>
+      toast.error(err instanceof Error ? err.message : "Could not add"),
   });
 
   const update = useMutation({
-    mutationFn: ({ id, body }: { id: string; body: unknown }) => adminApi.updateUser(id, body),
+    mutationFn: ({ id, body }: { id: string; body: unknown }) =>
+      adminApi.updateUser(id, body),
     onSuccess: () => {
       toast.success("Updated");
       invalidate();
     },
     // The server refuses to demote or disable the last active admin; surfacing
     // its message is more useful than a generic failure.
-    onError: (err) => toast.error(err instanceof Error ? err.message : "Could not update"),
+    onError: (err) =>
+      toast.error(err instanceof Error ? err.message : "Could not update"),
   });
 
   const users = data ?? [];
@@ -56,7 +78,11 @@ export function TeamPage() {
       <div className="grid gap-x-12 lg:grid-cols-[1fr_20rem]">
         <DataTable
           head={["Name", "Email", "Role", "Active", "Last signed in"]}
-          empty={users.length === 0 ? <TableEmpty message="No team members." /> : undefined}
+          empty={
+            users.length === 0 ? (
+              <TableEmpty message="No team members." />
+            ) : undefined
+          }
         >
           {users.map((user) => (
             <tr key={user.id} className="border-b border-ivory-dark/60">
@@ -68,11 +94,18 @@ export function TeamPage() {
                   </span>
                 )}
               </td>
-              <td className="py-3 pr-6 text-[0.8rem] text-ink-soft">{user.email}</td>
+              <td className="py-3 pr-6 text-[0.8rem] text-ink-soft">
+                {user.email}
+              </td>
               <td className="py-3 pr-6">
                 <select
                   value={user.role}
-                  onChange={(e) => update.mutate({ id: user.id, body: { role: e.target.value } })}
+                  onChange={(e) =>
+                    update.mutate({
+                      id: user.id,
+                      body: { role: e.target.value },
+                    })
+                  }
                   className="border-0 border-b border-transparent bg-transparent py-0.5 pr-5 text-[0.8rem] hover:border-ink/30 focus:border-ink focus:outline-none"
                   aria-label={`Role of ${user.name}`}
                 >
@@ -86,16 +119,31 @@ export function TeamPage() {
               <td className="py-3 pr-6">
                 <button
                   type="button"
-                  onClick={() => update.mutate({ id: user.id, body: { isActive: !user.isActive } })}
+                  onClick={() =>
+                    update.mutate({
+                      id: user.id,
+                      body: { isActive: !user.isActive },
+                    })
+                  }
                   disabled={user.id === me?.id}
                   className="disabled:opacity-40"
-                  title={user.id === me?.id ? "You cannot disable your own account" : undefined}
+                  title={
+                    user.id === me?.id
+                      ? "You cannot disable your own account"
+                      : undefined
+                  }
                 >
-                  {user.isActive ? <Pill tone="brass">Active</Pill> : <Pill tone="muted">Disabled</Pill>}
+                  {user.isActive ? (
+                    <Pill tone="brass">Active</Pill>
+                  ) : (
+                    <Pill tone="muted">Disabled</Pill>
+                  )}
                 </button>
               </td>
               <td className="py-3 text-[0.76rem] text-ink-faint">
-                {user.lastLoginAt ? new Date(user.lastLoginAt).toLocaleDateString("en-IN") : "Never"}
+                {user.lastLoginAt
+                  ? new Date(user.lastLoginAt).toLocaleDateString("en-IN")
+                  : "Never"}
               </td>
             </tr>
           ))}
@@ -142,7 +190,9 @@ export function TeamPage() {
               <Select
                 id="u-role"
                 value={form.role}
-                onChange={(e) => setForm({ ...form, role: e.target.value as Role })}
+                onChange={(e) =>
+                  setForm({ ...form, role: e.target.value as Role })
+                }
               >
                 {ROLES.map((r) => (
                   <option key={r.value} value={r.value}>
@@ -155,7 +205,12 @@ export function TeamPage() {
             <button
               type="button"
               className="btn-solid w-full"
-              disabled={create.isPending || !form.name || !form.email || form.password.length < 10}
+              disabled={
+                create.isPending ||
+                !form.name ||
+                !form.email ||
+                form.password.length < 10
+              }
               onClick={() => create.mutate(form)}
             >
               {create.isPending ? "Adding…" : "Add"}
@@ -165,8 +220,8 @@ export function TeamPage() {
                 Phase 1, so the person adding the account has to be able to read
                 the password and pass it on. */}
             <p className="mt-4 text-[0.75rem] leading-relaxed text-ink-faint">
-              There is no invitation email yet — give them this password directly and
-              have them change it after signing in.
+              There is no invitation email yet — give them this password
+              directly and have them change it after signing in.
             </p>
           </div>
         </aside>

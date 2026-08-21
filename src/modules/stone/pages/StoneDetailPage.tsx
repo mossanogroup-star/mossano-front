@@ -2,7 +2,11 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link, useParams } from "react-router-dom";
 import { publicQueries } from "@/shared/api/publicQueries";
-import { Section, SectionHeading, EmptyState } from "@/shared/components/Section";
+import {
+  Section,
+  SectionHeading,
+  EmptyState,
+} from "@/shared/components/Section";
 import { StoneGrid } from "@/shared/components/StoneCard";
 import { Slab } from "@/shared/components/Slab";
 import { AvailabilityBadge } from "@/shared/components/AvailabilityBadge";
@@ -23,7 +27,9 @@ export function StoneDetailPage() {
   const { slug = "" } = useParams();
   const { data, isError } = useQuery(publicQueries.stone(slug));
   const [active, setActive] = useState(0);
-  const [enquiryType, setEnquiryType] = useState<"reserve" | "slab_video" | "stone" | null>(null);
+  const [enquiryType, setEnquiryType] = useState<
+    "reserve" | "slab_video" | "stone" | null
+  >(null);
 
   if (isError) {
     return (
@@ -41,7 +47,12 @@ export function StoneDetailPage() {
     );
   }
 
-  if (!data) return <Section><div className="h-96" /></Section>;
+  if (!data)
+    return (
+      <Section>
+        <div className="h-96" />
+      </Section>
+    );
 
   const { stone, related, appearsIn, projects } = data;
   const gallery = stone.images.length ? stone.images : [];
@@ -73,7 +84,9 @@ export function StoneDetailPage() {
                     aria-current={i === active}
                     className={cn(
                       "slab-frame aspect-square transition-opacity",
-                      i === active ? "opacity-100 ring-1 ring-brass" : "opacity-60 hover:opacity-100",
+                      i === active
+                        ? "opacity-100 ring-1 ring-brass"
+                        : "opacity-60 hover:opacity-100",
                     )}
                   >
                     <img src={image.thumbnailUrl} alt="" loading="lazy" />
@@ -99,7 +112,9 @@ export function StoneDetailPage() {
                         className={cn(slab.isSold && "opacity-45")}
                       />
                       <figcaption className="mt-2 flex items-baseline justify-between gap-2">
-                        <span className="label">{slab.reference ?? "Slab"}</span>
+                        <span className="label">
+                          {slab.reference ?? "Slab"}
+                        </span>
                         {slab.lengthIn && slab.widthIn && (
                           <span className="text-[0.72rem] text-ink-faint">
                             {slab.lengthIn} × {slab.widthIn} in
@@ -141,7 +156,11 @@ export function StoneDetailPage() {
               {stone.specs.map((spec) => (
                 <div key={spec.label} className="spec">
                   <dt>{spec.label}</dt>
-                  <dd className={cn(spec.value === "On request" && "text-ink-faint")}>
+                  <dd
+                    className={cn(
+                      spec.value === "On request" && "text-ink-faint",
+                    )}
+                  >
                     {spec.value}
                   </dd>
                 </div>
@@ -209,7 +228,10 @@ export function StoneDetailPage() {
 
               {/* A plain anchor with the message already composed, so it works
                   with JavaScript off — Admin Scope §8. */}
-              <WhatsAppButton href={stone.whatsapp.enquire} className="w-full" />
+              <WhatsAppButton
+                href={stone.whatsapp.enquire}
+                className="w-full"
+              />
             </div>
 
             {appearsIn.length > 0 && (
@@ -218,7 +240,10 @@ export function StoneDetailPage() {
                 {appearsIn.map((edit, i) => (
                   <span key={edit.href}>
                     {i > 0 && ", "}
-                    <Link to={edit.href} className="text-ink-soft underline-offset-4 hover:underline">
+                    <Link
+                      to={edit.href}
+                      className="text-ink-soft underline-offset-4 hover:underline"
+                    >
                       {edit.title}
                     </Link>
                   </span>
@@ -256,8 +281,12 @@ export function StoneDetailPage() {
               type={enquiryType}
               stoneSlug={stone.slug}
               subject={`${stone.mossanoCode} ${stone.name}`}
-              requirementLabel={enquiryType === "reserve" ? "Quantity required" : undefined}
-              submitLabel={enquiryType === "reserve" ? "Request reservation" : "Send"}
+              requirementLabel={
+                enquiryType === "reserve" ? "Quantity required" : undefined
+              }
+              submitLabel={
+                enquiryType === "reserve" ? "Request reservation" : "Send"
+              }
             />
           </div>
         </Section>
@@ -265,7 +294,10 @@ export function StoneDetailPage() {
 
       {projects.length > 0 && (
         <Section>
-          <SectionHeading label="In place" title="Where This Stone Has Been Used" />
+          <SectionHeading
+            label="In place"
+            title="Where This Stone Has Been Used"
+          />
           <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {projects.map((project) => (
               <Link key={project.id} to={project.href} className="group block">

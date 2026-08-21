@@ -19,12 +19,20 @@ export function EditDetailPage() {
     queryFn: () => adminApi.edit(id),
   });
 
-  const [form, setForm] = useState({ title: "", subtitle: "", description: "" });
+  const [form, setForm] = useState({
+    title: "",
+    subtitle: "",
+    description: "",
+  });
   const [imageIds, setImageIds] = useState<string[]>([]);
 
   useEffect(() => {
     if (!edit) return;
-    setForm({ title: edit.title, subtitle: edit.subtitle, description: edit.description });
+    setForm({
+      title: edit.title,
+      subtitle: edit.subtitle,
+      description: edit.description,
+    });
     setImageIds(edit.imageIds);
   }, [edit]);
 
@@ -40,13 +48,15 @@ export function EditDetailPage() {
       toast.success("Saved");
       invalidate();
     },
-    onError: (err) => toast.error(err instanceof Error ? err.message : "Could not save"),
+    onError: (err) =>
+      toast.error(err instanceof Error ? err.message : "Could not save"),
   });
 
   const addStones = useMutation({
     mutationFn: (stoneIds: string[]) => adminApi.addStonesToEdit(id, stoneIds),
     onSuccess: () => invalidate(),
-    onError: (err) => toast.error(err instanceof Error ? err.message : "Could not add"),
+    onError: (err) =>
+      toast.error(err instanceof Error ? err.message : "Could not add"),
   });
 
   const removeStone = useMutation({
@@ -66,7 +76,11 @@ export function EditDetailPage() {
             <Link to="/admin/edits" className="btn-outline">
               Back
             </Link>
-            {edit.isPublished ? <Pill tone="brass">Live</Pill> : <Pill tone="muted">Draft</Pill>}
+            {edit.isPublished ? (
+              <Pill tone="brass">Live</Pill>
+            ) : (
+              <Pill tone="muted">Draft</Pill>
+            )}
           </>
         }
       />
@@ -74,7 +88,11 @@ export function EditDetailPage() {
       <div className="grid gap-x-12 lg:grid-cols-2">
         <section>
           <p className="label mb-5">Collection details</p>
-          <Field label="Title" htmlFor="title" hint="Shown as the band heading, e.g. August 2026">
+          <Field
+            label="Title"
+            htmlFor="title"
+            hint="Shown as the band heading, e.g. August 2026"
+          >
             <TextInput
               id="title"
               value={form.title}
@@ -92,7 +110,9 @@ export function EditDetailPage() {
             <TextArea
               id="description"
               value={form.description}
-              onChange={(e) => setForm({ ...form, description: e.target.value })}
+              onChange={(e) =>
+                setForm({ ...form, description: e.target.value })
+              }
             />
           </Field>
 
@@ -137,7 +157,11 @@ export function EditDetailPage() {
                   </span>
                   <span className="slab-frame h-10 w-14 shrink-0">
                     {stone.primaryImageUrl && (
-                      <img src={stone.primaryImageUrl} alt="" className="h-full w-full object-cover" />
+                      <img
+                        src={stone.primaryImageUrl}
+                        alt=""
+                        className="h-full w-full object-cover"
+                      />
                     )}
                   </span>
                   <span className="min-w-0 flex-1">

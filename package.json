@@ -15,7 +15,8 @@
     "validate": "npm run lint && npm run format",
     "slabs": "python ../tools/crop_slabs.py && node scripts/process-slabs.mjs",
     "nav-audit": "node scripts/nav-audit.mjs",
-    "journey-audit": "node scripts/journey-audit.mjs"
+    "journey-audit": "node scripts/journey-audit.mjs",
+    "chatbot-audit": "node scripts/chatbot-audit.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",

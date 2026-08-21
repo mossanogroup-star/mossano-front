@@ -21,7 +21,12 @@ const NAV = [
   { to: "/admin/stones", label: "Stones", Icon: Gem },
   { to: "/admin/edits", label: "Edits", Icon: CalendarRange },
   { to: "/admin/applications", label: "Applications", Icon: Images },
-  { to: "/admin/enquiries", label: "Enquiries", Icon: Inbox, badge: "enquiries" },
+  {
+    to: "/admin/enquiries",
+    label: "Enquiries",
+    Icon: Inbox,
+    badge: "enquiries",
+  },
   { to: "/admin/selections", label: "Selections", Icon: Share2 },
   { to: "/admin/media", label: "Media", Icon: Images },
   { to: "/admin/team", label: "Team", Icon: Users, adminOnly: true },
@@ -46,7 +51,9 @@ export function AdminLayout() {
     refetchInterval: 2 * 60 * 1000,
   });
 
-  const visible = NAV.filter((item) => !item.adminOnly || user?.role === "admin");
+  const visible = NAV.filter(
+    (item) => !item.adminOnly || user?.role === "admin",
+  );
 
   return (
     <div className="min-h-screen bg-ivory">
@@ -70,11 +77,17 @@ export function AdminLayout() {
                 className={({ isActive }) =>
                   cn(
                     "flex items-center gap-3 px-3 py-2.5 font-sans text-[0.78rem] transition-colors",
-                    isActive ? "bg-ink text-ivory" : "text-ink-soft hover:bg-ivory-dark/40 hover:text-ink",
+                    isActive
+                      ? "bg-ink text-ivory"
+                      : "text-ink-soft hover:bg-ivory-dark/40 hover:text-ink",
                   )
                 }
               >
-                <Icon className="h-4 w-4 shrink-0" strokeWidth={1.3} aria-hidden="true" />
+                <Icon
+                  className="h-4 w-4 shrink-0"
+                  strokeWidth={1.3}
+                  aria-hidden="true"
+                />
                 <span className="flex-1">{label}</span>
                 {badge === "enquiries" && (summary?.enquiries.new ?? 0) > 0 && (
                   <span className="bg-brass px-1.5 py-0.5 text-[0.6rem] tabular-nums text-ivory">

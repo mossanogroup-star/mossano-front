@@ -15,7 +15,11 @@ import type { EnquiryType } from "@/shared/api/types";
 const schema = z
   .object({
     name: z.string().trim().min(1, "Please give your name").max(120),
-    email: z.string().trim().email("Enter a valid email address").or(z.literal("")),
+    email: z
+      .string()
+      .trim()
+      .email("Enter a valid email address")
+      .or(z.literal("")),
     phone: z.string().trim().max(24),
     company: z.string().trim().max(160),
     projectName: z.string().trim().max(160),
@@ -94,14 +98,18 @@ export function EnquiryForm({
     } catch (err) {
       // Surface the server's field-level messages against the right inputs
       // rather than collapsing everything into one banner.
-      const entries = err instanceof ApiError ? Object.entries(err.fieldErrors()) : [];
+      const entries =
+        err instanceof ApiError ? Object.entries(err.fieldErrors()) : [];
       if (entries.length) {
         entries.forEach(([key, message]) =>
           setError(key as keyof FormValues, { type: "server", message }),
         );
       } else {
         setError("root", {
-          message: err instanceof Error ? err.message : "Something went wrong. Please try again.",
+          message:
+            err instanceof Error
+              ? err.message
+              : "Something went wrong. Please try again.",
         });
       }
     }
@@ -111,7 +119,9 @@ export function EnquiryForm({
     return (
       <div className={cn("border-t border-ivory-dark pt-10", className)}>
         <div className="rule" />
-        <p className="mt-4 font-display text-[1.25rem] uppercase tracking-wide">Thank you</p>
+        <p className="mt-4 font-display text-[1.25rem] uppercase tracking-wide">
+          Thank you
+        </p>
         <p className="mt-3 max-w-prose text-[0.95rem] leading-relaxed text-ink-soft">
           MOSSANO has your enquiry and will be in touch. Your reference is{" "}
           <span className="text-ink">{submit.data.reference}</span>.
@@ -125,17 +135,32 @@ export function EnquiryForm({
       {subject && (
         <div className="mb-8 border-l border-brass pl-4">
           <p className="label">Enquiring about</p>
-          <p className="mt-1 font-display text-[1rem] uppercase tracking-wide">{subject}</p>
+          <p className="mt-1 font-display text-[1rem] uppercase tracking-wide">
+            {subject}
+          </p>
         </div>
       )}
 
       <div className="grid gap-x-8 sm:grid-cols-2">
-        <Field label="Name" htmlFor="name" required error={errors.name?.message}>
+        <Field
+          label="Name"
+          htmlFor="name"
+          required
+          error={errors.name?.message}
+        >
           <TextInput id="name" autoComplete="name" {...register("name")} />
         </Field>
 
-        <Field label="Company" htmlFor="company" error={errors.company?.message}>
-          <TextInput id="company" autoComplete="organization" {...register("company")} />
+        <Field
+          label="Company"
+          htmlFor="company"
+          error={errors.company?.message}
+        >
+          <TextInput
+            id="company"
+            autoComplete="organization"
+            {...register("company")}
+          />
         </Field>
 
         <Field
@@ -144,11 +169,21 @@ export function EnquiryForm({
           error={errors.email?.message}
           hint="Email or phone — at least one"
         >
-          <TextInput id="email" type="email" autoComplete="email" {...register("email")} />
+          <TextInput
+            id="email"
+            type="email"
+            autoComplete="email"
+            {...register("email")}
+          />
         </Field>
 
         <Field label="Phone" htmlFor="phone" error={errors.phone?.message}>
-          <TextInput id="phone" type="tel" autoComplete="tel" {...register("phone")} />
+          <TextInput
+            id="phone"
+            type="tel"
+            autoComplete="tel"
+            {...register("phone")}
+          />
         </Field>
 
         <Field

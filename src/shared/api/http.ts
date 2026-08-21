@@ -104,7 +104,8 @@ export class ApiError extends Error {
   }
 }
 
-type QueryValue = string | number | boolean | null | undefined | Array<string | number>;
+type QueryValue =
+  string | number | boolean | null | undefined | Array<string | number>;
 
 /**
  * Builds a query string, dropping anything empty.
@@ -118,7 +119,13 @@ export function buildQuery(params?: Record<string, QueryValue>): string {
   const search = new URLSearchParams();
 
   for (const [key, value] of Object.entries(params)) {
-    if (value === undefined || value === null || value === "" || value === false) continue;
+    if (
+      value === undefined ||
+      value === null ||
+      value === "" ||
+      value === false
+    )
+      continue;
     if (Array.isArray(value)) {
       if (!value.length) continue;
       search.set(key, value.join(","));
@@ -141,7 +148,10 @@ interface RequestOptions {
   formData?: FormData;
 }
 
-async function request<T>(path: string, options: RequestOptions = {}): Promise<ApiEnvelope<T>> {
+async function request<T>(
+  path: string,
+  options: RequestOptions = {},
+): Promise<ApiEnvelope<T>> {
   const headers: Record<string, string> = {};
 
   if (options.auth) {
@@ -154,7 +164,9 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<A
     method: options.method ?? "GET",
     headers,
     // Never set both: a multipart request must not carry a JSON content type.
-    body: options.formData ?? (options.body !== undefined ? JSON.stringify(options.body) : undefined),
+    body:
+      options.formData ??
+      (options.body !== undefined ? JSON.stringify(options.body) : undefined),
     signal: options.signal,
   });
 
@@ -184,8 +196,11 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<A
 }
 
 export const api = {
-  get: <T>(path: string, params?: Record<string, QueryValue>, opts?: RequestOptions) =>
-    request<T>(`${path}${buildQuery(params)}`, opts),
+  get: <T>(
+    path: string,
+    params?: Record<string, QueryValue>,
+    opts?: RequestOptions,
+  ) => request<T>(`${path}${buildQuery(params)}`, opts),
 
   post: <T>(path: string, body?: unknown, opts?: RequestOptions) =>
     request<T>(path, { ...opts, method: "POST", body }),
@@ -201,4 +216,5 @@ export const api = {
 };
 
 /** Most callers want the payload, not the envelope. */
-export const unwrap = async <T>(p: Promise<ApiEnvelope<T>>): Promise<T> => (await p).data;
+export const unwrap = async <T>(p: Promise<ApiEnvelope<T>>): Promise<T> =>
+  (await p).data;

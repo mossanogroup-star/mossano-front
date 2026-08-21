@@ -58,17 +58,25 @@ export function Field({
   );
 }
 
-export const TextInput = forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement>>(
-  function TextInput({ className, ...props }, ref) {
-    return <input ref={ref} {...props} className={cn(inputBase, className)} />;
-  },
-);
+export const TextInput = forwardRef<
+  HTMLInputElement,
+  React.InputHTMLAttributes<HTMLInputElement>
+>(function TextInput({ className, ...props }, ref) {
+  return <input ref={ref} {...props} className={cn(inputBase, className)} />;
+});
 
 export const TextArea = forwardRef<
   HTMLTextAreaElement,
   React.TextareaHTMLAttributes<HTMLTextAreaElement>
 >(function TextArea({ className, rows = 4, ...props }, ref) {
-  return <textarea ref={ref} rows={rows} {...props} className={cn(inputBase, "resize-y", className)} />;
+  return (
+    <textarea
+      ref={ref}
+      rows={rows}
+      {...props}
+      className={cn(inputBase, "resize-y", className)}
+    />
+  );
 });
 
 export const Select = forwardRef<
@@ -76,7 +84,11 @@ export const Select = forwardRef<
   React.SelectHTMLAttributes<HTMLSelectElement>
 >(function Select({ className, children, ...props }, ref) {
   return (
-    <select ref={ref} {...props} className={cn(inputBase, "appearance-none", className)}>
+    <select
+      ref={ref}
+      {...props}
+      className={cn(inputBase, "appearance-none", className)}
+    >
       {children}
     </select>
   );

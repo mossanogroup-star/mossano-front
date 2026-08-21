@@ -37,9 +37,14 @@ export function AvailabilityBadge({
   tone = "dark",
 }: Props) {
   return (
-    <div className={cn("flex flex-wrap items-center gap-x-3 gap-y-1", className)}>
+    <div
+      className={cn("flex flex-wrap items-center gap-x-3 gap-y-1", className)}
+    >
       <span className="inline-flex items-center gap-2">
-        <span className={cn("h-1.5 w-1.5 rounded-full", DOT[availability])} aria-hidden="true" />
+        <span
+          className={cn("h-1.5 w-1.5 rounded-full", DOT[availability])}
+          aria-hidden="true"
+        />
         <span
           className={cn(
             "font-sans text-[0.66rem] uppercase tracking-label",
@@ -57,7 +62,9 @@ export function AvailabilityBadge({
         <span
           className={cn(
             "border px-2 py-0.5 font-sans text-[0.6rem] uppercase tracking-label",
-            tone === "light" ? "border-brass-light/60 text-brass-light" : "border-brass/50 text-brass",
+            tone === "light"
+              ? "border-brass-light/60 text-brass-light"
+              : "border-brass/50 text-brass",
           )}
         >
           MOSSANO verified lot

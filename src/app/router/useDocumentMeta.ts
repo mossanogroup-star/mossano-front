@@ -3,7 +3,11 @@ import { useLocation, matchRoutes } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { publicRoutes, asRouteObjects, type PublicRoute } from "./publicRoutes";
 
-function setTag(selector: string, attr: "content" | "href", value: string | null) {
+function setTag(
+  selector: string,
+  attr: "content" | "href",
+  value: string | null,
+) {
   const el = document.head.querySelector(selector);
   if (!el) return;
   if (value === null) el.removeAttribute(attr);
@@ -27,11 +31,16 @@ export function useDocumentMeta() {
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    const matches = matchRoutes(asRouteObjects(publicRoutes), location.pathname);
+    const matches = matchRoutes(
+      asRouteObjects(publicRoutes),
+      location.pathname,
+    );
     if (!matches?.length) return;
 
     // The deepest match that actually declares meta — a layout route does not.
-    const leaf = [...matches].reverse().find((m) => (m.route as PublicRoute).meta);
+    const leaf = [...matches]
+      .reverse()
+      .find((m) => (m.route as PublicRoute).meta);
     if (!leaf) return;
 
     const meta = (leaf.route as PublicRoute).meta!(
@@ -42,9 +51,17 @@ export function useDocumentMeta() {
     document.title = meta.title;
     setTag('meta[name="description"]', "content", meta.description ?? null);
     setTag('meta[property="og:title"]', "content", meta.title);
-    setTag('meta[property="og:description"]', "content", meta.description ?? null);
+    setTag(
+      'meta[property="og:description"]',
+      "content",
+      meta.description ?? null,
+    );
     setTag('meta[property="og:url"]', "content", window.location.href);
-    setTag('link[rel="canonical"]', "href", window.location.origin + location.pathname);
+    setTag(
+      'link[rel="canonical"]',
+      "href",
+      window.location.origin + location.pathname,
+    );
     if (meta.image) setTag('meta[property="og:image"]', "content", meta.image);
   }, [location.pathname, location.search, queryClient]);
 }
