@@ -1,0 +1,48 @@
+{
+  "name": "mossano-front",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "MOSSANO MARMO — storefront (server-rendered) and admin panel",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && npm run build:client && npm run build:server",
+    "build:client": "vite build --outDir dist/client",
+    "build:server": "vite build --ssr src/entry-server.tsx --outDir dist/server",
+    "preview": "vite preview",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "validate": "npm run lint && npm run format",
+    "slabs": "python ../tools/crop_slabs.py && node scripts/process-slabs.mjs",
+    "nav-audit": "node scripts/nav-audit.mjs",
+    "journey-audit": "node scripts/journey-audit.mjs"
+  },
+  "dependencies": {
+    "@hookform/resolvers": "^3.9.1",
+    "@tanstack/react-query": "^5.62.0",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.462.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-hook-form": "^7.54.0",
+    "react-router-dom": "^6.28.0",
+    "sonner": "^1.7.1",
+    "tailwind-merge": "^2.5.5",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.48.2",
+    "@types/node": "^22.10.1",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^9.16.0",
+    "postcss": "^8.4.49",
+    "prettier": "^3.4.2",
+    "sharp": "^0.33.5",
+    "tailwindcss": "^3.4.17",
+    "typescript": "~5.6.3",
+    "vite": "^5.4.11"
+  }
+}

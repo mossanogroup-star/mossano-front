@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#f6f3ee" />
+
+    <!-- Everything between these markers is replaced per request by
+         src/entry-server.tsx, which stamps in the matched route's own title,
+         description and og:image. The defaults below are what a visitor sees if
+         this file is ever served raw — the admin shell, or a cold start before
+         the SSR handler is mounted. -->
+    <!--ssr-head-start-->
+    <title>MOSSANO MARMO — Curated Natural Stone, Sourced Globally</title>
+    <meta
+      name="description"
+      content="MOSSANO MARMO curates marble, granite and natural stone from quarries worldwide. Verified slab availability, actual slab photography and private sourcing for architects and designers."
+    />
+    <!--ssr-head-end-->
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Jost:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Organization schema. Deliberately minimal: it carries only facts taken
+         from the client's own material. No aggregateRating, no invented founding
+         date, no opening hours — none of that has been confirmed, and inventing
+         structured data is a Google violation as well as a lie. -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "MOSSANO MARMO",
+        "description": "Curated natural stone. Marble, granite and natural stone sourcing.",
+        "url": "https://www.mossanomarmo.com/",
+        "email": "mossanogroup@gmail.com",
+        "telephone": "+919619176132",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Natural Stone House, Survey No. 172, New Marble Market",
+          "addressLocality": "Kishangarh",
+          "addressRegion": "Rajasthan",
+          "postalCode": "305801",
+          "addressCountry": "IN"
+        }
+      }
+    </script>
+  </head>
+
+  <body>
+    <div id="root"></div>
+
+    <!-- The server renders real content into #root, so this is a genuine
+         fallback rather than the primary path — but a crawler or a reader with
+         scripting off still gets the facts that matter. -->
+    <noscript>
+      <p><strong>MOSSANO MARMO — Curated Natural Stone. Sourced Globally.</strong></p>
+      <p>
+        Marble, granite and natural stone sourcing. Natural Stone House, Survey
+        No. 172, New Marble Market, Kishangarh, Rajasthan 305801, India.
+        Telephone +91 9619176132 / +91 9136116132. Email mossanogroup@gmail.com.
+      </p>
+    </noscript>
+
+    <script type="module" src="/src/entry-client.tsx"></script>
+  </body>
+</html>

@@ -1,0 +1,137 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── MOSSANO MARMO ────────────────────────────────────────────────────────
+   Read DESIGN.md before changing anything below.
+
+   The governing rule: the stone is the content, everything else is a caption.
+   Type is small and widely tracked, surfaces are flat, nothing is rounded and
+   nothing casts a shadow. If a rule here seems too austere, that austerity is
+   what makes a slab read as valuable.
+   ────────────────────────────────────────────────────────────────────────── */
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+  }
+
+  body {
+    @apply bg-ivory font-sans text-ink antialiased;
+    font-size: 1rem;
+    line-height: 1.65;
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply font-display;
+    font-weight: 400;
+  }
+
+  ::selection {
+    @apply bg-umber text-ivory;
+  }
+
+  :focus-visible {
+    @apply outline-none ring-1 ring-brass ring-offset-2 ring-offset-ivory;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  .shell {
+    @apply mx-auto w-full max-w-shell px-5 sm:px-8 lg:px-12;
+  }
+
+  /* Display type is set small and widely tracked, in capitals. Big-and-bold is
+     a trading-website move; small-and-spaced is what this category does. */
+  .wordmark {
+    @apply font-display uppercase tracking-wordmark;
+  }
+
+  .h-display {
+    @apply font-display text-[1.75rem] uppercase leading-[1.15] tracking-wide sm:text-[2.25rem] lg:text-[2.75rem];
+  }
+
+  .h-section {
+    @apply font-display text-[1.35rem] uppercase leading-tight tracking-label sm:text-[1.6rem];
+  }
+
+  /* Small caps label. Used a few times per page — never above every section. */
+  .label {
+    @apply font-sans text-[0.66rem] uppercase tracking-label text-ink-faint;
+  }
+
+  .rule {
+    @apply h-px w-10 bg-brass;
+  }
+
+  /* Specification rows on the stone page — the numbers an architect reads. */
+  .spec {
+    @apply flex items-baseline justify-between gap-6 border-b border-ivory-dark py-3;
+  }
+  .spec dt {
+    @apply label;
+  }
+  .spec dd {
+    @apply text-[0.95rem] text-ink;
+  }
+
+  /* ── Controls: square, flat, colour-change on hover ─────────────────── */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2.5 border px-7 py-3.5
+           font-sans text-[0.7rem] uppercase tracking-label transition-colors duration-200;
+  }
+  .btn-solid {
+    @apply btn border-ink bg-ink text-ivory hover:border-umber hover:bg-umber;
+  }
+  .btn-outline {
+    @apply btn border-ink/25 text-ink hover:border-ink hover:bg-ink hover:text-ivory;
+  }
+  .btn-light {
+    @apply btn border-ivory/35 text-ivory hover:border-ivory hover:bg-ivory hover:text-ink;
+  }
+  .btn-wa {
+    @apply btn border-whatsapp bg-whatsapp text-white hover:brightness-95;
+  }
+
+  /* A stone is a photograph with text beneath it — never a bordered card. */
+  .slab-frame {
+    @apply relative overflow-hidden bg-ivory-deep;
+  }
+  .slab-frame img {
+    @apply h-full w-full object-cover transition-transform duration-[1200ms] ease-out;
+  }
+  .group:hover .slab-frame img {
+    @apply scale-[1.04];
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .text-pretty {
+    text-wrap: pretty;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
