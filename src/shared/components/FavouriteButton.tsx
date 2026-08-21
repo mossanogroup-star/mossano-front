@@ -38,15 +38,14 @@ export function FavouriteButton({
         toggle(slug);
       }}
       aria-pressed={saved}
-      aria-label={
-        saved ? `Remove ${name} from favourites` : `Save ${name} to favourites`
-      }
+      aria-label={saved ? `Remove ${name} from favourites` : `Save ${name} to favourites`}
       className={cn(
-        "inline-flex items-center gap-2 transition-colors duration-200",
+        // -m-2/p-2 grows the tap area to ~44px without moving anything: at
+        // 16x16 the icon was a thumb-sized miss on a phone, and this is one of
+        // the two actions the card exists for.
+        "-m-2 inline-flex items-center gap-2 p-2 transition-colors duration-200",
         withLabel && "font-sans text-[0.66rem] uppercase tracking-label",
-        tone === "light"
-          ? "text-ivory/70 hover:text-ivory"
-          : "text-ink-faint hover:text-ink",
+        tone === "light" ? "text-ivory/70 hover:text-ivory" : "text-ink-faint hover:text-ink",
         saved && (tone === "light" ? "text-brass-light" : "text-brass"),
         className,
       )}

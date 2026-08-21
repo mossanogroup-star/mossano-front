@@ -2,19 +2,13 @@ import { forwardRef, type ReactNode } from "react";
 import { cn } from "@/shared/lib/cn";
 
 /**
- * Form controls, in the house style: no rounding, no fill, a hairline underline
- * that darkens on focus. Written once here because an enquiry form appears on
- * five different pages and a second set of input styles would be visible
- * immediately.
+ * Form controls in the house style, written once because the enquiry form
+ * appears on five pages.
  *
- * ── These must stay forwardRef ─────────────────────────────────────────────
- * `register("email")` returns `{ name, onChange, onBlur, ref }`, and callers
- * spread it onto these components. In React 18 `ref` is not an ordinary prop:
- * it never appears in `...props`, so a plain function component silently drops
- * it. react-hook-form then has no element to read, treats every field as empty,
- * and every form fails validation with "Required" while showing the values the
- * user typed. That is exactly what happened here — silent, and identical across
- * the enquiry form, private sourcing, the stone editor and the admin login.
+ * ⚠ These must stay forwardRef. `register()` returns a `ref`, and in React 18
+ * `ref` never appears in `...props` — a plain function component drops it
+ * silently, react-hook-form reads nothing, and every field fails validation as
+ * empty while showing the text the user typed. This broke every form once.
  */
 const inputBase =
   "w-full border-0 border-b border-ink/20 bg-transparent px-0 py-2.5 font-sans text-[0.95rem] " +
@@ -58,38 +52,27 @@ export function Field({
   );
 }
 
-export const TextInput = forwardRef<
-  HTMLInputElement,
-  React.InputHTMLAttributes<HTMLInputElement>
->(function TextInput({ className, ...props }, ref) {
-  return <input ref={ref} {...props} className={cn(inputBase, className)} />;
-});
+export const TextInput = forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement>>(
+  function TextInput({ className, ...props }, ref) {
+    return <input ref={ref} {...props} className={cn(inputBase, className)} />;
+  },
+);
 
 export const TextArea = forwardRef<
   HTMLTextAreaElement,
   React.TextareaHTMLAttributes<HTMLTextAreaElement>
 >(function TextArea({ className, rows = 4, ...props }, ref) {
   return (
-    <textarea
-      ref={ref}
-      rows={rows}
-      {...props}
-      className={cn(inputBase, "resize-y", className)}
-    />
+    <textarea ref={ref} rows={rows} {...props} className={cn(inputBase, "resize-y", className)} />
   );
 });
 
-export const Select = forwardRef<
-  HTMLSelectElement,
-  React.SelectHTMLAttributes<HTMLSelectElement>
->(function Select({ className, children, ...props }, ref) {
-  return (
-    <select
-      ref={ref}
-      {...props}
-      className={cn(inputBase, "appearance-none", className)}
-    >
-      {children}
-    </select>
-  );
-});
+export const Select = forwardRef<HTMLSelectElement, React.SelectHTMLAttributes<HTMLSelectElement>>(
+  function Select({ className, children, ...props }, ref) {
+    return (
+      <select ref={ref} {...props} className={cn(inputBase, "appearance-none", className)}>
+        {children}
+      </select>
+    );
+  },
+);

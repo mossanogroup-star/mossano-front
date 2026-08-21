@@ -2,11 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { publicQueries } from "@/shared/api/publicQueries";
 import { useSiteConfig } from "@/shared/hooks/useSiteConfig";
-import {
-  Section,
-  SectionHeading,
-  EmptyState,
-} from "@/shared/components/Section";
+import { Section, SectionHeading, EmptyState } from "@/shared/components/Section";
 import { StoneGrid } from "@/shared/components/StoneCard";
 import { Slab } from "@/shared/components/Slab";
 import { WhatsAppButton } from "@/shared/components/WhatsAppButton";
@@ -23,9 +19,17 @@ export function HomePage() {
   const { data } = useQuery(publicQueries.home());
   const { brand, whatsapp } = useSiteConfig();
 
-  const hero =
-    data?.currentEdit?.coverImage ?? data?.featured[0]?.primaryImage ?? null;
-  const heroUrl = hero?.url ?? data?.featured[0]?.primaryImageUrl ?? null;
+  /**
+   * Resolved on the server — see publicService.resolveHero.
+   *
+   * It used to be `currentEdit?.coverImage ?? featured[0]?.primaryImage`, which
+   * meant nobody chose it: with the Edit unpublished it fell to whichever
+   * featured stone happened to sort first, and that order moves with
+   * availability. Marking a lot Available changed the front page; a lot
+   * *selling* changed it too.
+   */
+  const hero = data?.hero?.image ?? null;
+  const heroUrl = hero?.url ?? data?.hero?.stone.primaryImageUrl ?? null;
 
   return (
     <>
@@ -65,7 +69,7 @@ export function HomePage() {
               </Link>
               <Link
                 to="/private-sourcing"
-                className="border-b border-ivory/35 pb-1 font-sans text-[0.66rem] uppercase tracking-label text-ivory/80 transition-colors hover:border-ivory hover:text-ivory"
+                className="border-b border-ivory/35 py-1.5 font-sans text-[0.66rem] uppercase tracking-label text-ivory/80 transition-colors hover:border-ivory hover:text-ivory"
               >
                 MOSSANO Sourcing Desk
               </Link>
@@ -100,9 +104,7 @@ export function HomePage() {
       <Section>
         <SectionHeading
           label={data?.isFeaturedFallback ? "Recently added" : "Featured"}
-          title={
-            data?.isFeaturedFallback ? "Recently Added Stone" : "Featured Stone"
-          }
+          title={data?.isFeaturedFallback ? "Recently Added Stone" : "Featured Stone"}
           action={{ to: "/shop", label: "All stone" }}
         />
         <div className="mt-14">
@@ -112,12 +114,7 @@ export function HomePage() {
             <EmptyState
               title="The catalogue is being prepared"
               body="MOSSANO's stock is being photographed and verified."
-              action={
-                <WhatsAppButton
-                  href={whatsapp.general}
-                  label="Ask what is in stock"
-                />
-              }
+              action={<WhatsAppButton href={whatsapp.general} label="Ask what is in stock" />}
             />
           )}
         </div>
@@ -199,10 +196,9 @@ export function HomePage() {
               tone="light"
             />
             <p className="mt-8 max-w-prose text-[0.95rem] leading-relaxed text-ivory/70">
-              MOSSANO MARMO sources marble, granite and natural stone from
-              quarries worldwide and curates what is worth specifying. Every lot
-              is photographed as it actually is, and its availability is
-              verified rather than assumed.
+              MOSSANO MARMO sources marble, granite and natural stone from quarries worldwide and
+              curates what is worth specifying. Every lot is photographed as it actually is, and its
+              availability is verified rather than assumed.
             </p>
             <Link to="/about" className="btn-light mt-10">
               About MOSSANO
@@ -214,8 +210,8 @@ export function HomePage() {
             <p className="label mt-4 text-ivory/55">Talk to us</p>
             <h2 className="h-section mt-2 text-ivory">A Message Is Faster</h2>
             <p className="mt-6 max-w-prose text-[0.95rem] leading-relaxed text-ivory/70">
-              Send a requirement on WhatsApp and MOSSANO will come back with
-              actual slab photography and what is available now.
+              Send a requirement on WhatsApp and MOSSANO will come back with actual slab photography
+              and what is available now.
             </p>
             <div className="mt-10 flex flex-wrap gap-4">
               <WhatsAppButton href={whatsapp.general} />

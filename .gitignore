@@ -24,6 +24,10 @@ public/img
 test-results
 playwright-report
 
+# Screenshots from `npm run visual-audit`. Regenerated on every run, and a
+# few MB of PNGs per pass — a record of a moment, not part of the app.
+audit-shots
+
 .vscode
 .idea
 .DS_Store

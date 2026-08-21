@@ -4,13 +4,7 @@ import { MessageSquare, X, Send } from "lucide-react";
 import { useSubmitEnquiry } from "@/modules/enquiry/api/submitEnquiry";
 import { useSiteConfig } from "@/shared/hooks/useSiteConfig";
 import { cn } from "@/shared/lib/cn";
-import {
-  STEPS,
-  OPENING,
-  BROWSING_REPLY,
-  toEnquiry,
-  type Answers,
-} from "../constants/script";
+import { STEPS, OPENING, BROWSING_REPLY, toEnquiry, type Answers } from "../constants/script";
 
 interface Line {
   from: "mossano" | "customer";
@@ -18,25 +12,16 @@ interface Line {
 }
 
 /**
- * The scripted assistant — Website Notes, second document drop.
+ * The scripted assistant — Website Notes, second drop. No language model, and
+ * it needs none: the answers are fixed slots, so a script is faster, free, and
+ * cannot say anything MOSSANO did not write.
  *
- * Four questions from the client's flow plus name and number, then the lead is
- * created and the desk is alerted. There is no language model here and it does
- * not need one: the answers are fixed slots ("5000 sqft", "Mumbai", "1 month"),
- * so a script is faster, free, and cannot say anything MOSSANO did not write.
- *
- * ── Restraint is the design ───────────────────────────────────────────────
- * DESIGN.md's rule is that the stone is the content and everything else is a
- * caption, and a chat widget is the most interface-shaped thing on a site like
- * this. So: no bubble that follows you down the page, no auto-open, no
- * notification dot inventing urgency, no rounded corners. It sits still until
- * it is asked for.
+ * Restraint is deliberate, per DESIGN.md: no auto-open, no floating bubble, no
+ * notification dot inventing urgency. It sits still until it is asked for.
  */
 export function Chatbot() {
   const [open, setOpen] = useState(false);
-  const [lines, setLines] = useState<Line[]>([
-    { from: "mossano", text: OPENING },
-  ]);
+  const [lines, setLines] = useState<Line[]>([{ from: "mossano", text: OPENING }]);
   const [stepIndex, setStepIndex] = useState(0);
   const [answers, setAnswers] = useState<Answers>({});
   const [draft, setDraft] = useState("");
@@ -68,8 +53,7 @@ export function Chatbot() {
     if (open && step?.allowFreeText) inputRef.current?.focus();
   }, [open, stepIndex, step?.allowFreeText]);
 
-  const say = (from: Line["from"], text: string) =>
-    setLines((prev) => [...prev, { from, text }]);
+  const say = (from: Line["from"], text: string) => setLines((prev) => [...prev, { from, text }]);
 
   async function answer(value: string) {
     const trimmed = value.trim();
@@ -149,11 +133,7 @@ export function Chatbot() {
         {open ? (
           <X className="h-4 w-4" strokeWidth={1.3} aria-hidden="true" />
         ) : (
-          <MessageSquare
-            className="h-4 w-4"
-            strokeWidth={1.3}
-            aria-hidden="true"
-          />
+          <MessageSquare className="h-4 w-4" strokeWidth={1.3} aria-hidden="true" />
         )}
         {open ? "Close" : "Sourcing desk"}
       </button>
@@ -180,9 +160,7 @@ export function Chatbot() {
                 key={i}
                 className={cn(
                   "max-w-[85%] px-3.5 py-2.5 text-[0.85rem] leading-relaxed",
-                  line.from === "mossano"
-                    ? "bg-ivory-deep text-ink"
-                    : "ml-auto bg-ink text-ivory",
+                  line.from === "mossano" ? "bg-ivory-deep text-ink" : "ml-auto bg-ink text-ivory",
                 )}
               >
                 {line.text}

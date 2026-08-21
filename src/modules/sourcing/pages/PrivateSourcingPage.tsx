@@ -3,12 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Section, SectionHeading } from "@/shared/components/Section";
-import {
-  Field,
-  TextInput,
-  TextArea,
-  Select,
-} from "@/modules/enquiry/components/Field";
+import { Field, TextInput, TextArea, Select } from "@/modules/enquiry/components/Field";
 import { useSubmitEnquiry } from "@/modules/enquiry/api/submitEnquiry";
 import { useSiteConfig } from "@/shared/hooks/useSiteConfig";
 import { WhatsAppButton } from "@/shared/components/WhatsAppButton";
@@ -41,11 +36,7 @@ const STEPS = [
 const schema = z
   .object({
     name: z.string().trim().min(1, "Please give your name").max(120),
-    email: z
-      .string()
-      .trim()
-      .email("Enter a valid email address")
-      .or(z.literal("")),
+    email: z.string().trim().email("Enter a valid email address").or(z.literal("")),
     phone: z.string().trim().max(24),
     company: z.string().trim().max(160),
     projectName: z.string().trim().max(160),
@@ -122,18 +113,14 @@ export function PrivateSourcingPage() {
       });
       setReference(receipt.reference);
     } catch (err) {
-      const entries =
-        err instanceof ApiError ? Object.entries(err.fieldErrors()) : [];
+      const entries = err instanceof ApiError ? Object.entries(err.fieldErrors()) : [];
       if (entries.length) {
         entries.forEach(([key, message]) =>
           setError(key as keyof FormValues, { type: "server", message }),
         );
       } else {
         setError("root", {
-          message:
-            err instanceof Error
-              ? err.message
-              : "Something went wrong. Please try again.",
+          message: err instanceof Error ? err.message : "Something went wrong. Please try again.",
         });
       }
     }
@@ -147,29 +134,20 @@ export function PrivateSourcingPage() {
           <p className="label mt-4 text-ivory/55">MOSSANO Sourcing Desk</p>
           <h1 className="h-display mt-2 text-ivory">Private Sourcing</h1>
           <p className="mt-6 max-w-prose text-[1rem] leading-relaxed text-ivory/75">
-            When the right stone is not on any website. Tell MOSSANO what the
-            project needs and the search happens across the whole supplier
-            network, not a catalogue.
+            When the right stone is not on any website. Tell MOSSANO what the project needs and the
+            search happens across the whole supplier network, not a catalogue.
           </p>
-          <WhatsAppButton
-            href={whatsapp.general}
-            variant="light"
-            className="mt-10"
-          />
+          <WhatsAppButton href={whatsapp.general} variant="light" className="mt-10" />
         </div>
 
         <ol className="mt-20 grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           {STEPS.map((step) => (
             <li key={step.n} className="border-t border-ivory/20 pt-6">
-              <p className="font-display text-[1.5rem] text-brass-light">
-                {step.n}
-              </p>
+              <p className="font-display text-[1.5rem] text-brass-light">{step.n}</p>
               <h2 className="mt-3 font-display text-[1rem] uppercase tracking-wide text-ivory">
                 {step.title}
               </h2>
-              <p className="mt-3 text-[0.9rem] leading-relaxed text-ivory/65">
-                {step.body}
-              </p>
+              <p className="mt-3 text-[0.9rem] leading-relaxed text-ivory/65">{step.body}</p>
             </li>
           ))}
         </ol>
@@ -189,41 +167,19 @@ export function PrivateSourcingPage() {
                 Requirement received
               </p>
               <p className="mt-3 max-w-prose text-[0.95rem] leading-relaxed text-ink-soft">
-                Your reference is <span className="text-ink">{reference}</span>.
-                MOSSANO will search and come back with options and actual
-                photography.
+                Your reference is <span className="text-ink">{reference}</span>. MOSSANO will search
+                and come back with options and actual photography.
               </p>
-              <WhatsAppButton
-                href={whatsapp.general}
-                className="mt-8"
-                variant="outline"
-              />
+              <WhatsAppButton href={whatsapp.general} className="mt-8" variant="outline" />
             </div>
           ) : (
             <form onSubmit={onSubmit} className="mt-12" noValidate>
               <div className="grid gap-x-8 sm:grid-cols-2">
-                <Field
-                  label="Name"
-                  htmlFor="s-name"
-                  required
-                  error={errors.name?.message}
-                >
-                  <TextInput
-                    id="s-name"
-                    autoComplete="name"
-                    {...register("name")}
-                  />
+                <Field label="Name" htmlFor="s-name" required error={errors.name?.message}>
+                  <TextInput id="s-name" autoComplete="name" {...register("name")} />
                 </Field>
-                <Field
-                  label="Company"
-                  htmlFor="s-company"
-                  error={errors.company?.message}
-                >
-                  <TextInput
-                    id="s-company"
-                    autoComplete="organization"
-                    {...register("company")}
-                  />
+                <Field label="Company" htmlFor="s-company" error={errors.company?.message}>
+                  <TextInput id="s-company" autoComplete="organization" {...register("company")} />
                 </Field>
                 <Field
                   label="Email"
@@ -238,23 +194,12 @@ export function PrivateSourcingPage() {
                     {...register("email")}
                   />
                 </Field>
-                <Field
-                  label="Phone"
-                  htmlFor="s-phone"
-                  error={errors.phone?.message}
-                >
-                  <TextInput
-                    id="s-phone"
-                    type="tel"
-                    autoComplete="tel"
-                    {...register("phone")}
-                  />
+                <Field label="Phone" htmlFor="s-phone" error={errors.phone?.message}>
+                  <TextInput id="s-phone" type="tel" autoComplete="tel" {...register("phone")} />
                 </Field>
               </div>
 
-              <p className="label mt-10 border-t border-ivory-dark pt-8">
-                The requirement
-              </p>
+              <p className="label mt-10 border-t border-ivory-dark pt-8">The requirement</p>
 
               <div className="mt-6 grid gap-x-8 sm:grid-cols-2">
                 <Field label="Material" htmlFor="s-material">
@@ -281,27 +226,15 @@ export function PrivateSourcingPage() {
 
                 {/* Free text, not a picker: customers say "20mm", "2cm" and
                     "18–20mm", and forcing one of those loses information. */}
-                <Field
-                  label="Thickness"
-                  htmlFor="s-thickness"
-                  hint="e.g. 20 mm, or 2 cm"
-                >
+                <Field label="Thickness" htmlFor="s-thickness" hint="e.g. 20 mm, or 2 cm">
                   <TextInput id="s-thickness" {...register("thickness")} />
                 </Field>
 
-                <Field
-                  label="Quantity"
-                  htmlFor="s-quantity"
-                  hint="e.g. 5,000 sq ft"
-                >
+                <Field label="Quantity" htmlFor="s-quantity" hint="e.g. 5,000 sq ft">
                   <TextInput id="s-quantity" {...register("quantity")} />
                 </Field>
 
-                <Field
-                  label="Budget"
-                  htmlFor="s-budget"
-                  hint="Per sq ft, or for the lot"
-                >
+                <Field label="Budget" htmlFor="s-budget" hint="Per sq ft, or for the lot">
                   <TextInput id="s-budget" {...register("budget")} />
                 </Field>
 
@@ -313,11 +246,7 @@ export function PrivateSourcingPage() {
                   <TextInput id="s-project" {...register("projectName")} />
                 </Field>
 
-                <Field
-                  label="Required by"
-                  htmlFor="s-required"
-                  hint="Approximate is fine"
-                >
+                <Field label="Required by" htmlFor="s-required" hint="Approximate is fine">
                   <TextInput
                     id="s-required"
                     placeholder="e.g. within 1 month"
@@ -349,16 +278,14 @@ export function PrivateSourcingPage() {
                     Please select the best options for my project
                   </span>
                   <span className="mt-1.5 block text-[0.85rem] leading-relaxed text-ink-soft">
-                    MOSSANO will curate a private selection for you and send a
-                    link to review it.
+                    MOSSANO will curate a private selection for you and send a link to review it.
                   </span>
                 </span>
               </label>
 
               {delegating && (
                 <p className="mt-4 text-[0.8rem] text-brass">
-                  MOSSANO will prepare a private selection and send you the
-                  link.
+                  MOSSANO will prepare a private selection and send you the link.
                 </p>
               )}
 
@@ -369,11 +296,7 @@ export function PrivateSourcingPage() {
               )}
 
               <div className="mt-10">
-                <button
-                  type="submit"
-                  className="btn-solid"
-                  disabled={isSubmitting}
-                >
+                <button type="submit" className="btn-solid" disabled={isSubmitting}>
                   {isSubmitting ? "Sending…" : "Send requirement"}
                 </button>
               </div>

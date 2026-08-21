@@ -7,8 +7,7 @@
  * never invented, and a generator would emit it without saying so.
  */
 
-export type Availability =
-  "available" | "on_hold" | "sold" | "verification_required";
+export type Availability = "available" | "on_hold" | "sold" | "verification_required";
 
 export interface MediaSrc {
   width: number;
@@ -243,7 +242,16 @@ export interface SiteConfig {
   };
 }
 
+export interface HeroPayload {
+  /** "pinned" when HERO_STONE_CODE resolved, "ranked" when it fell back. */
+  source: "pinned" | "ranked";
+  stone: StoneCard;
+  image: Media | null;
+}
+
 export interface HomePayload {
+  /** Chosen on the server, never derived from sort order — see resolveHero. */
+  hero: HeroPayload | null;
   featured: StoneCard[];
   /** True when nothing is marked featured and the newest stock is standing in. */
   isFeaturedFallback: boolean;
@@ -274,7 +282,7 @@ export interface SelectionPayload {
   pdfUrl: string;
 }
 
-// ── Enquiries ──────────────────────────────────────────────────────────────
+// Enquiries
 
 export type EnquiryType =
   | "general"
@@ -400,7 +408,7 @@ export interface AdminSelection {
   updatedAt: string;
 }
 
-// ── Admin session ──────────────────────────────────────────────────────────
+// Admin session
 
 export type Role = "admin" | "editor" | "viewer";
 

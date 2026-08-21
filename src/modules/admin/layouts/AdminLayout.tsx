@@ -51,9 +51,7 @@ export function AdminLayout() {
     refetchInterval: 2 * 60 * 1000,
   });
 
-  const visible = NAV.filter(
-    (item) => !item.adminOnly || user?.role === "admin",
-  );
+  const visible = NAV.filter((item) => !item.adminOnly || user?.role === "admin");
 
   return (
     <div className="min-h-screen bg-ivory">
@@ -83,11 +81,7 @@ export function AdminLayout() {
                   )
                 }
               >
-                <Icon
-                  className="h-4 w-4 shrink-0"
-                  strokeWidth={1.3}
-                  aria-hidden="true"
-                />
+                <Icon className="h-4 w-4 shrink-0" strokeWidth={1.3} aria-hidden="true" />
                 <span className="flex-1">{label}</span>
                 {badge === "enquiries" && (summary?.enquiries.new ?? 0) > 0 && (
                   <span className="bg-brass px-1.5 py-0.5 text-[0.6rem] tabular-nums text-ivory">

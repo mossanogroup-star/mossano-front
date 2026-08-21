@@ -1,14 +1,9 @@
 /**
- * The palette, in one place.
+ * The palette, in one place, imported by tailwind.config.js.
  *
- * Imported by both tailwind.config.js and any script that generates brand
- * assets, so the site and its favicon/OG image cannot drift apart — a mistake
- * worth designing out, because when it happens nothing errors and nobody
- * notices until a stale colour is already live.
- *
- * Values follow the brief's stated direction — "warm beige / cream / ivory /
- * dark brown / black typography" — sampled against the client's own catalogue
- * backdrops so the interface sits with the photography rather than against it.
+ * Values follow the brief's "warm beige / cream / ivory / dark brown / black
+ * typography", sampled against the client's own catalogue backdrops so the
+ * interface sits with the photography rather than against it.
  */
 export const BRAND_COLOURS = {
   ivory: {

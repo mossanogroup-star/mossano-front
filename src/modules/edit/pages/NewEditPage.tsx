@@ -1,11 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { publicQueries } from "@/shared/api/publicQueries";
-import {
-  Section,
-  SectionHeading,
-  EmptyState,
-} from "@/shared/components/Section";
+import { Section, SectionHeading, EmptyState } from "@/shared/components/Section";
 import { StoneGrid } from "@/shared/components/StoneCard";
 import { WhatsAppButton } from "@/shared/components/WhatsAppButton";
 import { useSiteConfig } from "@/shared/hooks/useSiteConfig";
@@ -35,10 +31,7 @@ function EditBand({ edit, index }: { edit: Edit; index: number }) {
       <div className="mt-14">
         {stones.length ? (
           <>
-            <StoneGrid
-              stones={stones.slice(0, 9)}
-              priorityCount={index === 0 ? 3 : 0}
-            />
+            <StoneGrid stones={stones.slice(0, 9)} priorityCount={index === 0 ? 3 : 0} />
             {stones.length > 9 && (
               <div className="mt-14 text-center">
                 <Link to={edit.href} className="btn-outline">
@@ -72,8 +65,8 @@ export function NewEditPage() {
           <p className="label mt-4">The Edit</p>
           <h1 className="h-display mt-2">Curated, Month by Month</h1>
           <p className="mt-6 max-w-prose text-[0.95rem] leading-relaxed text-ink-soft">
-            MOSSANO publishes a new selection each month. What is available now,
-            what arrives next, and an early view of what is coming.
+            MOSSANO publishes a new selection each month. What is available now, what arrives next,
+            and an early view of what is coming.
           </p>
         </div>
       </Section>
@@ -85,12 +78,7 @@ export function NewEditPage() {
           <EmptyState
             title="No Edit is published yet"
             body="The current selection is being verified before it goes live. MOSSANO can tell you what is in stock today."
-            action={
-              <WhatsAppButton
-                href={whatsapp.general}
-                label="Ask what is available"
-              />
-            }
+            action={<WhatsAppButton href={whatsapp.general} label="Ask what is available" />}
           />
         </Section>
       )}

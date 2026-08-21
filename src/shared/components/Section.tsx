@@ -33,21 +33,10 @@ export function SectionHeading({
         className,
       )}
     >
-      <div
-        className={cn(
-          "max-w-prose",
-          align === "center" && "mx-auto text-center",
-        )}
-      >
+      <div className={cn("max-w-prose", align === "center" && "mx-auto text-center")}>
         <div className={cn("rule", align === "center" && "mx-auto")} />
-        {label && (
-          <p className={cn("label mt-4", tone === "light" && "text-ivory/55")}>
-            {label}
-          </p>
-        )}
-        <h2 className={cn("h-section mt-2", tone === "light" && "text-ivory")}>
-          {title}
-        </h2>
+        {label && <p className={cn("label mt-4", tone === "light" && "text-ivory/55")}>{label}</p>}
+        <h2 className={cn("h-section mt-2", tone === "light" && "text-ivory")}>{title}</h2>
         {intro && (
           <p
             className={cn(
@@ -64,7 +53,7 @@ export function SectionHeading({
         <Link
           to={action.to}
           className={cn(
-            "shrink-0 border-b pb-1 font-sans text-[0.66rem] uppercase tracking-label transition-colors",
+            "shrink-0 border-b py-1.5 font-sans text-[0.66rem] uppercase tracking-label transition-colors",
             tone === "light"
               ? "border-ivory/30 text-ivory/80 hover:border-ivory hover:text-ivory"
               : "border-ink/25 text-ink-soft hover:border-ink hover:text-ink",
@@ -123,14 +112,8 @@ export function EmptyState({
 }) {
   return (
     <div className="border-t border-ivory-dark py-20 text-center">
-      <p className="font-display text-[1.1rem] uppercase tracking-wide">
-        {title}
-      </p>
-      {body && (
-        <p className="mx-auto mt-3 max-w-prose text-[0.9rem] text-ink-soft">
-          {body}
-        </p>
-      )}
+      <p className="font-display text-[1.1rem] uppercase tracking-wide">{title}</p>
+      {body && <p className="mx-auto mt-3 max-w-prose text-[0.9rem] text-ink-soft">{body}</p>}
       {action && <div className="mt-8">{action}</div>}
     </div>
   );

@@ -9,14 +9,7 @@ import { FilterRail } from "../components/FilterRail";
 import { WhatsAppButton } from "@/shared/components/WhatsAppButton";
 import { useSiteConfig } from "@/shared/hooks/useSiteConfig";
 
-const MULTI = [
-  "material",
-  "colour",
-  "look",
-  "application",
-  "availability",
-  "finish",
-] as const;
+const MULTI = ["material", "colour", "look", "application", "availability", "finish"] as const;
 
 const SORTS = [
   { value: "default", label: "Available first" },
@@ -56,8 +49,7 @@ export function ShopPage() {
 
   const selected = useMemo(() => {
     const out: Record<string, string[]> = {};
-    for (const key of MULTI)
-      out[key] = (params.get(key) ?? "").split(",").filter(Boolean);
+    for (const key of MULTI) out[key] = (params.get(key) ?? "").split(",").filter(Boolean);
     return out;
   }, [params]);
 
@@ -108,8 +100,7 @@ export function ShopPage() {
 
   const items = data?.items ?? [];
   const total = data?.meta?.total ?? 0;
-  const hasFilters =
-    Object.values(selected).some((v) => v.length) || Boolean(query.search);
+  const hasFilters = Object.values(selected).some((v) => v.length) || Boolean(query.search);
 
   return (
     <Section className="pt-24 sm:pt-28">
@@ -134,9 +125,7 @@ export function ShopPage() {
         <div>
           <div className="flex flex-wrap items-center justify-between gap-4 border-b border-ivory-dark pb-4">
             <p className="label" aria-live="polite">
-              {isFetching && !items.length
-                ? "Loading…"
-                : `${total} lot${total === 1 ? "" : "s"}`}
+              {isFetching && !items.length ? "Loading…" : `${total} lot${total === 1 ? "" : "s"}`}
             </p>
 
             <div className="flex items-center gap-5">
@@ -144,9 +133,7 @@ export function ShopPage() {
                 <span className="label">Sort</span>
                 <select
                   value={params.get("sort") ?? "default"}
-                  onChange={(e) =>
-                    update((next) => next.set("sort", e.target.value))
-                  }
+                  onChange={(e) => update((next) => next.set("sort", e.target.value))}
                   className="border-0 border-b border-ink/20 bg-transparent py-1 font-sans text-[0.8rem] focus:border-ink focus:outline-none"
                 >
                   {SORTS.map((s) => (
@@ -160,16 +147,13 @@ export function ShopPage() {
               <button
                 type="button"
                 onClick={() => setRailOpen((v) => !v)}
-                className="inline-flex items-center gap-2 font-sans text-[0.66rem] uppercase tracking-label lg:hidden"
+                className="-my-2 inline-flex items-center gap-2 py-2 font-sans text-[0.66rem] uppercase tracking-label lg:hidden"
                 aria-expanded={railOpen}
               >
                 {railOpen ? (
                   <X className="h-3.5 w-3.5" strokeWidth={1.5} />
                 ) : (
-                  <SlidersHorizontal
-                    className="h-3.5 w-3.5"
-                    strokeWidth={1.5}
-                  />
+                  <SlidersHorizontal className="h-3.5 w-3.5" strokeWidth={1.5} />
                 )}
                 Filter
               </button>
@@ -189,13 +173,11 @@ export function ShopPage() {
 
           <div className="mt-12">
             {items.length ? (
-              <StoneGrid stones={items} />
+              <StoneGrid stones={items} headingLevel={2} />
             ) : (
               <EmptyState
                 title={
-                  hasFilters
-                    ? "Nothing matches those filters"
-                    : "The catalogue is being prepared"
+                  hasFilters ? "Nothing matches those filters" : "The catalogue is being prepared"
                 }
                 body={
                   hasFilters
@@ -213,10 +195,7 @@ export function ShopPage() {
                         Clear filters
                       </button>
                     )}
-                    <WhatsAppButton
-                      href={whatsapp.general}
-                      label="Ask MOSSANO to source it"
-                    />
+                    <WhatsAppButton href={whatsapp.general} label="Ask MOSSANO to source it" />
                   </div>
                 }
               />

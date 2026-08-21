@@ -1,10 +1,5 @@
 import { useState } from "react";
-import {
-  useQuery,
-  useMutation,
-  useQueryClient,
-  keepPreviousData,
-} from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient, keepPreviousData } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { adminApi } from "../../api/adminApi";
@@ -34,19 +29,13 @@ export function StoneListPage() {
 
   const { data, isFetching } = useQuery({
     queryKey: ["admin-stones", search, page],
-    queryFn: () =>
-      adminApi.stones({ search: search || undefined, page, limit: 30 }),
+    queryFn: () => adminApi.stones({ search: search || undefined, page, limit: 30 }),
     placeholderData: keepPreviousData,
   });
 
   const setAvailability = useMutation({
-    mutationFn: ({
-      id,
-      availability,
-    }: {
-      id: string;
-      availability: Availability;
-    }) => adminApi.setAvailability(id, availability),
+    mutationFn: ({ id, availability }: { id: string; availability: Availability }) =>
+      adminApi.setAvailability(id, availability),
     onSuccess: (stone) => {
       toast.success(`${stone.name} — ${stone.availabilityLabel}`);
       // The storefront's cache is invalidated server-side; this refreshes the
@@ -55,8 +44,7 @@ export function StoneListPage() {
       queryClient.invalidateQueries({ queryKey: ["dashboard"] });
       queryClient.invalidateQueries({ queryKey: ["verification-queue"] });
     },
-    onError: (err) =>
-      toast.error(err instanceof Error ? err.message : "Could not update"),
+    onError: (err) => toast.error(err instanceof Error ? err.message : "Could not update"),
   });
 
   const stones = data?.data ?? [];
@@ -86,46 +74,24 @@ export function StoneListPage() {
           className="w-full max-w-sm border-0 border-b border-ink/20 bg-transparent py-2 text-[0.9rem] placeholder:text-ink-faint/70 focus:border-ink focus:outline-none"
         />
         <p className="label" aria-live="polite">
-          {isFetching && !stones.length
-            ? "Loading…"
-            : `${meta?.total ?? 0} lots`}
+          {isFetching && !stones.length ? "Loading…" : `${meta?.total ?? 0} lots`}
         </p>
       </div>
 
       <DataTable
-        head={[
-          "",
-          "Code",
-          "Stone",
-          "Lot",
-          "Availability",
-          "Verified",
-          "Size",
-          "",
-        ]}
+        head={["", "Code", "Stone", "Lot", "Availability", "Verified", "Size", ""]}
         empty={
           stones.length === 0 && !isFetching ? (
-            <TableEmpty
-              message={
-                search ? "Nothing matches that search." : "No stones yet."
-              }
-            />
+            <TableEmpty message={search ? "Nothing matches that search." : "No stones yet."} />
           ) : undefined
         }
       >
         {stones.map((stone) => (
-          <tr
-            key={stone.id}
-            className="border-b border-ivory-dark/60 align-middle"
-          >
+          <tr key={stone.id} className="border-b border-ivory-dark/60 align-middle">
             <td className="py-2.5 pr-4">
               <div className="slab-frame h-10 w-14">
                 {stone.primaryImageUrl ? (
-                  <img
-                    src={stone.primaryImageUrl}
-                    alt=""
-                    className="h-full w-full object-cover"
-                  />
+                  <img src={stone.primaryImageUrl} alt="" className="h-full w-full object-cover" />
                 ) : null}
               </div>
             </td>
@@ -133,10 +99,7 @@ export function StoneListPage() {
               {stone.mossanoCode}
             </td>
             <td className="py-2.5 pr-6">
-              <Link
-                to={`/admin/stones/${stone.id}`}
-                className="text-[0.88rem] hover:text-brass"
-              >
+              <Link to={`/admin/stones/${stone.id}`} className="text-[0.88rem] hover:text-brass">
                 {stone.name}
               </Link>
               {!stone.isPublished && (
@@ -150,17 +113,13 @@ export function StoneListPage() {
                 </span>
               )}
             </td>
-            <td className="py-2.5 pr-6 text-[0.78rem] text-ink-faint">
-              {stone.lotNumber ?? "—"}
-            </td>
+            <td className="py-2.5 pr-6 text-[0.78rem] text-ink-faint">{stone.lotNumber ?? "—"}</td>
             <td className="py-2.5 pr-6">
               <AvailabilitySelect
                 value={stone.availability}
                 disabled={setAvailability.isPending}
                 labels={taxonomies?.availability ?? {}}
-                onChange={(availability) =>
-                  setAvailability.mutate({ id: stone.id, availability })
-                }
+                onChange={(availability) => setAvailability.mutate({ id: stone.id, availability })}
               />
             </td>
             <td className="py-2.5 pr-6 text-[0.78rem] text-ink-faint">
@@ -170,9 +129,7 @@ export function StoneListPage() {
             </td>
             <td className="py-2.5 pr-6 text-[0.78rem] tabular-nums text-ink-faint">
               {stone.slabCount ? `${stone.slabCount} slabs` : "—"}
-              {stone.areaSqFt
-                ? ` · ${stone.areaSqFt.toLocaleString("en-IN")} sq ft`
-                : ""}
+              {stone.areaSqFt ? ` · ${stone.areaSqFt.toLocaleString("en-IN")} sq ft` : ""}
             </td>
             <td className="py-2.5">
               <a
@@ -189,10 +146,7 @@ export function StoneListPage() {
       </DataTable>
 
       {(meta?.totalPages ?? 1) > 1 && (
-        <nav
-          className="mt-8 flex items-center justify-between"
-          aria-label="Pagination"
-        >
+        <nav className="mt-8 flex items-center justify-between" aria-label="Pagination">
           <button
             type="button"
             className="btn-outline disabled:opacity-30"

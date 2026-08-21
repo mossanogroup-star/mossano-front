@@ -33,23 +33,19 @@ export function MediaLibraryPage() {
 
   const { data } = useQuery({
     queryKey: ["media-library", kind],
-    queryFn: async () =>
-      (await adminApi.media({ kind: kind || undefined, limit: 200 })).data,
+    queryFn: async () => (await adminApi.media({ kind: kind || undefined, limit: 200 })).data,
   });
 
-  const invalidate = () =>
-    queryClient.invalidateQueries({ queryKey: ["media"] });
+  const invalidate = () => queryClient.invalidateQueries({ queryKey: ["media"] });
 
   const upload = useMutation({
-    mutationFn: (files: File[]) =>
-      adminApi.uploadMedia(files, { kind: kind || "general" }),
+    mutationFn: (files: File[]) => adminApi.uploadMedia(files, { kind: kind || "general" }),
     onSuccess: (res) => {
       toast.success(`${res.data.length} uploaded`);
       invalidate();
       queryClient.invalidateQueries({ queryKey: ["media-library"] });
     },
-    onError: (err) =>
-      toast.error(err instanceof Error ? err.message : "Upload failed"),
+    onError: (err) => toast.error(err instanceof Error ? err.message : "Upload failed"),
   });
 
   const updateAlt = useMutation({
@@ -113,9 +109,7 @@ export function MediaLibraryPage() {
             onClick={() => setKind(k.value)}
             className={cn(
               "px-3 py-1.5 font-sans text-[0.7rem] uppercase tracking-label transition-colors",
-              kind === k.value
-                ? "bg-ink text-ivory"
-                : "text-ink-soft hover:text-ink",
+              kind === k.value ? "bg-ink text-ivory" : "text-ink-soft hover:text-ink",
             )}
           >
             {k.label}
@@ -141,8 +135,7 @@ export function MediaLibraryPage() {
                       // Missing alt text is a real defect on a photography-led
                       // site, so it is visible in the grid rather than only in
                       // the panel.
-                      !item.alt &&
-                        "outline outline-1 outline-offset-2 outline-[#d9a318]/50",
+                      !item.alt && "outline outline-1 outline-offset-2 outline-[#d9a318]/50",
                     )}
                   >
                     <img
@@ -164,11 +157,7 @@ export function MediaLibraryPage() {
           {selected ? (
             <>
               <div className="slab-frame aspect-square">
-                <img
-                  src={selected.url}
-                  alt={selected.alt}
-                  className="h-full w-full object-cover"
-                />
+                <img src={selected.url} alt={selected.alt} className="h-full w-full object-cover" />
               </div>
 
               <dl className="mt-4 space-y-1 text-[0.75rem] text-ink-faint">
@@ -178,9 +167,7 @@ export function MediaLibraryPage() {
                     {selected.width} × {selected.height} px
                   </div>
                 )}
-                {selected.bytes && (
-                  <div>{Math.round(selected.bytes / 1024)} KB</div>
-                )}
+                {selected.bytes && <div>{Math.round(selected.bytes / 1024)} KB</div>}
               </dl>
 
               <label className="label mt-6 block" htmlFor="alt">
@@ -200,9 +187,7 @@ export function MediaLibraryPage() {
                   type="button"
                   className="btn-outline flex-1"
                   disabled={updateAlt.isPending || alt === selected.alt}
-                  onClick={() =>
-                    updateAlt.mutate({ id: selected.id, value: alt })
-                  }
+                  onClick={() => updateAlt.mutate({ id: selected.id, value: alt })}
                 >
                   Save
                 </button>
@@ -218,8 +203,7 @@ export function MediaLibraryPage() {
             </>
           ) : (
             <p className="text-[0.85rem] text-ink-faint">
-              Choose a file to edit its alt text. Files outlined in amber have
-              none.
+              Choose a file to edit its alt text. Files outlined in amber have none.
             </p>
           )}
         </aside>

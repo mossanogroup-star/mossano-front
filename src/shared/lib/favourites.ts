@@ -1,20 +1,10 @@
 /**
- * Favourites — Website §5 and Admin Scope §7.
+ * Favourites — Website §5: no account in Phase 1, saved on the device.
  *
- * "No account is required in Phase 1. Favourites should remain saved when the
- * customer leaves and comes back to the website on the same device."
- *
- * So: localStorage, holding stone slugs rather than ids. Slugs are what the
- * URLs already carry, they are stable, and they mean a favourites list stays
- * readable if it is ever exported or migrated to a real account in Phase 2.
- *
- * Three things this has to survive, all of which are ordinary rather than
- * exotic:
- *   - server rendering, where `window` does not exist at all
- *   - a browser that throws on localStorage access (private mode, blocked
- *     site data) rather than returning null
- *   - two tabs open at once, where a favourite added in one should appear in
- *     the other
+ * localStorage, holding slugs rather than ids so the list stays readable if it
+ * is ever migrated to real accounts. Has to survive three ordinary cases:
+ * server rendering (no `window`), a browser that throws on storage access
+ * (private mode, blocked site data), and two tabs open at once.
  */
 const KEY = "mossano.favourites";
 const MAX = 200;
@@ -42,9 +32,7 @@ function parse(): string[] {
     // Anything could be under this key — another script, an older format, a
     // hand-edited value. Only a clean array of strings is accepted.
     if (!Array.isArray(parsed)) return [];
-    return parsed
-      .filter((s): s is string => typeof s === "string")
-      .slice(0, MAX);
+    return parsed.filter((s): s is string => typeof s === "string").slice(0, MAX);
   } catch {
     return [];
   }
@@ -111,13 +99,11 @@ export const favouritesStore = {
       snapshot = null;
       fn(read());
     };
-    if (typeof window !== "undefined")
-      window.addEventListener("storage", onStorage);
+    if (typeof window !== "undefined") window.addEventListener("storage", onStorage);
 
     return () => {
       listeners.delete(fn);
-      if (typeof window !== "undefined")
-        window.removeEventListener("storage", onStorage);
+      if (typeof window !== "undefined") window.removeEventListener("storage", onStorage);
     };
   },
 };

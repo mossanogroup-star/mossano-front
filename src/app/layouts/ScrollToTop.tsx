@@ -4,19 +4,11 @@ import { useLocation } from "react-router-dom";
 /**
  * Resets scroll position on navigation.
  *
- * ── Read the body of the effect before changing it ──────────────────────────
- * This must keep its block body. Written as
- *
- *     useEffect(() => window.scrollTo(0, 0), [pathname])
- *
- * the arrow implicitly returns whatever scrollTo returns. React treats an
- * effect's return value as its cleanup function, calls it on the next
- * navigation, and the app dies with "destroy is not a function". That shipped
- * twice in this project. `npm run nav-audit` walks every route and fails on any
- * console error, specifically to catch it a third time.
- *
- * The hash branch matters too: an in-page anchor should land on its target, not
- * be yanked back to the top.
+ * ⚠ The effect must keep its block body. Written as
+ * `useEffect(() => window.scrollTo(0, 0), [pathname])` the arrow returns
+ * scrollTo's value, React treats it as cleanup, and the next navigation dies
+ * with "destroy is not a function". That shipped twice; `npm run nav-audit`
+ * exists to catch a third.
  */
 export function ScrollToTop() {
   const { pathname, hash } = useLocation();

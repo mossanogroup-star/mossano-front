@@ -46,7 +46,7 @@ export function Footer() {
                   <li key={link.to}>
                     <Link
                       to={link.to}
-                      className="text-[0.9rem] text-ivory/75 transition-colors hover:text-ivory"
+                      className="inline-block py-1 text-[0.9rem] text-ivory/75 transition-colors hover:text-ivory"
                     >
                       {link.label}
                     </Link>
@@ -72,7 +72,7 @@ export function Footer() {
                 <p key={phone}>
                   <a
                     href={`tel:+91${phone}`}
-                    className="text-ivory/75 transition-colors hover:text-ivory"
+                    className="inline-block py-1 text-ivory/75 transition-colors hover:text-ivory"
                   >
                     +91 {phone}
                   </a>
@@ -81,18 +81,14 @@ export function Footer() {
               <p>
                 <a
                   href={`mailto:${brand.email}`}
-                  className="text-ivory/75 transition-colors hover:text-ivory"
+                  className="inline-block py-1 text-ivory/75 transition-colors hover:text-ivory"
                 >
                   {brand.email}
                 </a>
               </p>
             </div>
 
-            <WhatsAppButton
-              href={whatsapp.general}
-              variant="light"
-              className="mt-7"
-            />
+            <WhatsAppButton href={whatsapp.general} variant="light" className="mt-7" />
           </div>
         </div>
 
@@ -100,9 +96,7 @@ export function Footer() {
           <p className="text-[0.7rem] uppercase tracking-label text-ivory/40">
             © {new Date().getFullYear()} {brand.name}
           </p>
-          <p className="text-[0.7rem] uppercase tracking-label text-ivory/40">
-            {brand.tagline}
-          </p>
+          <p className="text-[0.75rem] uppercase tracking-label text-ivory/40">{brand.tagline}</p>
         </div>
       </div>
     </footer>

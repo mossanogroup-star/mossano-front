@@ -26,8 +26,7 @@ export function StonePicker({
 
   const { data, isFetching } = useQuery({
     queryKey: ["stone-options", search],
-    queryFn: async () =>
-      (await adminApi.stoneOptions({ search: search || undefined })).data,
+    queryFn: async () => (await adminApi.stoneOptions({ search: search || undefined })).data,
     // A search box that fires on every keystroke against a 100-lot catalogue is
     // fine; against a growing one it is not. Two characters is the floor.
     enabled: search.length === 0 || search.length >= 2,
@@ -38,11 +37,7 @@ export function StonePicker({
   return (
     <div className={cn("border border-ivory-dark p-5", className)}>
       <label className="flex items-center gap-3 border-b border-ink/20 pb-2">
-        <Search
-          className="h-4 w-4 shrink-0 text-ink-faint"
-          strokeWidth={1.3}
-          aria-hidden="true"
-        />
+        <Search className="h-4 w-4 shrink-0 text-ink-faint" strokeWidth={1.3} aria-hidden="true" />
         <input
           type="search"
           value={search}
@@ -76,9 +71,7 @@ export function StonePicker({
                   )}
                 </span>
                 <span className="min-w-0 flex-1">
-                  <span className="block truncate text-[0.85rem]">
-                    {stone.name}
-                  </span>
+                  <span className="block truncate text-[0.85rem]">{stone.name}</span>
                   <span className="block text-[0.7rem] text-ink-faint">
                     {stone.mossanoCode} · {stone.availabilityLabel}
                   </span>
@@ -86,10 +79,7 @@ export function StonePicker({
                 {already ? (
                   <span className="label shrink-0">Added</span>
                 ) : (
-                  <Plus
-                    className="h-4 w-4 shrink-0 text-ink-faint"
-                    strokeWidth={1.3}
-                  />
+                  <Plus className="h-4 w-4 shrink-0 text-ink-faint" strokeWidth={1.3} />
                 )}
               </button>
             </li>

@@ -3,11 +3,7 @@ import type { RouteObject } from "react-router-dom";
 
 import { PublicLayout } from "../layouts/PublicLayout";
 import { HomePage } from "@/modules/landing/pages/HomePage";
-import {
-  AboutPage,
-  ContactPage,
-  NotFoundPage,
-} from "@/modules/landing/pages/AboutContactPages";
+import { AboutPage, ContactPage, NotFoundPage } from "@/modules/landing/pages/AboutContactPages";
 import { ShopPage } from "@/modules/stone/pages/ShopPage";
 import { StoneDetailPage } from "@/modules/stone/pages/StoneDetailPage";
 import { NewEditPage } from "@/modules/edit/pages/NewEditPage";
@@ -35,28 +31,19 @@ export interface RouteMeta {
 type Params = Record<string, string | undefined>;
 
 /**
- * A public route, plus the two things server rendering needs from it.
+ * A public route, plus what server rendering needs from it.
  *
- * `prefetch` fills the query cache before renderToString runs, so the HTML the
- * server produces contains real content rather than a loading state — the whole
- * point of rendering on the server for a site discovered through forwarded
- * links.
- *
- * `meta` runs after the prefetch, against the data it fetched, which is what
- * lets a stone page carry its own title, description and og:image instead of
- * the site defaults. That is the difference between a WhatsApp preview showing
- * the slab and showing nothing.
+ * `prefetch` fills the query cache before renderToString, so the HTML carries
+ * real content. `meta` then runs against that data, which is how a stone page
+ * gets its own og:image instead of the site default — the difference between a
+ * WhatsApp preview showing the slab and showing nothing.
  */
 export interface PublicRoute {
   path?: string;
   index?: boolean;
   Component?: RouteObject["Component"];
   children?: PublicRoute[];
-  prefetch?: (
-    qc: QueryClient,
-    params: Params,
-    search: URLSearchParams,
-  ) => Promise<unknown>;
+  prefetch?: (qc: QueryClient, params: Params, search: URLSearchParams) => Promise<unknown>;
   meta?: (qc: QueryClient, params: Params) => RouteMeta;
 }
 
@@ -67,8 +54,7 @@ export interface PublicRoute {
  * so the table is declared in our shape and narrowed at the three points that
  * hand it to React Router.
  */
-export const asRouteObjects = (routes: PublicRoute[]) =>
-  routes as unknown as RouteObject[];
+export const asRouteObjects = (routes: PublicRoute[]) => routes as unknown as RouteObject[];
 
 const SITE_TITLE = "MOSSANO MARMO";
 const SITE_DESCRIPTION =
@@ -128,25 +114,19 @@ export const publicRoutes: PublicRoute[] = [
       {
         path: "stone/:slug",
         Component: StoneDetailPage,
-        prefetch: (qc, params) =>
-          qc.prefetchQuery(publicQueries.stone(params.slug!)),
+        prefetch: (qc, params) => qc.prefetchQuery(publicQueries.stone(params.slug!)),
         meta: (qc, params) => {
-          const payload = qc.getQueryData(
-            publicQueries.stone(params.slug!).queryKey,
-          );
+          const payload = qc.getQueryData(publicQueries.stone(params.slug!).queryKey);
           const stone = payload?.stone;
           if (!stone) return { title: withSuffix("Stone") };
 
           // The description states availability, because that is the fact the
           // preview is being forwarded to communicate.
-          const facts = [stone.origin, stone.availabilityLabel]
-            .filter(Boolean)
-            .join(" · ");
+          const facts = [stone.origin, stone.availabilityLabel].filter(Boolean).join(" · ");
           return {
             title: `${stone.mossanoCode} ${stone.name} — ${SITE_TITLE}`,
             description:
-              stone.description ||
-              `${stone.name}. ${facts}. Enquire with MOSSANO MARMO.`,
+              stone.description || `${stone.name}. ${facts}. Enquire with MOSSANO MARMO.`,
             image: stone.primaryImageUrl,
           };
         },
@@ -165,17 +145,13 @@ export const publicRoutes: PublicRoute[] = [
       {
         path: "new-edit/:slug",
         Component: EditDetailPage,
-        prefetch: (qc, params) =>
-          qc.prefetchQuery(publicQueries.edit(params.slug!)),
+        prefetch: (qc, params) => qc.prefetchQuery(publicQueries.edit(params.slug!)),
         meta: (qc, params) => {
-          const edit = qc.getQueryData(
-            publicQueries.edit(params.slug!).queryKey,
-          );
+          const edit = qc.getQueryData(publicQueries.edit(params.slug!).queryKey);
           return edit
             ? {
                 title: `${edit.title} — ${SITE_TITLE}`,
-                description:
-                  edit.subtitle || edit.description || SITE_DESCRIPTION,
+                description: edit.subtitle || edit.description || SITE_DESCRIPTION,
                 image: edit.coverImage?.url ?? null,
               }
             : { title: withSuffix("Edit") };
@@ -195,12 +171,9 @@ export const publicRoutes: PublicRoute[] = [
       {
         path: "look/:slug",
         Component: LookDetailPage,
-        prefetch: (qc, params) =>
-          qc.prefetchQuery(publicQueries.look(params.slug!)),
+        prefetch: (qc, params) => qc.prefetchQuery(publicQueries.look(params.slug!)),
         meta: (qc, params) => {
-          const data = qc.getQueryData(
-            publicQueries.look(params.slug!).queryKey,
-          );
+          const data = qc.getQueryData(publicQueries.look(params.slug!).queryKey);
           const label = (data?.meta?.label as string) ?? "Look";
           return {
             title: withSuffix(label),
@@ -223,12 +196,9 @@ export const publicRoutes: PublicRoute[] = [
       {
         path: "application/:slug",
         Component: ApplicationDetailPage,
-        prefetch: (qc, params) =>
-          qc.prefetchQuery(publicQueries.application(params.slug!)),
+        prefetch: (qc, params) => qc.prefetchQuery(publicQueries.application(params.slug!)),
         meta: (qc, params) => {
-          const data = qc.getQueryData(
-            publicQueries.application(params.slug!).queryKey,
-          );
+          const data = qc.getQueryData(publicQueries.application(params.slug!).queryKey);
           const label = (data?.meta?.label as string) ?? "Application";
           return {
             title: withSuffix(label),
@@ -240,9 +210,7 @@ export const publicRoutes: PublicRoute[] = [
         path: "application/:slug/:projectSlug",
         Component: ApplicationProjectPage,
         prefetch: (qc, params) =>
-          qc.prefetchQuery(
-            publicQueries.applicationProject(params.projectSlug!),
-          ),
+          qc.prefetchQuery(publicQueries.applicationProject(params.projectSlug!)),
         meta: (qc, params) => {
           const project = qc.getQueryData(
             publicQueries.applicationProject(params.projectSlug!).queryKey,
@@ -283,8 +251,7 @@ export const publicRoutes: PublicRoute[] = [
       {
         path: "selection/:token",
         Component: SelectionPage,
-        prefetch: (qc, params) =>
-          qc.prefetchQuery(publicQueries.selection(params.token!)),
+        prefetch: (qc, params) => qc.prefetchQuery(publicQueries.selection(params.token!)),
         // Rendered on the server so the customer sees content immediately, but
         // never indexed: the token is the only thing keeping it private, and a
         // search engine that crawls it publishes a client's shortlist.

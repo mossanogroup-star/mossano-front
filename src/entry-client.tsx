@@ -35,14 +35,9 @@ function App() {
 /**
  * Renders its children only after the first client render.
  *
- * The server tree is `<App />` alone. Anything the client mounts alongside it —
- * sonner's Toaster renders a real <section> immediately — is markup the server
- * never produced, and React reports that as a hydration mismatch and throws the
- * whole root back to client rendering, discarding the server-rendered HTML the
- * SSR pass exists to deliver.
- *
- * Returning null on the first render makes the client's initial output match
- * the server's exactly; the toaster appears on the effect that follows.
+ * ⚠ The server tree is `<App />` alone. Anything mounted alongside it — the
+ * Toaster renders a real <section> — is markup the server never produced, and
+ * React discards the whole server-rendered root over the mismatch.
  */
 function AfterHydration({ children }: { children: React.ReactNode }) {
   const [ready, setReady] = useState(false);
@@ -60,9 +55,7 @@ const tree = (
   <StrictMode>
     <QueryClientProvider client={queryClient}>
       <HydrationBoundary state={dehydratedState}>
-        <BrowserRouter
-          future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
-        >
+        <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
           <App />
           <AfterHydration>
             <Toaster position="top-right" closeButton richColors />

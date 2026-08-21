@@ -2,13 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { adminApi } from "../../api/adminApi";
-import {
-  PageHeader,
-  Stat,
-  Pill,
-  DataTable,
-  TableEmpty,
-} from "../../components/AdminUi";
+import { PageHeader, Stat, Pill, DataTable, TableEmpty } from "../../components/AdminUi";
 import { useSiteConfig } from "@/shared/hooks/useSiteConfig";
 
 /**
@@ -42,8 +36,7 @@ export function DashboardPage() {
   });
 
   const availabilityLabel = (slug: string) =>
-    taxonomies?.availability[slug as keyof typeof taxonomies.availability] ??
-    slug;
+    taxonomies?.availability[slug as keyof typeof taxonomies.availability] ?? slug;
 
   return (
     <>
@@ -66,23 +59,14 @@ export function DashboardPage() {
           hint={`Not checked in ${data?.stones.verificationStaleDays ?? 14} days`}
         />
         <Stat label="Stones in catalogue" value={data?.stones.total ?? 0} />
-        <Stat
-          label="Live selections"
-          value={data?.selections.active ?? 0}
-          hint="Shared links"
-        />
+        <Stat label="Live selections" value={data?.selections.active ?? 0} hint="Shared links" />
       </div>
 
       {/* ── The Current Edit ───────────────────────────────────────────── */}
       <section className="mt-14">
         <div className="flex items-baseline justify-between gap-4 border-b border-ivory-dark pb-3">
-          <h2 className="font-display text-[1rem] uppercase tracking-wide">
-            Current Edit
-          </h2>
-          <Link
-            to="/admin/edits"
-            className="label underline-offset-4 hover:underline"
-          >
+          <h2 className="font-display text-[1rem] uppercase tracking-wide">Current Edit</h2>
+          <Link to="/admin/edits" className="label underline-offset-4 hover:underline">
             Manage Edits
           </Link>
         </div>
@@ -121,26 +105,21 @@ export function DashboardPage() {
           <h2 className="font-display text-[1rem] uppercase tracking-wide">
             Availability to confirm
           </h2>
-          <Link
-            to="/admin/stones"
-            className="label underline-offset-4 hover:underline"
-          >
+          <Link to="/admin/stones" className="label underline-offset-4 hover:underline">
             All stones
           </Link>
         </div>
 
         <p className="mt-3 max-w-prose text-[0.82rem] leading-relaxed text-ink-faint">
-          The site tells customers when a lot was last verified. Confirming here
-          updates that date without changing the status.
+          The site tells customers when a lot was last verified. Confirming here updates that date
+          without changing the status.
         </p>
 
         <div className="mt-5">
           <DataTable
             head={["Code", "Stone", "Status", "Last verified", ""]}
             empty={
-              queue?.length === 0 ? (
-                <TableEmpty message="Everything is up to date." />
-              ) : undefined
+              queue?.length === 0 ? <TableEmpty message="Everything is up to date." /> : undefined
             }
           >
             {(queue ?? []).slice(0, 10).map((stone) => (
@@ -183,13 +162,8 @@ export function DashboardPage() {
       {/* ── Recent enquiries ───────────────────────────────────────────── */}
       <section className="mt-14">
         <div className="flex items-baseline justify-between gap-4 border-b border-ivory-dark pb-3">
-          <h2 className="font-display text-[1rem] uppercase tracking-wide">
-            Latest enquiries
-          </h2>
-          <Link
-            to="/admin/enquiries"
-            className="label underline-offset-4 hover:underline"
-          >
+          <h2 className="font-display text-[1rem] uppercase tracking-wide">Latest enquiries</h2>
+          <Link to="/admin/enquiries" className="label underline-offset-4 hover:underline">
             All enquiries
           </Link>
         </div>
@@ -216,24 +190,16 @@ export function DashboardPage() {
                     {enquiry.name}
                   </Link>
                   {enquiry.company && (
-                    <span className="block text-[0.75rem] text-ink-faint">
-                      {enquiry.company}
-                    </span>
+                    <span className="block text-[0.75rem] text-ink-faint">{enquiry.company}</span>
                   )}
                 </td>
                 <td className="py-3 pr-6 text-[0.8rem] text-ink-soft">
-                  {enquiry.stone?.mossanoCode ??
-                    enquiry.stoneSnapshot?.mossanoCode ??
-                    "—"}
+                  {enquiry.stone?.mossanoCode ?? enquiry.stoneSnapshot?.mossanoCode ?? "—"}
                 </td>
                 <td className="py-3 pr-6">
-                  <Pill tone={enquiry.isHighIntent ? "brass" : "muted"}>
-                    {enquiry.typeLabel}
-                  </Pill>
+                  <Pill tone={enquiry.isHighIntent ? "brass" : "muted"}>{enquiry.typeLabel}</Pill>
                 </td>
-                <td className="py-3 pr-6 text-[0.8rem]">
-                  {enquiry.statusLabel}
-                </td>
+                <td className="py-3 pr-6 text-[0.8rem]">{enquiry.statusLabel}</td>
                 <td className="py-3 text-[0.78rem] text-ink-faint">
                   {new Date(enquiry.createdAt).toLocaleDateString("en-IN")}
                 </td>

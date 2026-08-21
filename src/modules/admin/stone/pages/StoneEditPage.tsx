@@ -6,12 +6,7 @@ import { toast } from "sonner";
 import { adminApi } from "../../api/adminApi";
 import { PageHeader, AdminError } from "../../components/AdminUi";
 import { MediaPicker } from "../../media/components/MediaPicker";
-import {
-  Field,
-  TextInput,
-  TextArea,
-  Select,
-} from "@/modules/enquiry/components/Field";
+import { Field, TextInput, TextArea, Select } from "@/modules/enquiry/components/Field";
 import { useSiteConfig } from "@/shared/hooks/useSiteConfig";
 import { ApiError } from "@/shared/api/http";
 
@@ -126,9 +121,7 @@ export function StoneEditPage() {
     mutationFn: (body: unknown) =>
       isNew ? adminApi.createStone(body) : adminApi.updateStone(id!, body),
     onSuccess: (saved) => {
-      toast.success(
-        isNew ? `${saved.name} added as ${saved.mossanoCode}` : "Saved",
-      );
+      toast.success(isNew ? `${saved.name} added as ${saved.mossanoCode}` : "Saved");
       queryClient.invalidateQueries({ queryKey: ["admin-stones"] });
       queryClient.invalidateQueries({ queryKey: ["admin-stone", saved.id] });
       queryClient.invalidateQueries({ queryKey: ["dashboard"] });
@@ -161,8 +154,7 @@ export function StoneEditPage() {
         videoIds,
       });
     } catch (err) {
-      const entries =
-        err instanceof ApiError ? Object.entries(err.fieldErrors()) : [];
+      const entries = err instanceof ApiError ? Object.entries(err.fieldErrors()) : [];
       if (entries.length) {
         entries.forEach(([key, message]) =>
           setError(key as keyof FormValues, { type: "server", message }),
@@ -201,16 +193,8 @@ export function StoneEditPage() {
       <div className="grid gap-x-12 lg:grid-cols-2">
         <section>
           <p className="label mb-5">Identity</p>
-          <Field
-            label="Stone name"
-            htmlFor="name"
-            required
-            error={errors.name?.message}
-          >
-            <TextInput
-              id="name"
-              {...register("name", { required: "A name is required" })}
-            />
+          <Field label="Stone name" htmlFor="name" required error={errors.name?.message}>
+            <TextInput id="name" {...register("name", { required: "A name is required" })} />
           </Field>
           <Field
             label="Supplier lot number"
@@ -249,16 +233,8 @@ export function StoneEditPage() {
           <p className="label mb-3 mt-8 border-t border-ivory-dark pt-6">
             Specification — leave blank if not confirmed
           </p>
-          <Field
-            label="Origin"
-            htmlFor="origin"
-            hint='Shows as "On request" while blank'
-          >
-            <TextInput
-              id="origin"
-              placeholder="e.g. Italy"
-              {...register("origin")}
-            />
+          <Field label="Origin" htmlFor="origin" hint='Shows as "On request" while blank'>
+            <TextInput id="origin" placeholder="e.g. Italy" {...register("origin")} />
           </Field>
 
           <div className="grid gap-x-6 sm:grid-cols-2">
@@ -273,50 +249,23 @@ export function StoneEditPage() {
               </Select>
             </Field>
             <Field label="Thickness (mm)" htmlFor="thicknessMm">
-              <TextInput
-                id="thicknessMm"
-                type="number"
-                min={0}
-                {...register("thicknessMm")}
-              />
+              <TextInput id="thicknessMm" type="number" min={0} {...register("thicknessMm")} />
             </Field>
           </div>
 
-          <p className="label mb-3 mt-8 border-t border-ivory-dark pt-6">
-            The lot
-          </p>
+          <p className="label mb-3 mt-8 border-t border-ivory-dark pt-6">The lot</p>
           <div className="grid gap-x-6 sm:grid-cols-2">
             <Field label="Slab length (in)" htmlFor="slabLengthIn">
-              <TextInput
-                id="slabLengthIn"
-                type="number"
-                min={0}
-                {...register("slabLengthIn")}
-              />
+              <TextInput id="slabLengthIn" type="number" min={0} {...register("slabLengthIn")} />
             </Field>
             <Field label="Slab width (in)" htmlFor="slabWidthIn">
-              <TextInput
-                id="slabWidthIn"
-                type="number"
-                min={0}
-                {...register("slabWidthIn")}
-              />
+              <TextInput id="slabWidthIn" type="number" min={0} {...register("slabWidthIn")} />
             </Field>
             <Field label="Number of slabs" htmlFor="slabCount">
-              <TextInput
-                id="slabCount"
-                type="number"
-                min={0}
-                {...register("slabCount")}
-              />
+              <TextInput id="slabCount" type="number" min={0} {...register("slabCount")} />
             </Field>
             <Field label="Total area (sq ft)" htmlFor="areaSqFt">
-              <TextInput
-                id="areaSqFt"
-                type="number"
-                min={0}
-                {...register("areaSqFt")}
-              />
+              <TextInput id="areaSqFt" type="number" min={0} {...register("areaSqFt")} />
             </Field>
           </div>
         </section>
@@ -329,13 +278,11 @@ export function StoneEditPage() {
             hint="Changing this updates every page the stone appears on"
           >
             <Select id="availability" {...register("availability")}>
-              {Object.entries(taxonomies?.availability ?? {}).map(
-                ([slug, label]) => (
-                  <option key={slug} value={slug}>
-                    {label}
-                  </option>
-                ),
-              )}
+              {Object.entries(taxonomies?.availability ?? {}).map(([slug, label]) => (
+                <option key={slug} value={slug}>
+                  {label}
+                </option>
+              ))}
             </Select>
           </Field>
 
@@ -358,9 +305,7 @@ export function StoneEditPage() {
             </label>
           </div>
 
-          <p className="label mb-3 mt-8 border-t border-ivory-dark pt-6">
-            Categorisation
-          </p>
+          <p className="label mb-3 mt-8 border-t border-ivory-dark pt-6">Categorisation</p>
 
           {/* Controller rather than register: these are arrays of checkboxes,
               and react-hook-form's uncontrolled path does not manage array
@@ -373,10 +318,7 @@ export function StoneEditPage() {
                 <legend className="label mb-2">Look</legend>
                 <div className="flex flex-wrap gap-x-5 gap-y-2">
                   {(taxonomies?.looks ?? []).map((look) => (
-                    <label
-                      key={look.slug}
-                      className="flex items-center gap-2 text-[0.85rem]"
-                    >
+                    <label key={look.slug} className="flex items-center gap-2 text-[0.85rem]">
                       <input
                         type="checkbox"
                         checked={field.value.includes(look.slug)}
@@ -405,10 +347,7 @@ export function StoneEditPage() {
                 <legend className="label mb-2">Application</legend>
                 <div className="flex flex-wrap gap-x-5 gap-y-2">
                   {(taxonomies?.applications ?? []).map((app) => (
-                    <label
-                      key={app.slug}
-                      className="flex items-center gap-2 text-[0.85rem]"
-                    >
+                    <label key={app.slug} className="flex items-center gap-2 text-[0.85rem]">
                       <input
                         type="checkbox"
                         checked={field.value.includes(app.slug)}

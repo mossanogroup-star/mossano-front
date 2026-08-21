@@ -3,26 +3,20 @@ import { Navigate, useLocation } from "react-router-dom";
 import { useSession } from "@/modules/admin/auth/useSession";
 
 /**
- * Gate for every admin route.
+ * Gate for every admin route. Three states on purpose: no token redirects at
+ * once, a token being validated waits rather than flashing the login screen at
+ * someone already signed in, and a failed token redirects carrying the page
+ * they wanted.
  *
- * The three states are distinguished on purpose. With no token at all the
- * redirect is immediate. With a token still being validated the panel waits,
- * rather than flashing the login screen at someone who is in fact signed in.
- * Only a token that fails validation sends them to log in again — carrying the
- * page they were trying to reach, so a bookmarked enquiry still opens after
- * signing in.
- *
- * This is a convenience, not the security boundary. Every admin endpoint checks
- * the token server-side; nothing here is trusted.
+ * A convenience, not the security boundary — every admin endpoint checks the
+ * token server-side.
  */
 export function RequireAuth({ children }: { children: ReactNode }) {
   const { isAuthenticated, isLoading, isAnonymous } = useSession();
   const location = useLocation();
 
   if (isAnonymous) {
-    return (
-      <Navigate to="/admin/login" state={{ from: location.pathname }} replace />
-    );
+    return <Navigate to="/admin/login" state={{ from: location.pathname }} replace />;
   }
 
   if (isLoading) {
@@ -34,9 +28,7 @@ export function RequireAuth({ children }: { children: ReactNode }) {
   }
 
   if (!isAuthenticated) {
-    return (
-      <Navigate to="/admin/login" state={{ from: location.pathname }} replace />
-    );
+    return <Navigate to="/admin/login" state={{ from: location.pathname }} replace />;
   }
 
   return <>{children}</>;

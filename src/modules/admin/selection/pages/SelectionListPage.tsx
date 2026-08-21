@@ -3,12 +3,7 @@ import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { Copy, Link2Off, RotateCcw } from "lucide-react";
 import { adminApi } from "../../api/adminApi";
-import {
-  PageHeader,
-  DataTable,
-  TableEmpty,
-  Pill,
-} from "../../components/AdminUi";
+import { PageHeader, DataTable, TableEmpty, Pill } from "../../components/AdminUi";
 
 /**
  * Admin Scope §6 — private selections.
@@ -22,12 +17,10 @@ export function SelectionListPage() {
 
   const { data } = useQuery({
     queryKey: ["admin-selections"],
-    queryFn: async () =>
-      (await adminApi.selections({ includeRevoked: true, limit: 60 })).data,
+    queryFn: async () => (await adminApi.selections({ includeRevoked: true, limit: 60 })).data,
   });
 
-  const invalidate = () =>
-    queryClient.invalidateQueries({ queryKey: ["admin-selections"] });
+  const invalidate = () => queryClient.invalidateQueries({ queryKey: ["admin-selections"] });
 
   const revoke = useMutation({
     mutationFn: (id: string) => adminApi.revokeSelection(id),
@@ -71,20 +64,8 @@ export function SelectionListPage() {
       />
 
       <DataTable
-        head={[
-          "Ref",
-          "Prepared for",
-          "Stones",
-          "Status",
-          "Views",
-          "Last opened",
-          "",
-        ]}
-        empty={
-          selections.length === 0 ? (
-            <TableEmpty message="No selections yet." />
-          ) : undefined
-        }
+        head={["Ref", "Prepared for", "Stones", "Status", "Views", "Last opened", ""]}
+        empty={selections.length === 0 ? <TableEmpty message="No selections yet." /> : undefined}
       >
         {selections.map((selection) => (
           <tr key={selection.id} className="border-b border-ivory-dark/60">

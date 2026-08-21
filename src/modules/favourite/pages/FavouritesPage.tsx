@@ -31,8 +31,8 @@ export function FavouritesPage() {
           <p className="label mt-4">Favourites</p>
           <h1 className="h-display mt-2">Your Shortlist</h1>
           <p className="mt-6 max-w-prose text-[0.95rem] leading-relaxed text-ink-soft">
-            Saved on this device. No account needed — and nothing here is shared
-            with MOSSANO until you send it.
+            Saved on this device. No account needed — and nothing here is shared with MOSSANO until
+            you send it.
           </p>
         </div>
 
@@ -62,14 +62,14 @@ export function FavouritesPage() {
           <div className="h-64" aria-busy="true" />
         ) : stones.length ? (
           <>
-            <StoneGrid stones={stones} />
+            <StoneGrid stones={stones} headingLevel={2} />
 
             {/* The point of a shortlist is sending it. Composed as a plain
                 link so it survives with JavaScript disabled. */}
             <div className="mt-20 border-t border-ivory-dark pt-10">
               <p className="max-w-prose text-[0.95rem] leading-relaxed text-ink-soft">
-                Send the shortlist to MOSSANO and they will confirm what is
-                available, with actual slab photography.
+                Send the shortlist to MOSSANO and they will confirm what is available, with actual
+                slab photography.
               </p>
               <div className="mt-7 flex flex-wrap gap-4">
                 <WhatsAppButton
@@ -92,12 +92,7 @@ export function FavouritesPage() {
           <EmptyState
             title="These stones are no longer listed"
             body="The lots you saved have been withdrawn. MOSSANO can suggest what has replaced them."
-            action={
-              <WhatsAppButton
-                href={whatsapp.general}
-                label="Ask what is similar"
-              />
-            }
+            action={<WhatsAppButton href={whatsapp.general} label="Ask what is similar" />}
           />
         )}
       </div>

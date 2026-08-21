@@ -19,7 +19,8 @@ import { configureApiBase } from "./shared/api/http";
 /**
  * The server half of the storefront.
  *
- * ── This file must never import the admin panel ──────────────────────────
+ * This file must never import the admin panel.
+ *
  * It imports `publicRoutes` and nothing from modules/admin. That is what keeps
  * admin code out of the SSR bundle — enforced by the module graph rather than
  * by anyone remembering. See docs/ARCHITECTURE.md.
@@ -80,8 +81,7 @@ function buildHead(meta: RouteMeta, url: string, origin: string) {
 
   // Private selections and favourites are rendered for the person holding the
   // link and must not be indexed.
-  if (meta.noindex)
-    tags.push(`<meta name="robots" content="noindex, nofollow" />`);
+  if (meta.noindex) tags.push(`<meta name="robots" content="noindex, nofollow" />`);
 
   return tags.join("\n    ");
 }
@@ -104,20 +104,13 @@ export async function render({ url, template, origin }: RenderArgs) {
   const search = new URLSearchParams(rawSearch);
   const matches = matchRoutes(asRouteObjects(publicRoutes), pathname) ?? [];
 
-  const leaf = [...matches]
-    .reverse()
-    .find((m) => (m.route as PublicRoute).meta);
-  const routeWithData = [...matches]
-    .reverse()
-    .find((m) => (m.route as PublicRoute).prefetch);
+  const leaf = [...matches].reverse().find((m) => (m.route as PublicRoute).meta);
+  const routeWithData = [...matches].reverse().find((m) => (m.route as PublicRoute).prefetch);
 
   /**
-   * Prefetch, but never let it take the page down.
-   *
-   * If the API is briefly unreachable the page should still render its shell
-   * and let the client retry, rather than returning a 500 to a customer who
-   * followed a link from WhatsApp. `prefetchQuery` already swallows errors;
-   * the try/catch covers anything thrown building the query itself.
+   * Prefetch must never take the page down: a customer arriving from WhatsApp
+   * gets the shell and a client-side retry, not a 500. `prefetchQuery` already
+   * swallows errors; the catch covers building the query itself.
    */
   await Promise.all([
     queryClient.prefetchQuery(publicQueries.config()).catch(() => undefined),
@@ -131,19 +124,13 @@ export async function render({ url, template, origin }: RenderArgs) {
   ]);
 
   /**
-   * The correct status code, which is not the same question as "did a route
-   * match".
+   * The status code, which is not the same question as "did a route match".
    *
-   * `/stone/does-not-exist` matches the stone route perfectly well — the route
-   * exists, the lot does not. Returning 200 there is a soft 404: the page says
-   * "Stone not found" to a human while telling a crawler it is real content, and
-   * a withdrawn lot gets indexed and stays in search results.
-   *
-   * So the answer comes from the prefetch. If the query the route depends on
-   * failed with a 4xx, that is the status of the page. Anything else — an API
-   * that was briefly unreachable, a 500 — still renders the shell with a 200,
-   * because the client will retry and a transient outage should not
-   * de-index the catalogue.
+   * `/stone/does-not-exist` matches the stone route fine — the route exists,
+   * the lot does not. A 200 there is a soft 404, and the withdrawn lot gets
+   * indexed. So the answer comes from the prefetch: a 4xx on the route's query
+   * is the page's status. Anything else still renders the shell with a 200, so
+   * a transient outage cannot de-index the catalogue.
    */
   const status = (() => {
     if (matches.some((m) => (m.route as PublicRoute).path === "*")) return 404;
@@ -157,10 +144,7 @@ export async function render({ url, template, origin }: RenderArgs) {
   })();
 
   const meta: RouteMeta = leaf
-    ? (leaf.route as PublicRoute).meta!(
-        queryClient,
-        leaf.params as Record<string, string>,
-      )
+    ? (leaf.route as PublicRoute).meta!(queryClient, leaf.params as Record<string, string>)
     : { title: SITE_TITLE, description: SITE_DESCRIPTION };
 
   // A page that does not exist must not advertise itself for indexing, whatever
@@ -184,10 +168,7 @@ export async function render({ url, template, origin }: RenderArgs) {
     // Replaces the whole marked region rather than just the <title>, so the
     // defaults in index.html cannot survive alongside the route's own tags —
     // two <title> elements would leave the browser showing the wrong one.
-    .replace(
-      /<!--ssr-head-start-->[\s\S]*?<!--ssr-head-end-->/,
-      buildHead(meta, url, origin),
-    )
+    .replace(/<!--ssr-head-start-->[\s\S]*?<!--ssr-head-end-->/, buildHead(meta, url, origin))
     .replace(
       '<div id="root"></div>',
       `<div id="root">${appHtml}</div>\n    <script>window.__MOSSANO_STATE__=${serialiseState(state)}</script>`,

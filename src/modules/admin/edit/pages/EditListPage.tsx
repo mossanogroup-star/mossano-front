@@ -3,12 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { adminApi } from "../../api/adminApi";
-import {
-  PageHeader,
-  DataTable,
-  TableEmpty,
-  Pill,
-} from "../../components/AdminUi";
+import { PageHeader, DataTable, TableEmpty, Pill } from "../../components/AdminUi";
 import { Field, TextInput } from "@/modules/enquiry/components/Field";
 import type { EditStatus } from "@/shared/api/types";
 
@@ -33,8 +28,7 @@ export function EditListPage() {
 
   const { data } = useQuery({
     queryKey: ["admin-edits"],
-    queryFn: async () =>
-      (await adminApi.edits({ includeArchived: true, limit: 60 })).data,
+    queryFn: async () => (await adminApi.edits({ includeArchived: true, limit: 60 })).data,
   });
 
   const create = useMutation({
@@ -44,8 +38,7 @@ export function EditListPage() {
       setTitle("");
       queryClient.invalidateQueries({ queryKey: ["admin-edits"] });
     },
-    onError: (err) =>
-      toast.error(err instanceof Error ? err.message : "Could not create"),
+    onError: (err) => toast.error(err instanceof Error ? err.message : "Could not create"),
   });
 
   const setStatus = useMutation({
@@ -56,17 +49,14 @@ export function EditListPage() {
       queryClient.invalidateQueries({ queryKey: ["admin-edits"] });
       queryClient.invalidateQueries({ queryKey: ["dashboard"] });
     },
-    onError: (err) =>
-      toast.error(err instanceof Error ? err.message : "Could not update"),
+    onError: (err) => toast.error(err instanceof Error ? err.message : "Could not update"),
   });
 
   const publish = useMutation({
     mutationFn: ({ id, isPublished }: { id: string; isPublished: boolean }) =>
       adminApi.updateEdit(id, { isPublished }),
     onSuccess: (edit) => {
-      toast.success(
-        edit.isPublished ? `${edit.title} is live` : `${edit.title} hidden`,
-      );
+      toast.success(edit.isPublished ? `${edit.title} is live` : `${edit.title} hidden`);
       queryClient.invalidateQueries({ queryKey: ["admin-edits"] });
       queryClient.invalidateQueries({ queryKey: ["dashboard"] });
     },
@@ -112,25 +102,16 @@ export function EditListPage() {
 
       <DataTable
         head={["Edit", "Status", "Stones", "On the site", ""]}
-        empty={
-          edits.length === 0 ? (
-            <TableEmpty message="No Edits yet." />
-          ) : undefined
-        }
+        empty={edits.length === 0 ? <TableEmpty message="No Edits yet." /> : undefined}
       >
         {edits.map((edit) => (
           <tr key={edit.id} className="border-b border-ivory-dark/60">
             <td className="py-3 pr-6">
-              <Link
-                to={`/admin/edits/${edit.id}`}
-                className="text-[0.9rem] hover:text-brass"
-              >
+              <Link to={`/admin/edits/${edit.id}`} className="text-[0.9rem] hover:text-brass">
                 {edit.title}
               </Link>
               {edit.subtitle && (
-                <span className="block text-[0.75rem] text-ink-faint">
-                  {edit.subtitle}
-                </span>
+                <span className="block text-[0.75rem] text-ink-faint">{edit.subtitle}</span>
               )}
             </td>
             <td className="py-3 pr-6">

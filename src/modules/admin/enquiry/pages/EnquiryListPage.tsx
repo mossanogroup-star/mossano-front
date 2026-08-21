@@ -1,19 +1,9 @@
 import { useState } from "react";
-import {
-  useQuery,
-  useMutation,
-  useQueryClient,
-  keepPreviousData,
-} from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient, keepPreviousData } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { adminApi } from "../../api/adminApi";
-import {
-  PageHeader,
-  DataTable,
-  TableEmpty,
-  Pill,
-} from "../../components/AdminUi";
+import { PageHeader, DataTable, TableEmpty, Pill } from "../../components/AdminUi";
 import { cn } from "@/shared/lib/cn";
 import type { EnquiryStatus } from "@/shared/api/types";
 
@@ -58,8 +48,7 @@ export function EnquiryListPage() {
       queryClient.invalidateQueries({ queryKey: ["admin-enquiries"] });
       queryClient.invalidateQueries({ queryKey: ["dashboard"] });
     },
-    onError: (err) =>
-      toast.error(err instanceof Error ? err.message : "Could not update"),
+    onError: (err) => toast.error(err instanceof Error ? err.message : "Could not update"),
   });
 
   const enquiries = data?.data ?? [];
@@ -67,10 +56,7 @@ export function EnquiryListPage() {
 
   return (
     <>
-      <PageHeader
-        title="Enquiries"
-        subtitle="Everything customers have sent, in one place."
-      />
+      <PageHeader title="Enquiries" subtitle="Everything customers have sent, in one place." />
 
       <div className="mb-6 flex flex-wrap items-center gap-x-2 gap-y-3">
         <button
@@ -81,9 +67,7 @@ export function EnquiryListPage() {
           }}
           className={cn(
             "px-3 py-1.5 font-sans text-[0.7rem] uppercase tracking-label transition-colors",
-            status === ""
-              ? "bg-ink text-ivory"
-              : "text-ink-soft hover:text-ink",
+            status === "" ? "bg-ink text-ivory" : "text-ink-soft hover:text-ink",
           )}
         >
           All
@@ -98,9 +82,7 @@ export function EnquiryListPage() {
             }}
             className={cn(
               "px-3 py-1.5 font-sans text-[0.7rem] uppercase tracking-label transition-colors",
-              status === stage.value
-                ? "bg-ink text-ivory"
-                : "text-ink-soft hover:text-ink",
+              status === stage.value ? "bg-ink text-ivory" : "text-ink-soft hover:text-ink",
             )}
           >
             {stage.label}
@@ -122,9 +104,7 @@ export function EnquiryListPage() {
       <DataTable
         head={["Ref", "From", "Type", "About", "Status", "Received"]}
         empty={
-          enquiries.length === 0 && !isFetching ? (
-            <TableEmpty message="Nothing here." />
-          ) : undefined
+          enquiries.length === 0 && !isFetching ? <TableEmpty message="Nothing here." /> : undefined
         }
       >
         {enquiries.map((enquiry) => (
@@ -147,20 +127,14 @@ export function EnquiryListPage() {
                 {enquiry.name}
               </Link>
               <span className="block text-[0.73rem] text-ink-faint">
-                {[enquiry.company, enquiry.phone ?? enquiry.email]
-                  .filter(Boolean)
-                  .join(" · ")}
+                {[enquiry.company, enquiry.phone ?? enquiry.email].filter(Boolean).join(" · ")}
               </span>
             </td>
             <td className="py-3 pr-6">
-              <Pill tone={enquiry.isHighIntent ? "brass" : "muted"}>
-                {enquiry.typeLabel}
-              </Pill>
+              <Pill tone={enquiry.isHighIntent ? "brass" : "muted"}>{enquiry.typeLabel}</Pill>
             </td>
             <td className="py-3 pr-6 text-[0.8rem] text-ink-soft">
-              {enquiry.stone?.mossanoCode ??
-                enquiry.stoneSnapshot?.mossanoCode ??
-                "—"}
+              {enquiry.stone?.mossanoCode ?? enquiry.stoneSnapshot?.mossanoCode ?? "—"}
             </td>
             <td className="py-3 pr-6">
               <select
@@ -193,10 +167,7 @@ export function EnquiryListPage() {
       </DataTable>
 
       {(meta?.totalPages ?? 1) > 1 && (
-        <nav
-          className="mt-8 flex items-center justify-between"
-          aria-label="Pagination"
-        >
+        <nav className="mt-8 flex items-center justify-between" aria-label="Pagination">
           <button
             type="button"
             className="btn-outline disabled:opacity-30"

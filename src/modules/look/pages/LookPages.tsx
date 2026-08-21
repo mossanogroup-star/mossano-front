@@ -28,8 +28,8 @@ export function LookIndexPage() {
         <p className="label mt-4">Shop by Look</p>
         <h1 className="h-display mt-2">Begin With the Mood</h1>
         <p className="mt-6 max-w-prose text-[0.95rem] leading-relaxed text-ink-soft">
-          Quiet or dramatic, warm or dark. Most specifications start from a
-          feeling long before they settle on a material.
+          Quiet or dramatic, warm or dark. Most specifications start from a feeling long before they
+          settle on a material.
         </p>
       </header>
 
@@ -101,12 +101,10 @@ export function LookDetailPage() {
 
       <div className="mt-14">
         {items.length ? (
-          <StoneGrid stones={items} />
+          <StoneGrid stones={items} headingLevel={2} />
         ) : (
           <EmptyState
-            title={
-              isError ? "Unknown look" : `No ${label} stone on the site yet`
-            }
+            title={isError ? "Unknown look" : `No ${label} stone on the site yet`}
             body="MOSSANO's supplier network reaches well beyond what is listed here."
             action={
               <WhatsAppButton

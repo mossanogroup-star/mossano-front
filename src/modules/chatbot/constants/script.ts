@@ -1,26 +1,12 @@
 import type { EnquiryInput } from "@/shared/api/types";
 
 /**
- * The chatbot's script, as data.
- *
- * From the Website document's second drop:
- *
- *     Customer Chatbot → Interested? → Quantity? → Location? → Delivery?
- *          ↓
- *     Lead created in MongoDB
- *
- * ── Two steps the client's diagram does not show ──────────────────────────
- * Their own message template ends "Customer: [Name] … Customer contact:
- * +91 XXXXX XXXXX", so name and number have to be collected somewhere. The
- * four-step diagram never asks for them. They are added at the end, after the
- * customer has already invested four answers — asking for a phone number first
- * is what makes people close a chat widget.
- *
- * Kept as data rather than branching code so the team can reword a question,
- * change the quick replies, or drop a step without touching the component.
+ * The chatbot's script, as data so a question can be reworded without touching
+ * the component. The client's flow is Interested? → Quantity? → Location? →
+ * Delivery?, and name and number are added after it — their own alert template
+ * needs both, and leading with a phone number closes the widget.
  */
-export type StepId =
-  "interested" | "quantity" | "location" | "delivery" | "name" | "phone";
+export type StepId = "interested" | "quantity" | "location" | "delivery" | "name" | "phone";
 
 export interface Step {
   id: StepId;
@@ -76,8 +62,7 @@ export const STEPS: Step[] = [
     prompt: "Thank you. Who should the desk ask for?",
     allowFreeText: true,
     placeholder: "Your name",
-    validate: (v) =>
-      v.trim().length < 2 ? "Please give a name MOSSANO can use." : null,
+    validate: (v) => (v.trim().length < 2 ? "Please give a name MOSSANO can use." : null),
   },
   {
     id: "phone",
@@ -86,9 +71,7 @@ export const STEPS: Step[] = [
     placeholder: "Phone number",
     inputMode: "tel",
     validate: (v) =>
-      v.replace(/\D/g, "").length < 10
-        ? "That number looks short — please check it."
-        : null,
+      v.replace(/\D/g, "").length < 10 ? "That number looks short — please check it." : null,
   },
 ];
 

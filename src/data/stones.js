@@ -1,26 +1,15 @@
 /**
- * The stone catalogue.
- *
- * Every field here was read off the client's own catalogue pages — the captions
- * are burnt into the photographs, so this file is the transcription. Nothing is
- * invented. See CLIENT-FACTS.md for how the spec format was decoded:
+ * The stone catalogue, transcribed from the client's PDF pages — the captions
+ * are burnt into the photographs. Nothing is invented; CLIENT-FACTS.md decodes
+ * the spec format. Seeded into MongoDB by mossano-back/scripts/seedStones.js.
  *
  *     "Size- 73*59*94NOS" + "QTY- 2800 SQ FT"
- *       = 73in x 59in slabs, 94 of them, 2,800 sq ft in total
+ *       = 73in x 59in slabs, 94 of them, 2,800 sq ft total
  *
- * Fields the catalogues do not contain are `null`, and the UI renders those as
- * "On request" rather than guessing. That matters more than usual here: an
- * architect specifying a 2,800 sq ft order will discover an invented origin or
- * finish, and MOSSANO's whole proposition is verified availability.
- *
- * ⚠️ Still to come from the client (see CLIENT-FACTS.md § Gaps):
- *   - origin      — required by the brief on every card and stone page
- *   - mossanoCode — the MM-024 scheme in the brief does not exist yet
- *   - finish, thickness
- *   - names for the lots that carry only a number
- *
- * Adding more: the remaining ~75 slabs are cropped in public/slabs/ and
- * inventoried in contact-sheets/. Transcribe from the sheets and append here.
+ * Fields the catalogues lack are `null` and render "On request". Origin,
+ * finish, thickness and the MM-024 codes are still outstanding — see
+ * docs/CLIENT-QUESTIONS.md. The remaining ~75 slabs are inventoried in
+ * contact-sheets/; transcribe and append.
  */
 
 /** Look categories, per the brief's SHOP BY LOOK section. */
@@ -72,7 +61,7 @@ export const COLLECTIONS = [
 
 /** @type {Stone[]} */
 export const STONES = [
-  // ── Beige ──────────────────────────────────────────────────────────────
+  // Beige
   {
     id: "classic-beige-16858",
     name: "Classic Beige",
@@ -206,7 +195,7 @@ export const STONES = [
     image: "beige/beige-p012-1.webp",
   },
 
-  // ── Black ──────────────────────────────────────────────────────────────
+  // Black
   {
     id: "black-forest-11931",
     name: "Black Forest",
@@ -316,7 +305,7 @@ export const STONES = [
     image: "black/black-p025-1.webp",
   },
 
-  // ── Grey & White ───────────────────────────────────────────────────────
+  // Grey & White
   {
     id: "super-white-17733",
     name: "Super White",
@@ -354,8 +343,7 @@ export const STONES = [
 export const stoneTitle = (s) => s.name ?? `Lot ${s.lot}`;
 
 /** "73 × 59 in" — the slab format architects actually read. */
-export const slabSize = (s) =>
-  s.slabL && s.slabW ? `${s.slabL} × ${s.slabW} in` : null;
+export const slabSize = (s) => (s.slabL && s.slabW ? `${s.slabL} × ${s.slabW} in` : null);
 
 /** Availability line for cards, per the brief's "4 slabs available". */
 export const availability = (s) => {

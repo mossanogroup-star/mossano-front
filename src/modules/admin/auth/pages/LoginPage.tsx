@@ -43,10 +43,7 @@ export function LoginPage() {
       // alike, so the whole team cannot be enumerated. Shown against the form
       // rather than a field, for the same reason.
       setError("root", {
-        message:
-          err instanceof ApiError
-            ? err.message
-            : "Could not sign in. Please try again.",
+        message: err instanceof ApiError ? err.message : "Could not sign in. Please try again.",
       });
     }
   });
@@ -69,11 +66,7 @@ export function LoginPage() {
             />
           </Field>
 
-          <Field
-            label="Password"
-            htmlFor="password"
-            error={errors.password?.message}
-          >
+          <Field label="Password" htmlFor="password" error={errors.password?.message}>
             <TextInput
               id="password"
               type="password"
@@ -88,11 +81,7 @@ export function LoginPage() {
             </p>
           )}
 
-          <button
-            type="submit"
-            className="btn-solid w-full"
-            disabled={isSubmitting}
-          >
+          <button type="submit" className="btn-solid w-full" disabled={isSubmitting}>
             {isSubmitting ? "Signing in…" : "Sign in"}
           </button>
         </form>

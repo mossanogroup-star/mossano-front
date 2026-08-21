@@ -37,17 +37,16 @@ export function AvailabilityBadge({
   tone = "dark",
 }: Props) {
   return (
-    <div
-      className={cn("flex flex-wrap items-center gap-x-3 gap-y-1", className)}
-    >
+    <div className={cn("flex flex-wrap items-center gap-x-3 gap-y-1", className)}>
       <span className="inline-flex items-center gap-2">
-        <span
-          className={cn("h-1.5 w-1.5 rounded-full", DOT[availability])}
-          aria-hidden="true"
-        />
+        <span className={cn("h-1.5 w-1.5 rounded-full", DOT[availability])} aria-hidden="true" />
         <span
           className={cn(
-            "font-sans text-[0.66rem] uppercase tracking-label",
+            // 0.75rem, not the 0.66rem of a decorative label. This line carries
+            // the site's central claim — how many slabs, and whether they are
+            // actually available — and at 10.6px it was the smallest text on a
+            // phone, below the caption describing it.
+            "font-sans text-[0.75rem] uppercase tracking-label",
             tone === "light" ? "text-ivory/85" : "text-ink-soft",
           )}
         >
@@ -74,7 +73,7 @@ export function AvailabilityBadge({
       {verifiedLabel && (
         <span
           className={cn(
-            "font-sans text-[0.66rem] tracking-wide",
+            "font-sans text-[0.72rem] tracking-wide",
             tone === "light" ? "text-ivory/55" : "text-ink-faint",
           )}
         >

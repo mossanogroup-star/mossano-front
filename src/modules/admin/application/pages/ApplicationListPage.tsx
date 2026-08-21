@@ -3,20 +3,10 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { X } from "lucide-react";
 import { adminApi } from "../../api/adminApi";
-import {
-  PageHeader,
-  DataTable,
-  TableEmpty,
-  Pill,
-} from "../../components/AdminUi";
+import { PageHeader, DataTable, TableEmpty, Pill } from "../../components/AdminUi";
 import { StonePicker } from "../../components/StonePicker";
 import { MediaPicker } from "../../media/components/MediaPicker";
-import {
-  Field,
-  TextInput,
-  TextArea,
-  Select,
-} from "@/modules/enquiry/components/Field";
+import { Field, TextInput, TextArea, Select } from "@/modules/enquiry/components/Field";
 import { useSiteConfig } from "@/shared/hooks/useSiteConfig";
 
 const BLANK = {
@@ -42,9 +32,7 @@ export function ApplicationListPage() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState(BLANK);
   const [imageIds, setImageIds] = useState<string[]>([]);
-  const [stoneIds, setStoneIds] = useState<
-    Array<{ id: string; name: string; code: string }>
-  >([]);
+  const [stoneIds, setStoneIds] = useState<Array<{ id: string; name: string; code: string }>>([]);
 
   const { data } = useQuery({
     queryKey: ["admin-applications"],
@@ -86,16 +74,13 @@ export function ApplicationListPage() {
 
   const save = useMutation({
     mutationFn: (body: unknown) =>
-      editingId
-        ? adminApi.updateApplication(editingId, body)
-        : adminApi.createApplication(body),
+      editingId ? adminApi.updateApplication(editingId, body) : adminApi.createApplication(body),
     onSuccess: () => {
       toast.success(editingId ? "Saved" : "Project added");
       queryClient.invalidateQueries({ queryKey: ["admin-applications"] });
       reset();
     },
-    onError: (err) =>
-      toast.error(err instanceof Error ? err.message : "Could not save"),
+    onError: (err) => toast.error(err instanceof Error ? err.message : "Could not save"),
   });
 
   const remove = useMutation({
@@ -137,21 +122,15 @@ export function ApplicationListPage() {
                   </button>
                   {(project.location || project.architect) && (
                     <span className="block text-[0.73rem] text-ink-faint">
-                      {[project.architect, project.location]
-                        .filter(Boolean)
-                        .join(" · ")}
+                      {[project.architect, project.location].filter(Boolean).join(" · ")}
                     </span>
                   )}
                 </td>
                 <td className="py-3 pr-6 text-[0.8rem] text-ink-soft">
                   {project.applicationLabel}
                 </td>
-                <td className="py-3 pr-6 text-[0.8rem] tabular-nums">
-                  {project.stoneCount}
-                </td>
-                <td className="py-3 pr-6 text-[0.8rem] tabular-nums">
-                  {project.images.length}
-                </td>
+                <td className="py-3 pr-6 text-[0.8rem] tabular-nums">{project.stoneCount}</td>
+                <td className="py-3 pr-6 text-[0.8rem] tabular-nums">{project.images.length}</td>
                 <td className="py-3">
                   <div className="flex gap-4">
                     {project.isPublished ? (
@@ -175,15 +154,9 @@ export function ApplicationListPage() {
 
         <aside className="mt-12 border-t border-ivory-dark pt-8 lg:mt-0 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0">
           <div className="flex items-baseline justify-between">
-            <p className="label">
-              {editingId ? "Edit project" : "Add a project"}
-            </p>
+            <p className="label">{editingId ? "Edit project" : "Add a project"}</p>
             {editingId && (
-              <button
-                type="button"
-                onClick={reset}
-                className="label hover:text-ink"
-              >
+              <button type="button" onClick={reset} className="label hover:text-ink">
                 New instead
               </button>
             )}
@@ -194,9 +167,7 @@ export function ApplicationListPage() {
               <Select
                 id="application"
                 value={form.application}
-                onChange={(e) =>
-                  setForm({ ...form, application: e.target.value })
-                }
+                onChange={(e) => setForm({ ...form, application: e.target.value })}
               >
                 <option value="">Choose one</option>
                 {(taxonomies?.applications ?? []).map((a) => (
@@ -218,18 +189,14 @@ export function ApplicationListPage() {
               <TextInput
                 id="app-project"
                 value={form.projectName}
-                onChange={(e) =>
-                  setForm({ ...form, projectName: e.target.value })
-                }
+                onChange={(e) => setForm({ ...form, projectName: e.target.value })}
               />
             </Field>
             <Field label="Architect" htmlFor="app-architect">
               <TextInput
                 id="app-architect"
                 value={form.architect}
-                onChange={(e) =>
-                  setForm({ ...form, architect: e.target.value })
-                }
+                onChange={(e) => setForm({ ...form, architect: e.target.value })}
               />
             </Field>
             <Field label="Location" htmlFor="app-location">
@@ -243,9 +210,7 @@ export function ApplicationListPage() {
               <TextArea
                 id="app-description"
                 value={form.description}
-                onChange={(e) =>
-                  setForm({ ...form, description: e.target.value })
-                }
+                onChange={(e) => setForm({ ...form, description: e.target.value })}
               />
             </Field>
 
@@ -280,11 +245,7 @@ export function ApplicationListPage() {
                       </span>
                       <button
                         type="button"
-                        onClick={() =>
-                          setStoneIds((prev) =>
-                            prev.filter((s) => s.id !== stone.id),
-                          )
-                        }
+                        onClick={() => setStoneIds((prev) => prev.filter((s) => s.id !== stone.id))}
                         className="text-ink-faint hover:text-ink"
                         aria-label={`Remove ${stone.name}`}
                       >
@@ -312,11 +273,7 @@ export function ApplicationListPage() {
                 })
               }
             >
-              {save.isPending
-                ? "Saving…"
-                : editingId
-                  ? "Save project"
-                  : "Add project"}
+              {save.isPending ? "Saving…" : editingId ? "Save project" : "Add project"}
             </button>
           </div>
         </aside>

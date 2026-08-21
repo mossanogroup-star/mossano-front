@@ -7,8 +7,7 @@ import { cn } from "@/shared/lib/cn";
 import type { Media } from "@/shared/api/types";
 
 interface Props {
-  kind:
-    "slab" | "application" | "collection" | "selection" | "video" | "general";
+  kind: "slab" | "application" | "collection" | "selection" | "video" | "general";
   /** Ordered — the sequence is the gallery order the customer sees. */
   value: string[];
   onChange: (ids: string[]) => void;
@@ -18,26 +17,14 @@ interface Props {
 }
 
 /**
- * Upload and arrange images for a stone, an Edit, a project or a selection.
+ * Upload and arrange images for a stone, Edit, project or selection.
  *
- * Two things it takes seriously.
- *
- * Order is data, not presentation: the first image is the one that appears on
- * every card and in every WhatsApp preview, so reordering is a first-class
- * action rather than something the team works around by re-uploading.
- *
- * A failed file does not fail the batch. Uploading forty slabs and losing all
- * of them because the thirty-ninth was rejected is the wrong behaviour — the
- * server reports per-file errors and they are surfaced individually.
+ * Order is data: the first image is what every card and link preview uses, so
+ * reordering is a first-class action. A failed file never fails the batch —
+ * losing forty slabs because the thirty-ninth was rejected is the wrong
+ * behaviour, so per-file errors are surfaced individually.
  */
-export function MediaPicker({
-  kind,
-  value,
-  onChange,
-  label,
-  hint,
-  max = 40,
-}: Props) {
+export function MediaPicker({ kind, value, onChange, label, hint, max = 40 }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [dragIndex, setDragIndex] = useState<number | null>(null);
   const queryClient = useQueryClient();
@@ -68,18 +55,13 @@ export function MediaPicker({
           message: string;
         }>;
         toast.warning(`${uploaded.length} uploaded, ${failed} could not be`, {
-          description: errors
-            .map((e) => `${e.filename}: ${e.message}`)
-            .join("\n"),
+          description: errors.map((e) => `${e.filename}: ${e.message}`).join("\n"),
         });
       } else {
-        toast.success(
-          `${uploaded.length} image${uploaded.length === 1 ? "" : "s"} uploaded`,
-        );
+        toast.success(`${uploaded.length} image${uploaded.length === 1 ? "" : "s"} uploaded`);
       }
     },
-    onError: (err) =>
-      toast.error(err instanceof Error ? err.message : "Upload failed"),
+    onError: (err) => toast.error(err instanceof Error ? err.message : "Upload failed"),
   });
 
   const move = (from: number, to: number) => {
@@ -172,10 +154,7 @@ export function MediaPicker({
                 >
                   ←
                 </button>
-                <GripVertical
-                  className="h-3 w-3 text-ivory/50"
-                  aria-hidden="true"
-                />
+                <GripVertical className="h-3 w-3 text-ivory/50" aria-hidden="true" />
                 <button
                   type="button"
                   onClick={() => move(i, i + 1)}

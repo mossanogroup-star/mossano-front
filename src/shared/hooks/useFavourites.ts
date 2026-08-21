@@ -15,16 +15,9 @@ import { favouritesStore } from "../lib/favourites";
 const EMPTY: string[] = [];
 
 export function useFavourites() {
-  const slugs = useSyncExternalStore(
-    favouritesStore.subscribe,
-    favouritesStore.get,
-    () => EMPTY,
-  );
+  const slugs = useSyncExternalStore(favouritesStore.subscribe, favouritesStore.get, () => EMPTY);
 
-  const toggle = useCallback(
-    (slug: string) => favouritesStore.toggle(slug),
-    [],
-  );
+  const toggle = useCallback((slug: string) => favouritesStore.toggle(slug), []);
   const has = useCallback((slug: string) => slugs.includes(slug), [slugs]);
 
   return {

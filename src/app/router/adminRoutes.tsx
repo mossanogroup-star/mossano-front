@@ -3,16 +3,12 @@ import type { RouteObject } from "react-router-dom";
 import { RequireAuth } from "./RequireAuth";
 
 /**
- * The admin panel.
+ * The admin panel. Every screen is `React.lazy`, so a customer who never types
+ * /admin downloads none of it.
  *
- * Every screen is `React.lazy`, so a customer who never types /admin downloads
- * none of it — the panel's forms, tables and editors would otherwise ride along
- * in the bundle of a storefront whose entire premise is photography loading
- * fast on a phone.
- *
- * This file is imported only by entry-client.tsx. entry-server.tsx imports the
- * public route tree alone, which means the SSR bundle cannot contain admin code
- * even by accident — the module graph enforces it rather than a convention.
+ * ⚠ Imported only by entry-client.tsx. entry-server.tsx imports the public
+ * tree alone, so the module graph — not a convention — keeps admin code out of
+ * the SSR bundle.
  */
 const AdminLayout = lazy(() =>
   import("@/modules/admin/layouts/AdminLayout").then((m) => ({
@@ -93,9 +89,7 @@ function Loading() {
   );
 }
 
-const wrap = (element: React.ReactNode) => (
-  <Suspense fallback={<Loading />}>{element}</Suspense>
-);
+const wrap = (element: React.ReactNode) => <Suspense fallback={<Loading />}>{element}</Suspense>;
 
 export const adminRoutes: RouteObject[] = [
   { path: "/admin/login", element: wrap(<LoginPage />) },

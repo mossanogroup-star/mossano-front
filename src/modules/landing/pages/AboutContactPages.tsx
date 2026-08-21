@@ -1,9 +1,5 @@
 import { Link } from "react-router-dom";
-import {
-  Section,
-  SectionHeading,
-  EmptyState,
-} from "@/shared/components/Section";
+import { Section, SectionHeading, EmptyState } from "@/shared/components/Section";
 import { WhatsAppButton } from "@/shared/components/WhatsAppButton";
 import { EnquiryForm } from "@/modules/enquiry/components/EnquiryForm";
 import { useSiteConfig } from "@/shared/hooks/useSiteConfig";
@@ -47,28 +43,20 @@ export function AboutPage() {
           <p className="label mt-4 text-ivory/55">About</p>
           <h1 className="h-display mt-2 text-ivory">{brand.strapline}</h1>
           <p className="mt-8 max-w-prose text-[1rem] leading-relaxed text-ivory/75">
-            MOSSANO MARMO sources natural stone for architects, designers and
-            developers who need a specific thing rather than a category. The
-            business runs out of Kishangarh in Rajasthan, and the work is as
-            much about knowing what to leave out as what to bring in.
+            MOSSANO MARMO sources natural stone for architects, designers and developers who need a
+            specific thing rather than a category. The business runs out of Kishangarh in Rajasthan,
+            and the work is as much about knowing what to leave out as what to bring in.
           </p>
         </div>
       </Section>
 
       <Section>
-        <SectionHeading
-          label="How MOSSANO works"
-          title="Four Things That Matter"
-        />
+        <SectionHeading label="How MOSSANO works" title="Four Things That Matter" />
         <div className="mt-14 grid gap-x-12 gap-y-12 sm:grid-cols-2">
           {PILLARS.map((pillar) => (
             <div key={pillar.title} className="border-t border-ivory-dark pt-6">
-              <h2 className="font-display text-[1rem] uppercase tracking-wide">
-                {pillar.title}
-              </h2>
-              <p className="mt-4 text-[0.95rem] leading-relaxed text-ink-soft">
-                {pillar.body}
-              </p>
+              <h2 className="font-display text-[1rem] uppercase tracking-wide">{pillar.title}</h2>
+              <p className="mt-4 text-[0.95rem] leading-relaxed text-ink-soft">{pillar.body}</p>
             </div>
           ))}
         </div>
@@ -109,11 +97,7 @@ export function ContactPage() {
           <div className="mt-10 space-y-8">
             <div>
               <p className="label">WhatsApp</p>
-              <WhatsAppButton
-                href={whatsapp.general}
-                variant="quiet"
-                className="mt-2"
-              />
+              <WhatsAppButton href={whatsapp.general} variant="quiet" className="mt-2" />
             </div>
 
             <div>
@@ -123,7 +107,7 @@ export function ContactPage() {
                   <p key={phone}>
                     <a
                       href={`tel:+91${phone}`}
-                      className="text-[0.95rem] transition-colors hover:text-brass"
+                      className="inline-block py-1 text-[0.95rem] transition-colors hover:text-brass"
                     >
                       +91 {phone}
                     </a>
@@ -137,7 +121,7 @@ export function ContactPage() {
               <p className="mt-2">
                 <a
                   href={`mailto:${brand.email}`}
-                  className="text-[0.95rem] transition-colors hover:text-brass"
+                  className="inline-block py-1 text-[0.95rem] transition-colors hover:text-brass"
                 >
                   {brand.email}
                 </a>

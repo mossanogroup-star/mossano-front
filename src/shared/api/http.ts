@@ -1,11 +1,8 @@
 /**
  * The API client, shared by the storefront and the admin panel.
  *
- * One subtlety drives the shape of this file: the storefront is server-rendered,
- * so the same `api.get('/public/home')` call runs both in a browser, where a
- * relative URL is correct, and inside Node during SSR, where `fetch` has no
- * notion of an origin. `configureApiBase` lets the server entry point set one
- * per request; in the browser the base stays empty and requests are relative.
+ * The same call runs in a browser, where a relative URL is right, and inside
+ * Node during SSR, where `fetch` has no origin — hence `configureApiBase`.
  */
 
 let apiBase = "";
@@ -104,28 +101,18 @@ export class ApiError extends Error {
   }
 }
 
-type QueryValue =
-  string | number | boolean | null | undefined | Array<string | number>;
+type QueryValue = string | number | boolean | null | undefined | Array<string | number>;
 
 /**
- * Builds a query string, dropping anything empty.
- *
- * Array values are joined with commas rather than repeated, matching
- * csvQuerySchema on the server — and, more usefully, keeping a filtered Stone
- * Shop URL short enough to be shared on WhatsApp.
+ * Arrays join with commas rather than repeating the key: it matches
+ * csvQuerySchema on the server and keeps a filtered URL short enough to share.
  */
 export function buildQuery(params?: Record<string, QueryValue>): string {
   if (!params) return "";
   const search = new URLSearchParams();
 
   for (const [key, value] of Object.entries(params)) {
-    if (
-      value === undefined ||
-      value === null ||
-      value === "" ||
-      value === false
-    )
-      continue;
+    if (value === undefined || value === null || value === "" || value === false) continue;
     if (Array.isArray(value)) {
       if (!value.length) continue;
       search.set(key, value.join(","));
@@ -148,10 +135,7 @@ interface RequestOptions {
   formData?: FormData;
 }
 
-async function request<T>(
-  path: string,
-  options: RequestOptions = {},
-): Promise<ApiEnvelope<T>> {
+async function request<T>(path: string, options: RequestOptions = {}): Promise<ApiEnvelope<T>> {
   const headers: Record<string, string> = {};
 
   if (options.auth) {
@@ -165,8 +149,7 @@ async function request<T>(
     headers,
     // Never set both: a multipart request must not carry a JSON content type.
     body:
-      options.formData ??
-      (options.body !== undefined ? JSON.stringify(options.body) : undefined),
+      options.formData ?? (options.body !== undefined ? JSON.stringify(options.body) : undefined),
     signal: options.signal,
   });
 
@@ -196,11 +179,8 @@ async function request<T>(
 }
 
 export const api = {
-  get: <T>(
-    path: string,
-    params?: Record<string, QueryValue>,
-    opts?: RequestOptions,
-  ) => request<T>(`${path}${buildQuery(params)}`, opts),
+  get: <T>(path: string, params?: Record<string, QueryValue>, opts?: RequestOptions) =>
+    request<T>(`${path}${buildQuery(params)}`, opts),
 
   post: <T>(path: string, body?: unknown, opts?: RequestOptions) =>
     request<T>(path, { ...opts, method: "POST", body }),
@@ -216,5 +196,4 @@ export const api = {
 };
 
 /** Most callers want the payload, not the envelope. */
-export const unwrap = async <T>(p: Promise<ApiEnvelope<T>>): Promise<T> =>
-  (await p).data;
+export const unwrap = async <T>(p: Promise<ApiEnvelope<T>>): Promise<T> => (await p).data;

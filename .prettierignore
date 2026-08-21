@@ -1,0 +1,6 @@
+node_modules
+package-lock.json
+dist
+audit-shots
+public
+src/data/slabs.gen.js
