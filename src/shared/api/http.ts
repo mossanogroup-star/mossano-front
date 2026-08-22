@@ -4,13 +4,13 @@
  * The same call runs in a browser, where a relative URL is right, and in Node
  * during SSR, where `fetch` has no origin — hence `configureApiBase`.
  *
- * VITE_API_BASE_URL is normally unset: mossano-back serves the storefront too,
- * so "/api" is same-origin and follows the site to any domain. Set it only if
- * the front is ever deployed separately from the API.
+ * There is deliberately no build-time base URL. mossano-back serves the
+ * storefront, so "/api" is same-origin and follows the site to any domain
+ * without a rebuild.
  */
 
-/** Substituted at build time, so changing it needs a rebuild. */
-let apiBase = (import.meta.env?.VITE_API_BASE_URL ?? "").replace(/\/+$/, "");
+/** Empty in the browser, where "/api" is same-origin. SSR overrides it. */
+let apiBase = "";
 
 /**
  * Called by entry-server before rendering; never in the browser. Wins over the

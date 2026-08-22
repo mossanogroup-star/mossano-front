@@ -1,6 +1,9 @@
-import { defineConfig, loadEnv } from "vite";
+import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "node:path";
+
+/** Where the standalone dev server sends /api. mossano-back's dev port. */
+const DEV_API_TARGET = "http://localhost:5000";
 
 /**
  * Two builds from one source tree:
@@ -13,13 +16,7 @@ import path from "node:path";
  * dev` here starts a standalone client-only server, which is useful for working
  * on admin screens in isolation but does not exercise the SSR path.
  */
-export default defineConfig(({ isSsrBuild, mode }) => {
-  // The standalone dev server proxies to mossano-back. Only used by
-  // `npm run dev` here — under `mossano-back npm run dev` the API is
-  // same-origin and this never applies.
-  const env = loadEnv(mode, process.cwd(), "");
-  const apiTarget = env.VITE_DEV_API_TARGET || "http://localhost:5000";
-
+export default defineConfig(({ isSsrBuild }) => {
   return {
     plugins: [react()],
 
@@ -48,8 +45,8 @@ export default defineConfig(({ isSsrBuild, mode }) => {
       // Only used by the standalone dev server; under mossano-back the API is
       // same-origin and this never applies.
       proxy: {
-        "/api": { target: apiTarget, changeOrigin: true },
-        "/uploads": { target: apiTarget, changeOrigin: true },
+        "/api": { target: DEV_API_TARGET, changeOrigin: true },
+        "/uploads": { target: DEV_API_TARGET, changeOrigin: true },
       },
     },
   };

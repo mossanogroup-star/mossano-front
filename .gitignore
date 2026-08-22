@@ -1,9 +1,11 @@
 node_modules
 dist
 
+# This package needs no .env — mossano-back serves the storefront, so "/api" is
+# same-origin. There is deliberately no .env.example; configuration lives in
+# mossano-back/.env. Ignored anyway, so a stray local file cannot be committed.
 .env
 .env.*
-!.env.example
 
 # ── Recovered photography ─────────────────────────────────────────────────
 # Neither of these belongs in git. Both are derived from the client's three PDF

@@ -20,7 +20,8 @@
     "skipLibCheck": true,
     "noEmit": true,
 
-    "baseUrl": ".",
+    // No baseUrl: TypeScript 7 removed it, and paths already resolve relative
+    // to this file. Keep in step with the alias in vite.config.ts.
     "paths": { "@/*": ["./src/*"] }
   },
   "include": ["src"]
