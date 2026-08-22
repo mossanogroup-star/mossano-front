@@ -13,13 +13,9 @@ type Listener = (slugs: string[]) => void;
 const listeners = new Set<Listener>();
 
 /**
- * The current list, cached by identity.
- *
- * `useSyncExternalStore` compares snapshots with Object.is and re-renders when
- * they differ. Parsing localStorage on every call returns a new array each
- * time, which never compares equal and spins React into an infinite render
- * loop. So the parse happens once, and this reference only changes when the
- * data actually does.
+ * Cached by identity. `useSyncExternalStore` compares snapshots with Object.is,
+ * so parsing localStorage on every call returns a fresh array that never
+ * compares equal — an infinite render loop.
  */
 let snapshot: string[] | null = null;
 
@@ -29,8 +25,8 @@ function parse(): string[] {
     const raw = window.localStorage.getItem(KEY);
     if (!raw) return [];
     const parsed: unknown = JSON.parse(raw);
-    // Anything could be under this key — another script, an older format, a
-    // hand-edited value. Only a clean array of strings is accepted.
+    // Another script, an older format, a hand-edited value — only a clean
+    // array of strings is accepted.
     if (!Array.isArray(parsed)) return [];
     return parsed.filter((s): s is string => typeof s === "string").slice(0, MAX);
   } catch {
@@ -86,9 +82,8 @@ export const favouritesStore = {
   },
 
   /**
-   * Subscribes to changes, including those made in another tab — the `storage`
-   * event fires only in *other* tabs, which is exactly the case localStorage
-   * writes here do not otherwise cover.
+   * Subscribes to changes. The `storage` event fires only in *other* tabs,
+   * which is exactly the case local writes do not cover.
    */
   subscribe(fn: Listener) {
     listeners.add(fn);

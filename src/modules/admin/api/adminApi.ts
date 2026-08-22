@@ -1,9 +1,6 @@
 /**
- * The admin panel's API surface.
- *
- * Every call here passes `auth: true`, which is the single place the bearer
- * token is attached. Nothing in the public storefront imports this file, so
- * there is no path by which a public page could accidentally make an
+ * The admin panel's API surface, and the only place the bearer token is
+ * attached. No public page imports this file, so none can accidentally make an
  * authenticated request.
  */
 import { api, unwrap, type ApiEnvelope } from "@/shared/api/http";

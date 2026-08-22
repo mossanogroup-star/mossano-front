@@ -24,15 +24,11 @@ const ASPECT: Record<string, string> = {
 };
 
 /**
- * A slab photograph.
+ * A slab photograph. Deliberately not a card — DESIGN.md's rule is that the
+ * stone is the content and everything else is a caption.
  *
- * DESIGN.md's governing rule is that the stone is the content and everything
- * else is a caption, so this is deliberately not a card: no border, no radius,
- * no shadow, just the photograph and the frame that crops it.
- *
- * The srcset comes from the server rather than being assembled here, because
- * only the server knows whether the file is on Cloudinary — where a width is a
- * URL transformation — or on local disk, where it is not.
+ * srcset comes from the server: only it knows whether the file is on Cloudinary,
+ * where a width is a URL transformation, or on local disk, where it is not.
  */
 export function Slab({
   media,
@@ -47,9 +43,8 @@ export function Slab({
   const src = media?.url ?? url ?? null;
 
   if (!src) {
-    // A missing photograph is stated, not faked with a placeholder graphic —
-    // most of the catalogue has imagery, and a stone that does not should look
-    // incomplete to the team rather than passable to a customer.
+    // Stated, not faked with a placeholder: a stone with no photography should
+    // look incomplete to the team, not passable to a customer.
     return (
       <div
         className={cn("slab-frame grid place-items-center", ASPECT[aspect], className)}
@@ -74,13 +69,10 @@ export function Slab({
         width={media?.width ?? undefined}
         height={media?.height ?? undefined}
         loading={priority ? "eager" : "lazy"}
-        // The attribute that actually moves the hero up the network queue —
-        // loading="eager" alone only stops it being deferred.
-        //
-        // Spelled lowercase and spread, because React 18 does not know the
-        // camelCase `fetchPriority` prop and passes it through to the DOM with a
-        // console error on every image. React 19 accepts the camelCase form; when
-        // this upgrades, this can become a plain prop.
+        // What actually moves the hero up the network queue; loading="eager"
+        // only stops it being deferred. Lowercase and spread because React 18
+        // does not know `fetchPriority` and logs an error for every image —
+        // React 19 accepts the camelCase prop.
         {...(priority ? { fetchpriority: "high" } : {})}
         decoding={priority ? "sync" : "async"}
         className={imgClassName}

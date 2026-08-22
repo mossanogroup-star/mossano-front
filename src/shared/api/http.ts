@@ -1,13 +1,21 @@
 /**
  * The API client, shared by the storefront and the admin panel.
  *
- * The same call runs in a browser, where a relative URL is right, and inside
- * Node during SSR, where `fetch` has no origin — hence `configureApiBase`.
+ * The same call runs in a browser, where a relative URL is right, and in Node
+ * during SSR, where `fetch` has no origin — hence `configureApiBase`.
+ *
+ * VITE_API_BASE_URL is normally unset: mossano-back serves the storefront too,
+ * so "/api" is same-origin and follows the site to any domain. Set it only if
+ * the front is ever deployed separately from the API.
  */
 
-let apiBase = "";
+/** Substituted at build time, so changing it needs a rebuild. */
+let apiBase = (import.meta.env?.VITE_API_BASE_URL ?? "").replace(/\/+$/, "");
 
-/** Called by entry-server before rendering. Never called in the browser. */
+/**
+ * Called by entry-server before rendering; never in the browser. Wins over the
+ * build-time value — the request's own origin beats anything compiled in.
+ */
 export function configureApiBase(origin: string) {
   apiBase = origin.replace(/\/+$/, "");
 }
@@ -15,10 +23,8 @@ export function configureApiBase(origin: string) {
 const TOKEN_KEY = "mossano.admin.token";
 
 /**
- * The admin token, in localStorage.
- *
- * Guarded because this module is imported during SSR, where `window` does not
- * exist — and because a browser with site data blocked throws on access rather
+ * The admin token. Guarded twice over: this module is imported during SSR where
+ * `window` is undefined, and a browser with site data blocked *throws* rather
  * than returning null.
  */
 export const tokenStore = {

@@ -78,11 +78,9 @@ export const STEPS: Step[] = [
 export type Answers = Partial<Record<StepId, string>>;
 
 /**
- * Maps the collected answers onto the enquiry the API already accepts.
- *
- * Quantity, location and delivery go into the sourcing brief rather than into
- * free text, so a chatbot lead is filterable and reads identically to one from
- * the Private Sourcing form — the team should not have to learn two shapes.
+ * Maps answers onto the enquiry the API already accepts. Quantity, location and
+ * delivery go into the sourcing brief, not free text, so a chatbot lead reads
+ identically to one from the Private Sourcing form.
  */
 export function toEnquiry(answers: Answers, stoneSlug?: string): EnquiryInput {
   return {

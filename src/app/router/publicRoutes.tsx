@@ -48,11 +48,9 @@ export interface PublicRoute {
 }
 
 /**
- * React Router's own RouteObject is a discriminated union on `index`, which
- * cannot be extended with an optional boolean `index` without the two halves
- * conflicting. The extra fields here are ours and mean nothing to the router,
- * so the table is declared in our shape and narrowed at the three points that
- * hand it to React Router.
+ * RouteObject is a discriminated union on `index`, so it cannot carry an
+ * optional boolean `index`. The table is declared in our shape and narrowed
+ * where it is handed to React Router.
  */
 export const asRouteObjects = (routes: PublicRoute[]) => routes as unknown as RouteObject[];
 

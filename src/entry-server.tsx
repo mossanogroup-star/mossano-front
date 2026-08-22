@@ -17,15 +17,12 @@ import { publicQueries } from "./shared/api/publicQueries";
 import { configureApiBase } from "./shared/api/http";
 
 /**
- * The server half of the storefront.
+ * The server half of the storefront, called by mossano-back for every
+ * non-/api, non-/admin GET.
  *
- * This file must never import the admin panel.
- *
- * It imports `publicRoutes` and nothing from modules/admin. That is what keeps
- * admin code out of the SSR bundle — enforced by the module graph rather than
- * by anyone remembering. See docs/ARCHITECTURE.md.
- *
- * Called by mossano-back for every non-/api, non-/admin GET.
+ * ⚠ Must never import modules/admin. Importing only `publicRoutes` is what
+ * keeps admin code out of the SSR bundle — enforced by the module graph, not by
+ * anyone remembering. See docs/ARCHITECTURE.md.
  */
 
 function App() {
@@ -124,13 +121,10 @@ export async function render({ url, template, origin }: RenderArgs) {
   ]);
 
   /**
-   * The status code, which is not the same question as "did a route match".
-   *
-   * `/stone/does-not-exist` matches the stone route fine — the route exists,
-   * the lot does not. A 200 there is a soft 404, and the withdrawn lot gets
-   * indexed. So the answer comes from the prefetch: a 4xx on the route's query
-   * is the page's status. Anything else still renders the shell with a 200, so
-   * a transient outage cannot de-index the catalogue.
+   * Not the same question as "did a route match": `/stone/does-not-exist`
+   * matches fine — the route exists, the lot does not, and a 200 there gets a
+   * withdrawn lot indexed. So the status comes from the prefetch. Only a 4xx
+   * counts, so a transient outage cannot de-index the catalogue.
    */
   const status = (() => {
     if (matches.some((m) => (m.route as PublicRoute).path === "*")) return 404;

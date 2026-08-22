@@ -1,11 +1,7 @@
 /**
- * Query definitions for the storefront.
- *
- * Each one is a plain object rather than a hook, so the same definition can be
- * prefetched on the server during SSR and consumed by `useQuery` in the
- * browser. That is what keeps the two paths honest: there is no way for the
- * server to fetch one thing and the client to ask for another, because both
- * reference this object and its key.
+ * Storefront queries as plain objects, not hooks, so the same definition is
+ * prefetched during SSR and consumed by `useQuery` in the browser. The server
+ * cannot fetch one thing and the client ask for another.
  */
 import { queryOptions } from "@tanstack/react-query";
 import { api, unwrap } from "./http";
@@ -136,12 +132,9 @@ export const publicQueries = {
     }),
 
   /**
-   * Website §5. POSTed rather than GET because the list lives on the device and
-   * can run to dozens of slugs — long enough to break a URL, and private enough
-   * that it should not sit in access logs or browser history.
-   *
-   * Not prefetched on the server: favourites are per-device, and the server has
-   * no idea what this visitor saved.
+   * Website §5. POSTed, not GET: the list can run to dozens of slugs, and a
+   * shortlist should not sit in access logs or browser history. Never
+   * prefetched — the server has no idea what this device saved.
    */
   favourites: (slugs: string[]) =>
     queryOptions({

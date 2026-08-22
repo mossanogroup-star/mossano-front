@@ -11,23 +11,19 @@ interface Props {
   priority?: boolean;
   sizes?: string;
   /**
-   * The heading level for the stone's name.
-   *
-   * A card is h3 when it sits under a section heading (the home page, an Edit),
-   * and h2 when the grid *is* the page and the only thing above it is the h1 —
-   * the Stone Shop, a look, favourites. Getting this wrong skips a level, and a
-   * screen-reader user navigating by heading is left wondering what they missed.
+   * h3 under a section heading (home, an Edit); h2 when the grid *is* the page
+   * and only the h1 sits above it (Stone Shop, a look, favourites). Wrong here
+   * skips a heading level for anyone navigating by them.
    */
   headingLevel?: 2 | 3;
 }
 
 /**
- * A stone in a grid.
+ * A stone in a grid: the photograph carries the tile, the type is a caption.
  *
- * The photograph carries the tile; the type underneath is a caption. Origin is
- * shown when the client has supplied it and simply omitted when they have not —
- * "Origin: On request" on every card in a grid of twenty would turn an absent
- * field into the loudest thing on the page. The stone page states it properly.
+ * Origin is omitted when absent rather than shown as "On request" — twenty
+ * cards saying that would make the missing field the loudest thing on the page.
+ * The stone page states it properly.
  */
 export function StoneCard({ stone, className, priority, sizes, headingLevel = 3 }: Props) {
   const Heading = (headingLevel === 2 ? "h2" : "h3") as "h2" | "h3";
