@@ -266,7 +266,7 @@ export const publicRoutes: PublicRoute[] = [
         meta: () => ({
           title: withSuffix("About"),
           description:
-            "Fifteen years sourcing marble, granite and natural stone from Kishangarh, Rajasthan and from the quarries themselves.",
+            "Over twelve years sourcing marble, granite and natural stone from Mumbai, Dubai and the quarries themselves.",
         }),
       },
       {
@@ -275,7 +275,7 @@ export const publicRoutes: PublicRoute[] = [
         meta: () => ({
           title: withSuffix("Contact"),
           description:
-            "WhatsApp, telephone and email for MOSSANO MARMO, Natural Stone House, Kishangarh, Rajasthan.",
+            "WhatsApp, telephone and email for MOSSANO MARMO — head office and studio in Mumbai, and Dubai.",
         }),
       },
 

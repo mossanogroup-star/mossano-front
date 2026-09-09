@@ -209,6 +209,17 @@ export interface StoneFacets {
   origin: FacetBucket[];
 }
 
+/** `state` and `postalCode` are empty for offices printed without them. */
+export interface BrandLocation {
+  label: string;
+  line1: string;
+  line2: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  country: string;
+}
+
 export interface BrandConfig {
   name: string;
   wordmark: string;
@@ -217,14 +228,9 @@ export interface BrandConfig {
   phones: string[];
   whatsappNumber: string;
   email: string;
-  address: {
-    line1: string;
-    line2: string;
-    city: string;
-    state: string;
-    postalCode: string;
-    country: string;
-  };
+  /** The head office — for the single-address footer and PDF. */
+  address: BrandLocation;
+  locations: BrandLocation[];
   canonicalDomain: string;
   baseUrl: string;
 }

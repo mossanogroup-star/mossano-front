@@ -3,6 +3,11 @@ import { Section, SectionHeading, EmptyState } from "@/shared/components/Section
 import { WhatsAppButton } from "@/shared/components/WhatsAppButton";
 import { EnquiryForm } from "@/modules/enquiry/components/EnquiryForm";
 import { useSiteConfig } from "@/shared/hooks/useSiteConfig";
+import type { BrandLocation } from "@/shared/api/types";
+
+/** "Mumbai, Maharashtra 400003" — and just "Dubai" where the rest is absent. */
+const cityLine = ({ city, state, postalCode }: BrandLocation) =>
+  [[city, state].filter(Boolean).join(", "), postalCode].filter(Boolean).join(" ");
 
 /**
  * Website §10 — About MOSSANO.
@@ -16,7 +21,7 @@ import { useSiteConfig } from "@/shared/hooks/useSiteConfig";
 const PILLARS = [
   {
     title: "Sourcing experience",
-    body: "Fifteen years buying marble, granite and natural stone, working from Kishangarh — India's stone market — and from the quarries themselves.",
+    body: "Over twelve years buying marble, granite and natural stone, working from Mumbai and Dubai and from the quarries themselves.",
   },
   {
     title: "Global network",
@@ -44,8 +49,8 @@ export function AboutPage() {
           <h1 className="h-display mt-2 text-ivory">{brand.strapline}</h1>
           <p className="mt-8 max-w-prose text-[1rem] leading-relaxed text-ivory/75">
             MOSSANO MARMO sources natural stone for architects, designers and developers who need a
-            specific thing rather than a category. The business runs out of Kishangarh in Rajasthan,
-            and the work is as much about knowing what to leave out as what to bring in.
+            specific thing rather than a category. The business runs out of Mumbai and Dubai, and
+            the work is as much about knowing what to leave out as what to bring in.
           </p>
         </div>
       </Section>
@@ -84,7 +89,6 @@ export function AboutPage() {
 /** Website §11 — Contact. WhatsApp, phone, email, and a simple form. */
 export function ContactPage() {
   const { brand, whatsapp } = useSiteConfig();
-  const { address } = brand;
 
   return (
     <Section className="pt-24 sm:pt-28">
@@ -130,14 +134,24 @@ export function ContactPage() {
 
             <div>
               <p className="label">Visit</p>
-              <address className="mt-2 space-y-0.5 not-italic text-[0.95rem] leading-relaxed text-ink-soft">
-                <p>{address.line1}</p>
-                <p>{address.line2}</p>
-                <p>
-                  {address.city}, {address.state} {address.postalCode}
-                </p>
-                <p>{address.country}</p>
-              </address>
+              <div className="mt-2 space-y-5">
+                {brand.locations.map((location) => (
+                  <address
+                    key={location.label}
+                    className="space-y-0.5 not-italic text-[0.95rem] leading-relaxed text-ink-soft"
+                  >
+                    <p className="font-display uppercase tracking-wide text-ink">
+                      {location.label}
+                    </p>
+                    <p>{location.line1}</p>
+                    <p>{location.line2}</p>
+                    {/* Dubai is printed without a state or postcode, so the
+                        line is assembled rather than templated. */}
+                    <p>{cityLine(location)}</p>
+                    <p>{location.country}</p>
+                  </address>
+                ))}
+              </div>
             </div>
           </div>
         </div>
