@@ -50,9 +50,17 @@ const PARTNERS: Partner[] = [
   { name: "YES Bank" },
 ];
 
-function Tile({ partner }: { partner: Partner }) {
+/**
+ * The tile is the `<li>` itself, and takes `hidden` as a prop.
+ *
+ * Wrapping it in a second `<li>` to carry aria-hidden is what an earlier version
+ * did, and `<li>` inside `<li>` is invalid: the parser hoists the inner one, the
+ * hydrated DOM stops matching the server's, and React throws #418 on the home
+ * page. Nesting rules are a hydration concern, not only a validation one.
+ */
+function Tile({ partner, hidden }: { partner: Partner; hidden?: boolean }) {
   return (
-    <li className="flex shrink-0 items-center justify-center px-8">
+    <li aria-hidden={hidden} className="flex shrink-0 items-center justify-center px-8">
       {partner.logo ? (
         <img
           src={partner.logo}
@@ -91,9 +99,7 @@ export function PartnerMarquee() {
           <Tile key={partner.name} partner={partner} />
         ))}
         {PARTNERS.map((partner) => (
-          <li key={`${partner.name}-copy`} aria-hidden="true" className="contents">
-            <Tile partner={partner} />
-          </li>
+          <Tile key={`${partner.name}-copy`} partner={partner} hidden />
         ))}
       </ul>
     </div>
