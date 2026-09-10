@@ -7,6 +7,7 @@ import { queryOptions } from "@tanstack/react-query";
 import { api, unwrap } from "./http";
 import type {
   ApplicationProject,
+  ProjectGroup,
   ApplicationTile,
   Edit,
   EditDetail,
@@ -129,6 +130,13 @@ export const publicQueries = {
     queryOptions({
       queryKey: ["application-project", slug] as const,
       queryFn: () => unwrap<ApplicationProject>(api.get(`/public/applications/projects/${slug}`)),
+    }),
+
+  /** Phase-1 feedback §6 — landmark projects, grouped by sector. */
+  projects: () =>
+    queryOptions({
+      queryKey: ["projects"] as const,
+      queryFn: () => unwrap<ProjectGroup[]>(api.get("/public/projects")),
     }),
 
   /**

@@ -16,7 +16,23 @@ const BLANK = {
   location: "",
   architect: "",
   description: "",
+  /** Phase-1 feedback §6 — blank keeps this off the Projects page. */
+  sector: "",
+  areaSqFt: "",
 };
+
+/** Mirrors PROJECT_SECTORS in application.model.js. */
+const SECTORS = [
+  { slug: "residential", label: "Residential" },
+  { slug: "hospitality", label: "Hospitality" },
+  { slug: "commercial", label: "Commercial" },
+  { slug: "infrastructure", label: "Infrastructure" },
+];
+
+interface ProjectLink {
+  label: string;
+  url: string;
+}
 
 /**
  * Admin Scope §4 — application and project photography.
@@ -32,6 +48,8 @@ export function ApplicationListPage() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState(BLANK);
   const [imageIds, setImageIds] = useState<string[]>([]);
+  const [videoIds, setVideoIds] = useState<string[]>([]);
+  const [links, setLinks] = useState<ProjectLink[]>([]);
   const [stoneIds, setStoneIds] = useState<Array<{ id: string; name: string; code: string }>>([]);
 
   const { data } = useQuery({
@@ -54,8 +72,12 @@ export function ApplicationListPage() {
       location: editing.location ?? "",
       architect: editing.architect ?? "",
       description: editing.description,
+      sector: editing.sector ?? "",
+      areaSqFt: editing.areaSqFt?.toString() ?? "",
     });
     setImageIds(editing.imageIds);
+    setVideoIds(editing.videoIds ?? []);
+    setLinks(editing.links ?? []);
     setStoneIds(
       (editing.stones ?? []).map((s) => ({
         id: s.id,
@@ -69,6 +91,8 @@ export function ApplicationListPage() {
     setEditingId(null);
     setForm(BLANK);
     setImageIds([]);
+    setVideoIds([]);
+    setLinks([]);
     setStoneIds([]);
   };
 
@@ -214,6 +238,37 @@ export function ApplicationListPage() {
               />
             </Field>
 
+            {/* Phase-1 feedback §6 — what puts a record on /projects. Leave
+                the sector blank and it stays an ordinary application photo. */}
+            <Field
+              label="Landmark sector"
+              htmlFor="app-sector"
+              hint="Set this to list the project on the Projects page"
+            >
+              <Select
+                id="app-sector"
+                value={form.sector}
+                onChange={(e) => setForm({ ...form, sector: e.target.value })}
+              >
+                <option value="">Not a landmark project</option>
+                {SECTORS.map((s) => (
+                  <option key={s.slug} value={s.slug}>
+                    {s.label}
+                  </option>
+                ))}
+              </Select>
+            </Field>
+
+            <Field label="Area (sq ft)" htmlFor="app-area" hint="Orders the Projects page">
+              <TextInput
+                id="app-area"
+                type="number"
+                min={0}
+                value={form.areaSqFt}
+                onChange={(e) => setForm({ ...form, areaSqFt: e.target.value })}
+              />
+            </Field>
+
             <MediaPicker
               kind="application"
               label="Project photography"
@@ -221,6 +276,55 @@ export function ApplicationListPage() {
               onChange={setImageIds}
               max={30}
             />
+
+            <MediaPicker
+              kind="video"
+              label="Project video"
+              value={videoIds}
+              onChange={setVideoIds}
+              max={12}
+            />
+
+            <div className="mt-8">
+              <p className="label mb-3">Entry links</p>
+              {links.map((link, i) => (
+                <div key={i} className="mb-2 flex items-start gap-2">
+                  <TextInput
+                    aria-label={`Link ${i + 1} label`}
+                    placeholder="Label"
+                    value={link.label}
+                    onChange={(e) =>
+                      setLinks(links.map((l, j) => (j === i ? { ...l, label: e.target.value } : l)))
+                    }
+                  />
+                  <TextInput
+                    aria-label={`Link ${i + 1} URL`}
+                    placeholder="https://…"
+                    value={link.url}
+                    onChange={(e) =>
+                      setLinks(links.map((l, j) => (j === i ? { ...l, url: e.target.value } : l)))
+                    }
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setLinks(links.filter((_, j) => j !== i))}
+                    className="mt-2 shrink-0 text-ink-faint hover:text-ink"
+                    aria-label={`Remove link ${i + 1}`}
+                  >
+                    <X className="h-3.5 w-3.5" strokeWidth={1.4} />
+                  </button>
+                </div>
+              ))}
+              {links.length < 8 && (
+                <button
+                  type="button"
+                  onClick={() => setLinks([...links, { label: "", url: "" }])}
+                  className="label underline-offset-4 hover:underline"
+                >
+                  Add a link
+                </button>
+              )}
+            </div>
 
             <div className="mt-8">
               <p className="label mb-3">Stone used</p>
@@ -268,7 +372,12 @@ export function ApplicationListPage() {
                   location: form.location || undefined,
                   architect: form.architect || undefined,
                   description: form.description || undefined,
+                  sector: form.sector || undefined,
+                  areaSqFt: form.areaSqFt.trim() === "" ? undefined : Number(form.areaSqFt),
                   imageIds,
+                  videoIds,
+                  // A half-typed row must not fail the whole save on the URL rule.
+                  links: links.filter((l) => l.label.trim() && l.url.trim()),
                   stoneIds: stoneIds.map((s) => s.id),
                 })
               }

@@ -92,16 +92,17 @@ export function SelectionPage() {
 
       <Section>
         {data.stones.length ? (
-          <div className="space-y-24">
+          /**
+           * Phase-1 feedback §8 — one row per stone rather than a full-width
+           * section each. A customer comparing a shortlist wants the lots beside
+           * each other; the previous alternating layout put a screen of scroll
+           * between lot one and lot two, which is the opposite of a comparison.
+           */
+          <div className="divide-y divide-ivory-dark border-y border-ivory-dark">
             {data.stones.map((stone, i) => (
               <article
                 key={stone.id}
-                className={cn(
-                  "grid gap-10 lg:grid-cols-2 lg:gap-16",
-                  // Alternating sides so a long selection reads as a curated
-                  // sequence rather than a spreadsheet.
-                  i % 2 === 1 && "lg:[&>*:first-child]:order-2",
-                )}
+                className="grid gap-6 py-10 sm:grid-cols-[minmax(0,240px)_1fr] sm:gap-10"
               >
                 <Slab
                   media={stone.images[0] ?? stone.primaryImage}
@@ -109,17 +110,19 @@ export function SelectionPage() {
                   alt={`${stone.name} — natural stone slab`}
                   aspect="landscape"
                   priority={i === 0}
-                  sizes="(min-width: 1024px) 50vw, 100vw"
+                  sizes="(min-width: 640px) 240px, 100vw"
                 />
 
-                <div className="lg:self-center">
+                <div className="min-w-0">
                   <p className="label">
                     {String(i + 1).padStart(2, "0")} · {stone.mossanoCode}
                   </p>
-                  <h2 className="h-section mt-2">{stone.name}</h2>
+                  <h2 className="mt-1.5 font-display text-[1.25rem] uppercase leading-tight tracking-wide">
+                    {stone.name}
+                  </h2>
 
                   <AvailabilityBadge
-                    className="mt-4"
+                    className="mt-3"
                     availability={stone.availability}
                     label={stone.availabilityLabel}
                     verifiedLabel={stone.verifiedLabel}
@@ -127,12 +130,14 @@ export function SelectionPage() {
                   />
 
                   {stone.selectionNote && (
-                    <p className="mt-6 border-l border-brass pl-5 text-[0.95rem] leading-relaxed text-ink-soft">
+                    <p className="mt-5 border-l border-brass pl-5 text-[0.95rem] leading-relaxed text-ink-soft">
                       {stone.selectionNote}
                     </p>
                   )}
 
-                  <dl className="mt-8">
+                  {/* Two columns of specs keep the row shallow — the whole
+                      point of the change is that the next lot stays in view. */}
+                  <dl className="mt-6 grid gap-x-12 sm:grid-cols-2">
                     {stone.specs.map((spec) => (
                       <div key={spec.label} className="spec">
                         <dt>{spec.label}</dt>
@@ -143,7 +148,7 @@ export function SelectionPage() {
                     ))}
                   </dl>
 
-                  <div className="mt-8 flex flex-wrap items-center gap-6">
+                  <div className="mt-6 flex flex-wrap items-center gap-6">
                     <Link to={stone.href} className="btn-outline">
                       Full details
                     </Link>

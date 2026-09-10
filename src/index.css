@@ -118,6 +118,39 @@
   .group:hover .slab-frame img {
     @apply scale-[1.04];
   }
+
+  /* The clients-and-partners strip. The track holds the roster twice and
+     travels exactly -50%, which lands the copy where the original began, so
+     the loop has no seam. Pausing on hover and on focus lets someone actually
+     read a name, and keeps a keyboard user from chasing a moving target. */
+  .marquee-track {
+    animation: marquee-scroll 45s linear infinite;
+  }
+  .marquee:hover .marquee-track,
+  .marquee:focus-within .marquee-track {
+    animation-play-state: paused;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    /* The global reset above only shortens every animation to 0.01ms. On an
+       infinite loop that is not "no motion", it is a flicker — the opposite of
+       what this query is for. Stop it outright and let the strip be scrolled. */
+    .marquee-track {
+      animation: none !important;
+    }
+    .marquee {
+      overflow-x: auto;
+    }
+  }
+}
+
+@keyframes marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
 }
 
 @layer utilities {

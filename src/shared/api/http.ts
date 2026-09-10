@@ -197,8 +197,10 @@ export const api = {
   delete: <T>(path: string, opts?: RequestOptions) =>
     request<T>(path, { ...opts, method: "DELETE" }),
 
+  // Defaults to sending the admin token, but the public reference-image
+  // upload passes auth: false — it has no session and needs none.
   upload: <T>(path: string, formData: FormData, opts?: RequestOptions) =>
-    request<T>(path, { ...opts, method: "POST", formData, auth: true }),
+    request<T>(path, { ...opts, method: "POST", formData, auth: opts?.auth ?? true }),
 };
 
 /** Most callers want the payload, not the envelope. */

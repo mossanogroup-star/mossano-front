@@ -14,6 +14,7 @@ import {
   ApplicationDetailPage,
   ApplicationProjectPage,
 } from "@/modules/application/pages/ApplicationPages";
+import { ProjectsPage } from "@/modules/application/pages/ProjectsPage";
 import { FavouritesPage } from "@/modules/favourite/pages/FavouritesPage";
 import { PrivateSourcingPage } from "@/modules/sourcing/pages/PrivateSourcingPage";
 import { SelectionPage } from "@/modules/selection/pages/SelectionPage";
@@ -224,6 +225,17 @@ export const publicRoutes: PublicRoute[] = [
       },
 
       {
+        path: "projects",
+        Component: ProjectsPage,
+        prefetch: (qc) => qc.prefetchQuery(publicQueries.projects()),
+        meta: () => ({
+          title: withSuffix("Landmark Projects"),
+          description:
+            "Residences, hotels, corporate headquarters and infrastructure finished in MOSSANO stone — from intimate residences to landmark developments.",
+        }),
+      },
+
+      {
         path: "favourites",
         Component: FavouritesPage,
         // Deliberately not prefetched: the list lives on the visitor's device,
@@ -240,7 +252,7 @@ export const publicRoutes: PublicRoute[] = [
         path: "private-sourcing",
         Component: PrivateSourcingPage,
         meta: () => ({
-          title: withSuffix("Private Sourcing"),
+          title: withSuffix("Personalize Sourcing Desk"),
           description:
             "Send MOSSANO a requirement — material, colour, quantity, budget and date — and receive curated options with actual slab photography.",
         }),

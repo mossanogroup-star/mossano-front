@@ -6,6 +6,7 @@ import { Section, SectionHeading, EmptyState } from "@/shared/components/Section
 import { StoneGrid } from "@/shared/components/StoneCard";
 import { Slab } from "@/shared/components/Slab";
 import { WhatsAppButton } from "@/shared/components/WhatsAppButton";
+import { PartnerMarquee } from "../components/PartnerMarquee";
 
 /**
  * Website §1.
@@ -62,6 +63,11 @@ export function HomePage() {
             <p className="mt-5 max-w-md text-[1rem] leading-relaxed text-ivory/80">
               {brand.tagline}
             </p>
+            {/* Phase-1 feedback §1 — a short message in the first section. The
+                client's own line, from the brochure. */}
+            <p className="mt-4 max-w-md font-display text-[0.95rem] leading-relaxed text-brass-light">
+              We don&rsquo;t just supply marble. We curate experiences in stone.
+            </p>
 
             <div className="mt-10 flex flex-wrap items-center gap-4">
               <Link to="/new-edit" className="btn-light">
@@ -77,6 +83,41 @@ export function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* ── Clients & partners — Phase-1 feedback §1 ─────────────────────── */}
+      <Section className="py-14">
+        <p className="label text-center">Trusted by visionaries. Chosen by industry leaders.</p>
+        <PartnerMarquee />
+      </Section>
+
+      {/* ── Who MOSSANO is ───────────────────────────────────────────────────
+          Phase-1 feedback §1 asked for the footer write-up to become a proper
+          section here. It was one line under the wordmark; this is the client's
+          own positioning statement from the brochure, which is what that line
+          was standing in for. */}
+      <Section tone="dark">
+        <div className="grid gap-10 lg:grid-cols-[1fr_1.1fr] lg:gap-20">
+          <div>
+            <div className="rule" />
+            <h2 className="h-section mt-5 text-ivory">{brand.strapline}</h2>
+          </div>
+          <div>
+            <p className="max-w-prose text-[1rem] leading-relaxed text-ivory/75">
+              MOSSANO MARMO is a premium marble sourcing and distribution company, offering the
+              world&rsquo;s finest natural stones for luxury spaces. Strong relationships with
+              international factories across Italy, Turkey, Greece, Brazil, Vietnam and China let us
+              deliver exclusive and rare natural stone — with every lot photographed as it actually
+              is, and its availability verified before you specify it.
+            </p>
+            <Link
+              to="/about"
+              className="label mt-8 inline-block border-b border-ivory/35 py-1.5 text-ivory/80 transition-colors hover:border-ivory hover:text-ivory"
+            >
+              About MOSSANO
+            </Link>
+          </div>
+        </div>
+      </Section>
 
       {/* ── The Current Edit ─────────────────────────────────────────────── */}
       {data?.currentEdit && (
@@ -216,7 +257,7 @@ export function HomePage() {
             <div className="mt-10 flex flex-wrap gap-4">
               <WhatsAppButton href={whatsapp.general} />
               <Link to="/private-sourcing" className="btn-light">
-                Private Sourcing
+                Personalize Sourcing
               </Link>
             </div>
           </div>

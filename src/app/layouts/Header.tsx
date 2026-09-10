@@ -9,7 +9,10 @@ const NAV = [
   { to: "/shop", label: "Stone Shop" },
   { to: "/look", label: "Shop by Look" },
   { to: "/application", label: "Shop by Application" },
-  { to: "/private-sourcing", label: "Private Sourcing" },
+  { to: "/projects", label: "Projects" },
+  // Phase-1 feedback §4 renamed the label, not the path — a shared
+  // /private-sourcing link must keep working.
+  { to: "/private-sourcing", label: "Personalize Sourcing" },
   { to: "/about", label: "About" },
   { to: "/contact", label: "Contact" },
 ];

@@ -10,60 +10,188 @@ const cityLine = ({ city, state, postalCode }: BrandLocation) =>
   [[city, state].filter(Boolean).join(", "), postalCode].filter(Boolean).join(" ");
 
 /**
- * Website §10 — About MOSSANO.
+ * Website §10 — About MOSSANO — rebuilt from the client's own brochure
+ * (`Mossano Marmo.pdf`, 9 Sep 2026) after Phase-1 feedback §5 asked for three
+ * more sections plus a process section.
  *
- * The five headings the document asks for: story, sourcing experience, global
- * network, curation approach, quality and service. The copy is deliberately
- * short and declarative, and it claims nothing the client has not stated —
- * there is no founding date, no project count and no client list here, because
- * none of those has been supplied. See docs/CLIENT-QUESTIONS.md.
+ * Every figure and phrase below is transcribed from that document. Nothing is
+ * rounded up, softened or embellished: an architect who reads "6,000+ tons
+ * annually" here and hears something different on a call stops believing the
+ * rest of the page. See CLIENT-FACTS.md.
  */
-const PILLARS = [
+const STATS = [
+  { figure: "12+", label: "Years of experience", note: "In the natural stone industry" },
+  { figure: "30,000+", label: "Sq. ft.", note: "State-of-the-art manufacturing unit" },
+  { figure: "6,000+", label: "Tons annually", note: "Imported premium white marble" },
+  { figure: "Global", label: "Presence", note: "Strong networks across the world" },
+];
+
+/** The brochure's "About Mossano Marmo" six. */
+const CAPABILITIES = [
+  "Global Sourcing",
+  "Exclusive Collections",
+  "Factory Direct Procurement",
+  "Premium Quality Inspection",
+  "Pan India Supply",
+  "Project Support",
+];
+
+/** The brochure's "Why Choose Mossano Marmo" six, in its own words. */
+const REASONS = [
+  { title: "Direct Factory Sourcing", body: "Better pricing, no middlemen." },
+  { title: "Custom Selection", body: "Unique slabs for every project." },
+  { title: "Quality Inspection", body: "Premium selection at source." },
+  { title: "Designer Support", body: "Material consultation expertise." },
+  { title: "Global Network", body: "Exclusive materials worldwide." },
+  { title: "Project Handling", body: "Bulk supply capability." },
+];
+
+const SOURCE_COUNTRIES = ["Italy", "Turkey", "Greece", "Brazil", "Vietnam", "China"];
+
+/**
+ * Phase-1 feedback §5's "Our Process / Journey".
+ *
+ * Sequenced from what the brochure states — the six capabilities, the source
+ * countries and "from quarry to site, delivering consistent quality standards
+ * and reliable timelines" — rather than invented. The last step is the one thing
+ * this site adds that the brochure cannot: availability that is verified rather
+ * than asserted.
+ */
+const JOURNEY = [
   {
-    title: "Sourcing experience",
-    body: "Over twelve years buying marble, granite and natural stone, working from Mumbai and Dubai and from the quarries themselves.",
+    n: "01",
+    title: "Sourced at the quarry",
+    body: "Direct relationships with factories across Italy, Turkey, Greece, Brazil, Vietnam and China — exclusive and rare stone, bought without middlemen.",
   },
   {
-    title: "Global network",
-    body: "Relationships with quarries and processors across several countries, which is what makes it possible to find a specific block rather than sell what happens to be in the yard.",
+    n: "02",
+    title: "Inspected at source",
+    body: "Premium selection happens before anything ships, not after it arrives. What fails inspection never becomes your problem.",
   },
   {
-    title: "Curation",
-    body: "Most stone is ordinary. MOSSANO's work is deciding what is not, and putting only that in front of a designer.",
+    n: "03",
+    title: "Held and processed",
+    body: "A 30,000 sq ft manufacturing unit and around 6,000 tons of premium white marble imported a year, so a large order is a stock question rather than a search.",
   },
   {
-    title: "Quality and service",
-    body: "Every lot is photographed as it actually is and its availability is verified, so what you specify is what arrives.",
+    n: "04",
+    title: "Curated for the project",
+    body: "Most stone is ordinary. The work is deciding what is not, and putting only that in front of a designer.",
+  },
+  {
+    n: "05",
+    title: "Verified, then delivered",
+    body: "Every lot here is photographed as it actually is and its availability is verified, so what you specify is what arrives — anywhere in India, and to Dubai.",
   },
 ];
 
 export function AboutPage() {
-  const { brand, whatsapp } = useSiteConfig();
+  const { whatsapp } = useSiteConfig();
 
   return (
     <>
       <Section tone="dark" className="pt-28">
         <div className="max-w-2xl">
           <div className="rule" />
-          <p className="label mt-4 text-ivory/55">About</p>
-          <h1 className="h-display mt-2 text-ivory">{brand.strapline}</h1>
+          <p className="label mt-4 text-ivory/55">About us</p>
+          <h1 className="h-display mt-2 text-ivory">Crafting Timeless Legacies in Stone</h1>
           <p className="mt-8 max-w-prose text-[1rem] leading-relaxed text-ivory/75">
-            MOSSANO MARMO sources natural stone for architects, designers and developers who need a
-            specific thing rather than a category. The business runs out of Mumbai and Dubai, and
-            the work is as much about knowing what to leave out as what to bring in.
+            MOSSANO MARMO is a premium marble sourcing and distribution company, offering the
+            world&rsquo;s finest natural stones for luxury spaces. With a commitment to quality,
+            innovation and service, we transform raw beauty into timeless experiences.
           </p>
         </div>
+
+        <dl className="mt-16 grid gap-x-10 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
+          {STATS.map((stat) => (
+            <div key={stat.label} className="border-t border-ivory/20 pt-6">
+              <dt className="font-display text-[2rem] leading-none text-brass-light">
+                {stat.figure}
+              </dt>
+              <dd className="mt-3">
+                <span className="font-display text-[0.95rem] uppercase tracking-wide text-ivory">
+                  {stat.label}
+                </span>
+                <span className="mt-1.5 block text-[0.85rem] leading-relaxed text-ivory/60">
+                  {stat.note}
+                </span>
+              </dd>
+            </div>
+          ))}
+        </dl>
       </Section>
 
       <Section>
-        <SectionHeading label="How MOSSANO works" title="Four Things That Matter" />
-        <div className="mt-14 grid gap-x-12 gap-y-12 sm:grid-cols-2">
-          {PILLARS.map((pillar) => (
-            <div key={pillar.title} className="border-t border-ivory-dark pt-6">
-              <h2 className="font-display text-[1rem] uppercase tracking-wide">{pillar.title}</h2>
-              <p className="mt-4 text-[0.95rem] leading-relaxed text-ink-soft">{pillar.body}</p>
+        <SectionHeading
+          label="About MOSSANO MARMO"
+          title="India's Premium Marble Sourcing &amp; Luxury Surface Company"
+        />
+        <ul className="mt-14 grid gap-x-12 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
+          {CAPABILITIES.map((capability) => (
+            <li
+              key={capability}
+              className="border-t border-ivory-dark pt-5 font-display text-[1rem] uppercase tracking-wide"
+            >
+              {capability}
+            </li>
+          ))}
+        </ul>
+        <p className="mt-12 max-w-prose text-[0.95rem] leading-relaxed text-ink-soft">
+          Strong relationships with international factories across{" "}
+          {SOURCE_COUNTRIES.slice(0, -1).join(", ")} and {SOURCE_COUNTRIES.at(-1)} allow us to
+          deliver exclusive and rare natural stones.
+        </p>
+      </Section>
+
+      <Section tone="deep">
+        <SectionHeading label="Why choose us" title="We Curate Experiences in Stone" />
+        <div className="mt-14 grid gap-x-12 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+          {REASONS.map((reason) => (
+            <div key={reason.title} className="border-t border-ivory-dark pt-6">
+              <h2 className="font-display text-[1rem] uppercase tracking-wide">{reason.title}</h2>
+              <p className="mt-3 text-[0.95rem] leading-relaxed text-ink-soft">{reason.body}</p>
             </div>
           ))}
+        </div>
+        <p className="mt-14 max-w-prose border-l border-brass pl-6 font-display text-[1.15rem] leading-relaxed">
+          We don&rsquo;t just supply marble. We curate experiences in stone.
+        </p>
+      </Section>
+
+      <Section>
+        <SectionHeading
+          label="Our process"
+          title="From Rare Quarries to Refined Spaces"
+          intro="Where nature meets luxury — what happens between a block in a quarry and a finished surface in your project."
+        />
+        <ol className="mt-14 space-y-10">
+          {JOURNEY.map((step) => (
+            <li
+              key={step.n}
+              className="grid gap-x-8 gap-y-3 border-t border-ivory-dark pt-6 sm:grid-cols-[auto_1fr]"
+            >
+              <p className="font-display text-[1.5rem] leading-none text-brass">{step.n}</p>
+              <div>
+                <h2 className="font-display text-[1rem] uppercase tracking-wide">{step.title}</h2>
+                <p className="mt-3 max-w-prose text-[0.95rem] leading-relaxed text-ink-soft">
+                  {step.body}
+                </p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </Section>
+
+      <Section tone="dark">
+        <div className="max-w-2xl">
+          <div className="rule" />
+          <p className="label mt-4 text-ivory/55">Founder</p>
+          <h2 className="h-section mt-2 text-ivory">Sayed Mohsin</h2>
+          <p className="mt-6 max-w-prose text-[1rem] leading-relaxed text-ivory/75">
+            MOSSANO MARMO is a founder-led business, and the buying decisions are made by someone
+            who has been in the natural stone trade for over twelve years. That is what a direct
+            relationship with a quarry actually rests on.
+          </p>
         </div>
       </Section>
 
@@ -71,13 +199,13 @@ export function AboutPage() {
         <div className="max-w-2xl">
           <SectionHeading
             label="Start here"
-            title="Tell MOSSANO What You Need"
+            title="Let's Create Something Timeless"
             intro="A message with the material, the quantity and the date is enough to begin."
           />
           <div className="mt-10 flex flex-wrap gap-4">
             <WhatsAppButton href={whatsapp.general} />
             <Link to="/private-sourcing" className="btn-outline">
-              Private Sourcing
+              Personalize Sourcing
             </Link>
           </div>
         </div>

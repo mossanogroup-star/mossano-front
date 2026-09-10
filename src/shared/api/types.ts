@@ -84,6 +84,8 @@ export interface Stone extends Omit<StoneCard, "whatsapp"> {
   thicknessMm: number | null;
   slabLengthIn: number | null;
   slabWidthIn: number | null;
+  /** Free text; falls back to slabLengthIn × slabWidthIn when empty. */
+  approxSlabSize: string | null;
   material: string | null;
   looks: Taxon[];
   applications: Taxon[];
@@ -183,12 +185,30 @@ export interface ApplicationProject {
   href: string;
   stones?: StoneCard[];
   stoneCount: number;
+
+  // The Projects page — Phase-1 feedback §6.
+  videos: Media[];
+  hasVideo: boolean;
+  links: Array<{ label: string; url: string }>;
+  /** Null on an ordinary application photo; set on a landmark project. */
+  sector: string | null;
+  sectorLabel: string | null;
+  areaSqFt: number | null;
+  areaLabel: string | null;
+}
+
+/** Landmark projects, grouped the way the client's brochure groups them. */
+export interface ProjectGroup {
+  slug: string;
+  label: string;
+  projects: ApplicationProject[];
 }
 
 export interface AdminApplicationProject extends ApplicationProject {
   isPublished: boolean;
   stoneIds: string[];
   imageIds: string[];
+  videoIds: string[];
   coverImageId: string | null;
   createdAt: string;
   updatedAt: string;

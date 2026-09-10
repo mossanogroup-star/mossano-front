@@ -11,11 +11,15 @@ import { useSiteConfig } from "@/shared/hooks/useSiteConfig";
 
 const MULTI = ["material", "colour", "look", "application", "availability", "finish"] as const;
 
+/**
+ * Phase-1 feedback §2 dropped "Largest lot". The server still accepts
+ * `?sort=area-desc`, deliberately — filtered shop links get forwarded on
+ * WhatsApp, and one already shared should not start returning a 400.
+ */
 const SORTS = [
   { value: "default", label: "Available first" },
   { value: "newest", label: "Recently added" },
   { value: "name", label: "Name" },
-  { value: "area-desc", label: "Largest lot" },
 ];
 
 /**

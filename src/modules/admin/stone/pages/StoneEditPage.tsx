@@ -22,6 +22,7 @@ interface FormValues {
   slabWidthIn: string;
   slabCount: string;
   areaSqFt: string;
+  approxSlabSize: string;
   availability: string;
   description: string;
   internalNotes: string;
@@ -81,6 +82,7 @@ export function StoneEditPage() {
       slabWidthIn: "",
       slabCount: "",
       areaSqFt: "",
+      approxSlabSize: "",
       availability: "verification_required",
       description: "",
       internalNotes: "",
@@ -105,6 +107,7 @@ export function StoneEditPage() {
       slabWidthIn: stone.slabWidthIn?.toString() ?? "",
       slabCount: stone.slabCount?.toString() ?? "",
       areaSqFt: stone.areaSqFt?.toString() ?? "",
+      approxSlabSize: stone.approxSlabSize ?? "",
       availability: stone.availability,
       description: stone.description,
       internalNotes: stone.internalNotes,
@@ -143,6 +146,7 @@ export function StoneEditPage() {
         slabWidthIn: num(v.slabWidthIn),
         slabCount: num(v.slabCount),
         areaSqFt: num(v.areaSqFt),
+        approxSlabSize: str(v.approxSlabSize),
         availability: v.availability,
         description: str(v.description),
         internalNotes: str(v.internalNotes),
@@ -268,6 +272,18 @@ export function StoneEditPage() {
               <TextInput id="areaSqFt" type="number" min={0} {...register("areaSqFt")} />
             </Field>
           </div>
+
+          <Field
+            label="Approx. slab size"
+            htmlFor="approxSlabSize"
+            hint="What the stone page shows. Blank falls back to the length × width above."
+          >
+            <TextInput
+              id="approxSlabSize"
+              placeholder="8 × 4 ft approx"
+              {...register("approxSlabSize")}
+            />
+          </Field>
         </section>
 
         <section>

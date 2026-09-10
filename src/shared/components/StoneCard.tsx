@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Slab } from "./Slab";
 import { AvailabilityBadge } from "./AvailabilityBadge";
 import { FavouriteButton } from "./FavouriteButton";
+import { WhatsAppButton } from "./WhatsAppButton";
 import { cn } from "../lib/cn";
 import type { StoneCard as StoneCardType } from "../api/types";
 
@@ -30,42 +31,57 @@ export function StoneCard({ stone, className, priority, sizes, headingLevel = 3 
 
   return (
     <article className={cn("group relative", className)}>
-      <Link to={stone.href} className="block">
-        <Slab
-          media={stone.primaryImage}
-          url={stone.primaryImageUrl}
-          alt={`${stone.name} — natural stone slab`}
-          priority={priority}
-          sizes={sizes}
-        />
+      <Slab
+        media={stone.primaryImage}
+        url={stone.primaryImageUrl}
+        alt={`${stone.name} — natural stone slab`}
+        priority={priority}
+        sizes={sizes}
+      />
 
-        <div className="mt-4 flex items-start justify-between gap-4">
-          <div className="min-w-0">
-            <p className="label">{stone.mossanoCode}</p>
-            <Heading className="mt-1.5 font-display text-[1.05rem] uppercase leading-tight tracking-wide">
+      <div className="mt-4 flex items-start justify-between gap-4">
+        <div className="min-w-0">
+          <p className="label">{stone.mossanoCode}</p>
+          <Heading className="mt-1.5 font-display text-[1.05rem] uppercase leading-tight tracking-wide">
+            {/* The card's only link, stretched over the whole tile by the
+                ::after. That is what lets the two actions beside it be a real
+                button and a real anchor — an <a> cannot legally nest inside
+                another <a>, which it would have to if the Link wrapped the
+                card. */}
+            <Link
+              to={stone.href}
+              className="after:absolute after:inset-0 after:content-[''] hover:text-brass"
+            >
               {stone.name}
-            </Heading>
-            {stone.origin && <p className="mt-1 text-[0.8rem] text-ink-faint">{stone.origin}</p>}
-          </div>
-
-          {/* Sits outside the Link's flow but inside the card, so the whole
-              tile stays clickable without the button swallowing the click. */}
-          <FavouriteButton slug={stone.slug} name={stone.name} className="mt-1 shrink-0" />
+            </Link>
+          </Heading>
+          {stone.origin && <p className="mt-1 text-[0.8rem] text-ink-faint">{stone.origin}</p>}
         </div>
 
-        <AvailabilityBadge
-          className="mt-3"
-          availability={stone.availability}
-          label={
-            // Lot size is the more useful line where it is known — the brief's
-            // own example card reads "4 slabs available".
-            stone.slabCount
-              ? `${stone.slabCount} slab${stone.slabCount === 1 ? "" : "s"} · ${stone.availabilityLabel}`
-              : stone.availabilityLabel
-          }
-          isVerifiedLot={stone.isVerifiedLot}
-        />
-      </Link>
+        {/* Phase-1 feedback §3 — save it, or ask about it, without opening the
+            lot first. z-10 lifts both clear of the stretched link above. */}
+        <div className="relative z-10 mt-1 flex shrink-0 items-center gap-3">
+          <WhatsAppButton
+            href={stone.whatsapp.enquire}
+            variant="icon"
+            label={`Ask MOSSANO about ${stone.name} on WhatsApp`}
+          />
+          <FavouriteButton slug={stone.slug} name={stone.name} />
+        </div>
+      </div>
+
+      <AvailabilityBadge
+        className="mt-3"
+        availability={stone.availability}
+        label={
+          // Lot size is the more useful line where it is known — the brief's
+          // own example card reads "4 slabs available".
+          stone.slabCount
+            ? `${stone.slabCount} slab${stone.slabCount === 1 ? "" : "s"} · ${stone.availabilityLabel}`
+            : stone.availabilityLabel
+        }
+        isVerifiedLot={stone.isVerifiedLot}
+      />
     </article>
   );
 }

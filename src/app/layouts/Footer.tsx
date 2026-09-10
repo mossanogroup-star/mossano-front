@@ -16,7 +16,8 @@ const COLUMNS = [
   {
     title: "Services",
     links: [
-      { to: "/private-sourcing", label: "Private Sourcing" },
+      { to: "/private-sourcing", label: "Personalize Sourcing" },
+      { to: "/projects", label: "Projects" },
       { to: "/about", label: "About MOSSANO" },
       { to: "/contact", label: "Contact" },
     ],

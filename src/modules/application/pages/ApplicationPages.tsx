@@ -108,10 +108,11 @@ export function ApplicationDetailPage() {
                 <h2 className="mt-4 font-display text-[1rem] uppercase tracking-wide">
                   {project.projectName ?? project.title}
                 </h2>
-                {(project.location || project.architect) && (
-                  <p className="mt-1 text-[0.8rem] text-ink-faint">
-                    {[project.architect, project.location].filter(Boolean).join(" · ")}
-                  </p>
+                {/* Phase-1 feedback §7 — the architect credit is admin-only
+                    now. It is still captured and still searchable in the admin;
+                    it just no longer appears on the public card. */}
+                {project.location && (
+                  <p className="mt-1 text-[0.8rem] text-ink-faint">{project.location}</p>
                 )}
               </Link>
             ))}
@@ -185,11 +186,8 @@ export function ApplicationProjectPage() {
             </Link>
           </p>
           <h1 className="h-display mt-2">{data.projectName ?? data.title}</h1>
-          {(data.location || data.architect) && (
-            <p className="mt-3 text-[0.9rem] text-ink-faint">
-              {[data.architect, data.location].filter(Boolean).join(" · ")}
-            </p>
-          )}
+          {/* Phase-1 feedback §7 — architect credit removed from public view. */}
+          {data.location && <p className="mt-3 text-[0.9rem] text-ink-faint">{data.location}</p>}
           {data.description && (
             <p className="mt-6 max-w-prose text-[0.95rem] leading-relaxed text-ink-soft">
               {data.description}

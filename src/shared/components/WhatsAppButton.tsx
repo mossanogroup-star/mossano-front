@@ -5,7 +5,8 @@ interface Props {
   href: string;
   label?: string;
   className?: string;
-  variant?: "solid" | "outline" | "light" | "quiet";
+  /** `icon` is the quick action on a stone card — glyph only, label read out. */
+  variant?: "solid" | "outline" | "light" | "quiet" | "icon";
 }
 
 /** The WhatsApp glyph, inline so the button needs no icon font or extra request. */
@@ -39,12 +40,23 @@ export function WhatsAppButton({
     light: "btn-light",
     quiet:
       "inline-flex items-center gap-2 py-1.5 font-sans text-[0.66rem] uppercase tracking-label text-ink-soft transition-colors hover:text-whatsapp",
+    // -m-2/p-2 buys a ~44px tap target without shifting the layout, the same
+    // trick FavouriteButton uses so the two sit level beside each other.
+    icon: "-m-2 inline-flex items-center p-2 text-whatsapp transition-opacity hover:opacity-70",
   }[variant];
 
+  const iconOnly = variant === "icon";
+
   return (
-    <a href={href} target="_blank" rel="noopener noreferrer" className={cn(styles, className)}>
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={iconOnly ? label : undefined}
+      className={cn(styles, className)}
+    >
       <WhatsAppGlyph />
-      <span>{label}</span>
+      {iconOnly ? <span className="sr-only">{label}</span> : <span>{label}</span>}
     </a>
   );
 }

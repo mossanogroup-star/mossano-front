@@ -153,9 +153,32 @@ export function StoneDetailPage() {
                   </dd>
                 </div>
               ))}
+
+              {/* Phase-1 feedback §2 — "Application" below the main details.
+                  Rendered here rather than as a server spec so each one stays a
+                  link through to the application page, and so it is not also
+                  repeated as a chip underneath. */}
+              <div className="spec">
+                <dt>Application</dt>
+                <dd className={cn(stone.applications.length === 0 && "text-ink-faint")}>
+                  {stone.applications.length > 0
+                    ? stone.applications.map((app, i) => (
+                        <span key={app.slug}>
+                          {i > 0 && ", "}
+                          <Link
+                            to={`/application/${app.slug}`}
+                            className="underline-offset-4 transition-colors hover:text-brass hover:underline"
+                          >
+                            {app.label}
+                          </Link>
+                        </span>
+                      ))
+                    : "On request"}
+                </dd>
+              </div>
             </dl>
 
-            {(stone.looks.length > 0 || stone.applications.length > 0) && (
+            {stone.looks.length > 0 && (
               <div className="mt-8 flex flex-wrap gap-x-5 gap-y-2">
                 {stone.looks.map((look) => (
                   <Link
@@ -164,15 +187,6 @@ export function StoneDetailPage() {
                     className="label inline-block py-1.5 underline-offset-4 transition-colors hover:text-brass hover:underline"
                   >
                     {look.label}
-                  </Link>
-                ))}
-                {stone.applications.map((app) => (
-                  <Link
-                    key={app.slug}
-                    to={`/application/${app.slug}`}
-                    className="label inline-block py-1.5 underline-offset-4 transition-colors hover:text-brass hover:underline"
-                  >
-                    {app.label}
                   </Link>
                 ))}
               </div>

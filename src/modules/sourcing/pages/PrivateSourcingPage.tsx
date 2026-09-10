@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -8,6 +8,9 @@ import { useSubmitEnquiry } from "@/modules/enquiry/api/submitEnquiry";
 import { useSiteConfig } from "@/shared/hooks/useSiteConfig";
 import { WhatsAppButton } from "@/shared/components/WhatsAppButton";
 import { ApiError } from "@/shared/api/http";
+import { cn } from "@/shared/lib/cn";
+import { useUploadReferenceImages } from "../api/uploadReferenceImages";
+import type { Media } from "@/shared/api/types";
 
 /** Website §8 — the four steps, in the document's own words. */
 const STEPS = [
@@ -62,6 +65,39 @@ export function PrivateSourcingPage() {
   const submit = useSubmitEnquiry();
   const [reference, setReference] = useState<string | null>(null);
 
+  // Phase-1 feedback §4 — reference images, uploaded as they are chosen so a
+  // rejected photograph is reported before the brief is written, not after.
+  const uploadImages = useUploadReferenceImages();
+  const fileInput = useRef<HTMLInputElement>(null);
+  const [referenceImages, setReferenceImages] = useState<Media[]>([]);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+
+  const MAX_REFERENCE_IMAGES = 3;
+
+  const onPickFiles = async (files: FileList | null) => {
+    if (!files?.length) return;
+    setUploadError(null);
+
+    const room = MAX_REFERENCE_IMAGES - referenceImages.length;
+    if (room <= 0) {
+      setUploadError(`You can attach up to ${MAX_REFERENCE_IMAGES} images.`);
+      return;
+    }
+
+    try {
+      const result = await uploadImages.mutateAsync(Array.from(files).slice(0, room));
+      setReferenceImages((current) => [...current, ...result.images]);
+      if (result.errors.length) {
+        setUploadError(result.errors.map((e) => `${e.filename}: ${e.message}`).join(" "));
+      }
+    } catch (err) {
+      setUploadError(err instanceof Error ? err.message : "That image could not be uploaded.");
+    } finally {
+      // Cleared so choosing the same file again still fires a change event.
+      if (fileInput.current) fileInput.current.value = "";
+    }
+  };
+
   const {
     register,
     handleSubmit,
@@ -109,6 +145,9 @@ export function PrivateSourcingPage() {
           projectLocation: v.projectLocation || undefined,
           requiredBy: v.requiredBy || undefined,
           wantsMossanoToSelect: v.wantsMossanoToSelect,
+          referenceImages: referenceImages.length
+            ? referenceImages.map((image) => image.id)
+            : undefined,
         },
       });
       setReference(receipt.reference);
@@ -132,7 +171,8 @@ export function PrivateSourcingPage() {
         <div className="max-w-2xl">
           <div className="rule" />
           <p className="label mt-4 text-ivory/55">MOSSANO Sourcing Desk</p>
-          <h1 className="h-display mt-2 text-ivory">Private Sourcing</h1>
+          {/* Phase-1 feedback §4 — the client's own wording. */}
+          <h1 className="h-display mt-2 text-ivory">Personalize Sourcing Desk</h1>
           <p className="mt-6 max-w-prose text-[1rem] leading-relaxed text-ivory/75">
             When the right stone is not on any website. Tell MOSSANO what the project needs and the
             search happens across the whole supplier network, not a catalogue.
@@ -140,7 +180,13 @@ export function PrivateSourcingPage() {
           <WhatsAppButton href={whatsapp.general} variant="light" className="mt-10" />
         </div>
 
-        <ol className="mt-20 grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+        {/* Phase-1 feedback §4 asked for an "Our Process" section. The four
+            steps below are Website §8's own process, so this heads them rather
+            than adding a second one. The client's replacement copy drops into
+            STEPS. */}
+        <p className="label mt-20 text-ivory/55">Our Process</p>
+
+        <ol className="mt-8 grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           {STEPS.map((step) => (
             <li key={step.n} className="border-t border-ivory/20 pt-6">
               <p className="font-display text-[1.5rem] text-brass-light">{step.n}</p>
@@ -262,6 +308,69 @@ export function PrivateSourcingPage() {
                 >
                   <TextArea id="s-message" {...register("message")} />
                 </Field>
+              </div>
+
+              {/* Phase-1 feedback §4 — "Upload your Reference Image".
+                  The input is visually hidden rather than absent so the label
+                  stays a real form control for the keyboard and screen readers. */}
+              <div className="mt-8 border-t border-ivory-dark pt-8">
+                <p className="label">Reference image</p>
+                <p className="mt-2 max-w-prose text-[0.85rem] leading-relaxed text-ink-soft">
+                  A photograph of the stone, a mood board, or a drawing — anything that shows what
+                  you are after. Up to {MAX_REFERENCE_IMAGES}, JPEG, PNG, WebP or HEIC.
+                </p>
+
+                <input
+                  ref={fileInput}
+                  id="s-reference-images"
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  className="sr-only"
+                  onChange={(e) => void onPickFiles(e.target.files)}
+                />
+                <label
+                  htmlFor="s-reference-images"
+                  className={cn(
+                    "btn-outline mt-5 inline-flex cursor-pointer",
+                    (uploadImages.isPending || referenceImages.length >= MAX_REFERENCE_IMAGES) &&
+                      "pointer-events-none opacity-50",
+                  )}
+                >
+                  {uploadImages.isPending ? "Uploading…" : "Upload your Reference Image"}
+                </label>
+
+                {referenceImages.length > 0 && (
+                  <ul className="mt-6 flex flex-wrap gap-4">
+                    {referenceImages.map((image) => (
+                      <li key={image.id} className="relative">
+                        <img
+                          src={image.url}
+                          alt={image.alt || "Reference image you attached"}
+                          className="h-24 w-24 object-cover"
+                          loading="lazy"
+                        />
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setReferenceImages((current) =>
+                              current.filter((m) => m.id !== image.id),
+                            )
+                          }
+                          className="absolute right-1 top-1 bg-ink/75 px-2 py-1 text-[0.65rem] uppercase tracking-label text-ivory transition-colors hover:bg-ink"
+                        >
+                          Remove
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+
+                {uploadError && (
+                  <p className="mt-4 text-[0.8rem] text-[#b23b2e]" role="alert">
+                    {uploadError}
+                  </p>
+                )}
               </div>
 
               {/* Website §8: "Customer Can Also Say — please select the best
