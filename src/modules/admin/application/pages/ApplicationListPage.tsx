@@ -8,6 +8,7 @@ import { StonePicker } from "../../components/StonePicker";
 import { MediaPicker } from "../../media/components/MediaPicker";
 import { Field, TextInput, TextArea, Select } from "@/modules/enquiry/components/Field";
 import { useSiteConfig } from "@/shared/hooks/useSiteConfig";
+import { ApplicationContentEditor } from "../components/ApplicationContentEditor";
 
 const BLANK = {
   title: "",
@@ -50,6 +51,8 @@ export function ApplicationListPage() {
   const [imageIds, setImageIds] = useState<string[]>([]);
   const [videoIds, setVideoIds] = useState<string[]>([]);
   const [links, setLinks] = useState<ProjectLink[]>([]);
+  /** Phase-2 feedback §3 — Instagram reels, one URL per line. */
+  const [instagramUrls, setInstagramUrls] = useState("");
   const [stoneIds, setStoneIds] = useState<Array<{ id: string; name: string; code: string }>>([]);
 
   const { data } = useQuery({
@@ -78,6 +81,7 @@ export function ApplicationListPage() {
     setImageIds(editing.imageIds);
     setVideoIds(editing.videoIds ?? []);
     setLinks(editing.links ?? []);
+    setInstagramUrls((editing.instagramUrls ?? []).join("\n"));
     setStoneIds(
       (editing.stones ?? []).map((s) => ({
         id: s.id,
@@ -93,6 +97,7 @@ export function ApplicationListPage() {
     setImageIds([]);
     setVideoIds([]);
     setLinks([]);
+    setInstagramUrls("");
     setStoneIds([]);
   };
 
@@ -285,6 +290,23 @@ export function ApplicationListPage() {
               max={12}
             />
 
+            {/* Phase-2 feedback §3. A textarea rather than a repeating row:
+                the team pastes these straight from Instagram, several at a
+                time, and one per line is the shape that arrives. */}
+            <Field
+              label="Instagram videos"
+              htmlFor="app-instagram"
+              hint="One URL per line — a post or reel link"
+            >
+              <TextArea
+                id="app-instagram"
+                rows={3}
+                placeholder="https://www.instagram.com/reel/…"
+                value={instagramUrls}
+                onChange={(e) => setInstagramUrls(e.target.value)}
+              />
+            </Field>
+
             <div className="mt-8">
               <p className="label mb-3">Entry links</p>
               {links.map((link, i) => (
@@ -376,6 +398,10 @@ export function ApplicationListPage() {
                   areaSqFt: form.areaSqFt.trim() === "" ? undefined : Number(form.areaSqFt),
                   imageIds,
                   videoIds,
+                  instagramUrls: instagramUrls
+                    .split("\n")
+                    .map((u) => u.trim())
+                    .filter(Boolean),
                   // A half-typed row must not fail the whole save on the URL rule.
                   links: links.filter((l) => l.label.trim() && l.url.trim()),
                   stoneIds: stoneIds.map((s) => s.id),
@@ -384,6 +410,12 @@ export function ApplicationListPage() {
             >
               {save.isPending ? "Saving…" : editingId ? "Save project" : "Add project"}
             </button>
+          </div>
+
+          {/* Phase-2 feedback §5 — the application pages themselves, which are
+              not projects and are edited separately. */}
+          <div className="mt-10">
+            <ApplicationContentEditor />
           </div>
         </aside>
       </div>

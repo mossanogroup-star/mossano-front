@@ -5,6 +5,7 @@ import { useSubmitEnquiry } from "@/modules/enquiry/api/submitEnquiry";
 import { useSiteConfig } from "@/shared/hooks/useSiteConfig";
 import { cn } from "@/shared/lib/cn";
 import { STEPS, OPENING, BROWSING_REPLY, toEnquiry, type Answers } from "../constants/script";
+import { Wordmark } from "@/shared/components/Wordmark";
 
 interface Line {
   from: "mossano" | "customer";
@@ -29,7 +30,11 @@ export function Chatbot() {
   const [finished, setFinished] = useState<"lead" | "browsing" | null>(null);
 
   const submit = useSubmitEnquiry();
-  const { whatsapp } = useSiteConfig();
+  const { whatsapp, brand } = useSiteConfig();
+
+  // The desk's own number, read from brand config rather than written here, so
+  // it cannot drift from the footer and the contact page.
+  const teamNumber = brand.phones[0] ?? brand.whatsappNumber;
 
   // On a stone page the lot travels with the lead, so the desk's alert names it
   // under "Product/Project" instead of arriving contextless.
@@ -90,10 +95,18 @@ export function Chatbot() {
     // Last answer in — create the lead.
     try {
       const receipt = await submit.mutateAsync(toEnquiry(next, stoneSlug));
+      /**
+       * Phase-2 feedback §7 — the desk's number, in words, at the end.
+       *
+       * The enquiry has already been sent to the team by this point; this is so
+       * the customer does not have to wait to be called back if they would
+       * rather start the conversation themselves. Both directions, deliberately.
+       */
       say(
         "mossano",
-        `Thank you. Your reference is ${receipt.reference} and the sourcing desk has it now — ` +
-          `someone will be in touch shortly.`,
+        `Thank you. Your reference is ${receipt.reference} and the sourcing desk has it now, ` +
+          `with everything you have told me.\n\n` +
+          `If you would rather not wait, call or WhatsApp the team on +91 ${teamNumber}.`,
       );
       setFinished("lead");
     } catch {
@@ -146,7 +159,7 @@ export function Chatbot() {
           className="fixed bottom-20 right-5 z-40 flex max-h-[min(32rem,70vh)] w-[min(23rem,calc(100vw-2.5rem))] flex-col border border-ink bg-ivory"
         >
           <header className="shrink-0 border-b border-ivory-dark px-5 py-4">
-            <p className="wordmark text-[0.8rem]">MOSSANO</p>
+            <Wordmark className="block text-[0.8rem]" />
             <p className="label mt-0.5">Sourcing desk</p>
           </header>
 

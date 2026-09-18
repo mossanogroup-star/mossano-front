@@ -1,90 +1,21 @@
-/**
- * Phase-1 feedback §1 — clients and partners, in a carousel.
- *
- * Names rather than logos, deliberately. The client's brochure carries the logo
- * sheet as one flattened raster, so there are no logo files to use yet, and a
- * badly cut-out logo on a luxury site is worse than none. Every name below is
- * transcribed from that sheet — see CLIENT-FACTS.md.
- *
- * When the client supplies the files, give a partner a `logo` and the tile
- * renders the image instead; nothing else here has to change.
- */
-export interface Partner {
-  name: string;
-  /** An asset URL once the client supplies one. */
-  logo?: string;
-}
-
-const PARTNERS: Partner[] = [
-  // Builders & developers
-  { name: "Lodha" },
-  { name: "Piramal" },
-  { name: "Rustomjee" },
-  { name: "The Wadhwa Group" },
-  { name: "K Raheja Corp" },
-  { name: "Larsen & Toubro" },
-  { name: "Kalpataru" },
-  { name: "Hiranandani" },
-  { name: "Prestige Group" },
-  { name: "Peninsula Land" },
-  { name: "Lokhandwala" },
-  // Hospitality
-  { name: "Taj" },
-  { name: "Marriott" },
-  { name: "JW Marriott" },
-  { name: "Radisson" },
-  // Architects & interior designers
-  { name: "Hafeez Contractor" },
-  { name: "Gauri Khan Designs" },
-  { name: "AUM Architects" },
-  { name: "SJK Architects" },
-  { name: "PCA Group" },
-  { name: "Anjali Rawat Architects" },
-  // Retail, F&B and banking
-  { name: "Haldiram's" },
-  { name: "Café Coffee Day" },
-  { name: "Punjab Grill" },
-  { name: "HDFC Bank" },
-  { name: "ICICI Bank" },
-  { name: "Kotak Mahindra" },
-  { name: "YES Bank" },
-];
+import { ClientLogo } from "./ClientLogo";
+import type { ClientTile } from "@/shared/api/types";
 
 /**
- * The tile is the `<li>` itself, and takes `hidden` as a prop.
+ * Phase-2 feedback §2 — every client logo in one continuously moving strip.
  *
- * Wrapping it in a second `<li>` to carry aria-hidden is what an earlier version
- * did, and `<li>` inside `<li>` is invalid: the parser hoists the inner one, the
- * hydrated DOM stops matching the server's, and React throws #418 on the home
- * page. Nesting rules are a hydration concern, not only a validation one.
+ * The roster comes from the CRM, not from this file: §"Important" is explicit
+ * that the team adds a client without a code change. Phase 1 shipped this with
+ * names hardcoded because there were no logo files; there are now.
  */
-function Tile({ partner, hidden }: { partner: Partner; hidden?: boolean }) {
-  return (
-    <li aria-hidden={hidden} className="flex shrink-0 items-center justify-center px-8">
-      {partner.logo ? (
-        <img
-          src={partner.logo}
-          alt={partner.name}
-          className="h-8 w-auto opacity-60 transition-opacity hover:opacity-100"
-          loading="lazy"
-        />
-      ) : (
-        <span className="whitespace-nowrap font-display text-[0.95rem] uppercase tracking-wide text-ink-soft">
-          {partner.name}
-        </span>
-      )}
-    </li>
-  );
-}
+export function PartnerMarquee({ clients }: { clients: ClientTile[] }) {
+  if (clients.length === 0) return null;
 
-export function PartnerMarquee() {
   return (
     /**
-     * The track holds the list twice so the loop has somewhere to scroll to —
-     * it translates by exactly -50%, which lands the copy where the original
-     * started. The duplicate is aria-hidden so a screen reader reads the roster
-     * once, and the whole strip is a plain list for anyone who has reduced
-     * motion on, where the animation is off and the strip scrolls by hand.
+     * The track holds the roster twice and travels exactly -50%, which lands
+     * the copy where the original began, so the loop has no seam. The duplicate
+     * is aria-hidden: a screen reader should hear the roster once.
      */
     <div
       className="marquee relative overflow-hidden"
@@ -95,11 +26,19 @@ export function PartnerMarquee() {
       }}
     >
       <ul className="marquee-track flex w-max items-center py-2">
-        {PARTNERS.map((partner) => (
-          <Tile key={partner.name} partner={partner} />
+        {clients.map((client) => (
+          <li key={client.id} className="flex w-[180px] shrink-0 justify-center px-6">
+            <ClientLogo client={client} />
+          </li>
         ))}
-        {PARTNERS.map((partner) => (
-          <Tile key={`${partner.name}-copy`} partner={partner} hidden />
+        {clients.map((client) => (
+          <li
+            key={`${client.id}-copy`}
+            aria-hidden="true"
+            className="flex w-[180px] shrink-0 justify-center px-6"
+          >
+            <ClientLogo client={client} />
+          </li>
         ))}
       </ul>
     </div>

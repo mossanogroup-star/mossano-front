@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useSiteConfig } from "@/shared/hooks/useSiteConfig";
 import { WhatsAppButton } from "@/shared/components/WhatsAppButton";
+import { Wordmark } from "@/shared/components/Wordmark";
 
 const COLUMNS = [
   {
@@ -18,6 +19,7 @@ const COLUMNS = [
     links: [
       { to: "/private-sourcing", label: "Personalize Sourcing" },
       { to: "/projects", label: "Projects" },
+      { to: "/clients", label: "Clients" },
       { to: "/about", label: "About MOSSANO" },
       { to: "/contact", label: "Contact" },
     ],
@@ -33,7 +35,7 @@ export function Footer() {
       <div className="shell py-20">
         <div className="grid gap-12 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr]">
           <div>
-            <p className="wordmark text-[1.05rem]">{brand.wordmark}</p>
+            <Wordmark text={brand.wordmark} className="block text-[1.05rem]" />
             <p className="mt-4 max-w-xs text-[0.9rem] leading-relaxed text-ivory/65">
               {brand.strapline}
             </p>

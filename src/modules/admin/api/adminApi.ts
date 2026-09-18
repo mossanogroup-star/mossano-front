@@ -6,6 +6,9 @@
 import { api, unwrap, type ApiEnvelope } from "@/shared/api/http";
 import type {
   AdminApplicationProject,
+  AdminClient,
+  AdminClientCategory,
+  ApplicationContent,
   AdminEdit,
   AdminSelection,
   AdminStone,
@@ -80,6 +83,27 @@ export const adminApi = {
   updateApplication: (id: string, body: unknown) =>
     unwrap<AdminApplicationProject>(api.patch(`/applications/${id}`, body, AUTH)),
   deleteApplication: (id: string) => unwrap(api.delete(`/applications/${id}`, AUTH)),
+
+  // Phase-2 feedback §5 — each Shop by Application page's own content.
+  applicationContent: () =>
+    unwrap<ApplicationContent[]>(api.get("/applications/content", undefined, AUTH)),
+  saveApplicationContent: (application: string, body: unknown) =>
+    unwrap<ApplicationContent>(api.put(`/applications/content/${application}`, body, AUTH)),
+
+  // Phase-2 feedback §1 and §2 — clients and their categories.
+  clientCategories: () =>
+    unwrap<AdminClientCategory[]>(api.get("/clients/categories", undefined, AUTH)),
+  createClientCategory: (body: unknown) =>
+    unwrap<AdminClientCategory>(api.post("/clients/categories", body, AUTH)),
+  updateClientCategory: (id: string, body: unknown) =>
+    unwrap<AdminClientCategory>(api.patch(`/clients/categories/${id}`, body, AUTH)),
+  deleteClientCategory: (id: string) => unwrap(api.delete(`/clients/categories/${id}`, AUTH)),
+
+  clients: () => unwrap<AdminClient[]>(api.get("/clients", undefined, AUTH)),
+  createClient: (body: unknown) => unwrap<AdminClient>(api.post("/clients", body, AUTH)),
+  updateClient: (id: string, body: unknown) =>
+    unwrap<AdminClient>(api.patch(`/clients/${id}`, body, AUTH)),
+  deleteClient: (id: string) => unwrap(api.delete(`/clients/${id}`, AUTH)),
 
   // Enquiries
   enquiries: (query: Query = {}) =>

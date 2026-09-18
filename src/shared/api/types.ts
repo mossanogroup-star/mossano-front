@@ -190,6 +190,8 @@ export interface ApplicationProject {
   videos: Media[];
   hasVideo: boolean;
   links: Array<{ label: string; url: string }>;
+  /** Phase-2 §3 — Instagram reels, embedded on the project page. */
+  instagramUrls: string[];
   /** Null on an ordinary application photo; set on a landmark project. */
   sector: string | null;
   sectorLabel: string | null;
@@ -202,6 +204,46 @@ export interface ProjectGroup {
   slug: string;
   label: string;
   projects: ApplicationProject[];
+}
+
+/** Phase-2 §1/§2 — a client logo. `logo` is null until one is uploaded. */
+export interface ClientTile {
+  id: string;
+  name: string;
+  logo: Media | null;
+  website: string | null;
+}
+
+export interface ClientCategory {
+  id: string;
+  slug: string;
+  name: string;
+  clients: ClientTile[];
+}
+
+export interface AdminClientCategory {
+  id: string;
+  slug: string;
+  name: string;
+  sortOrder: number;
+  isPublished: boolean;
+  clientCount: number;
+}
+
+export interface AdminClient extends ClientTile {
+  categoryId: string | null;
+  logoId: string | null;
+  sortOrder: number;
+  isPublished: boolean;
+}
+
+/** Phase-2 §5 — a Shop by Application page's own content. */
+export interface ApplicationContent {
+  application: string;
+  headline: string;
+  description: string;
+  images: Media[];
+  isPublished: boolean;
 }
 
 export interface AdminApplicationProject extends ApplicationProject {
@@ -327,6 +369,8 @@ export type EnquiryStatus =
 export interface SourcingBrief {
   material?: string;
   colour?: string;
+  /** Phase-2 §7 — the chatbot's "what is it for" step. */
+  application?: string;
   thickness?: string;
   quantity?: string;
   budget?: string;

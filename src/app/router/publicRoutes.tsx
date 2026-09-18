@@ -15,6 +15,7 @@ import {
   ApplicationProjectPage,
 } from "@/modules/application/pages/ApplicationPages";
 import { ProjectsPage } from "@/modules/application/pages/ProjectsPage";
+import { ClientsPage } from "@/modules/landing/pages/ClientsPage";
 import { FavouritesPage } from "@/modules/favourite/pages/FavouritesPage";
 import { PrivateSourcingPage } from "@/modules/sourcing/pages/PrivateSourcingPage";
 import { SelectionPage } from "@/modules/selection/pages/SelectionPage";
@@ -70,7 +71,13 @@ export const publicRoutes: PublicRoute[] = [
       {
         index: true,
         Component: HomePage,
-        prefetch: (qc) => qc.prefetchQuery(publicQueries.home()),
+        // Both, or the logo strip pops in after hydration on a page whose
+        // first screen is meant to be complete.
+        prefetch: (qc) =>
+          Promise.all([
+            qc.prefetchQuery(publicQueries.home()),
+            qc.prefetchQuery(publicQueries.clients()),
+          ]),
         meta: () => ({
           title: "MOSSANO MARMO — Curated Natural Stone, Sourced Globally",
           description: SITE_DESCRIPTION,
@@ -222,6 +229,17 @@ export const publicRoutes: PublicRoute[] = [
               }
             : { title: withSuffix("Project") };
         },
+      },
+
+      {
+        path: "clients",
+        Component: ClientsPage,
+        prefetch: (qc) => qc.prefetchQuery(publicQueries.clients()),
+        meta: () => ({
+          title: withSuffix("Our Clients"),
+          description:
+            "Architects, developers, hotels, banks and brands who build with MOSSANO stone — trusted by visionaries, chosen by industry leaders.",
+        }),
       },
 
       {

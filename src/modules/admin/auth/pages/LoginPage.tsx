@@ -5,6 +5,7 @@ import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { useLogin, useSession } from "../useSession";
 import { Field, TextInput } from "@/modules/enquiry/components/Field";
 import { ApiError } from "@/shared/api/http";
+import { Wordmark } from "@/shared/components/Wordmark";
 
 const schema = z.object({
   email: z.string().trim().email("Enter your email address"),
@@ -52,7 +53,7 @@ export function LoginPage() {
     <main className="grid min-h-screen place-items-center bg-ivory px-6">
       <div className="w-full max-w-sm">
         <div className="rule" />
-        <p className="wordmark mt-5 text-[1.05rem]">MOSSANO</p>
+        <Wordmark className="mt-5 block text-[1.05rem]" />
         <h1 className="h-section mt-2">Admin</h1>
 
         <form onSubmit={onSubmit} className="mt-10" noValidate>

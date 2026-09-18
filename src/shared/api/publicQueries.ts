@@ -8,6 +8,8 @@ import { api, unwrap } from "./http";
 import type {
   ApplicationProject,
   ProjectGroup,
+  ClientCategory,
+  ApplicationContent,
   ApplicationTile,
   Edit,
   EditDetail,
@@ -119,6 +121,7 @@ export const publicQueries = {
       queryKey: ["application", slug] as const,
       queryFn: async () => {
         const res = await api.get<{
+          content: ApplicationContent;
           projects: ApplicationProject[];
           stones: StoneCard[];
         }>(`/public/applications/${slug}`);
@@ -137,6 +140,16 @@ export const publicQueries = {
     queryOptions({
       queryKey: ["projects"] as const,
       queryFn: () => unwrap<ProjectGroup[]>(api.get("/public/projects")),
+    }),
+
+  /**
+   * Phase-2 feedback §1 and §2. One query for both the Clients page and the
+   * home carousel, so opening one warms the other.
+   */
+  clients: () =>
+    queryOptions({
+      queryKey: ["clients"] as const,
+      queryFn: () => unwrap<ClientCategory[]>(api.get("/public/clients")),
     }),
 
   /**

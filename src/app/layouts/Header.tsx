@@ -3,6 +3,7 @@ import { Link, NavLink, useLocation } from "react-router-dom";
 import { Heart, Menu, X } from "lucide-react";
 import { useFavourites } from "@/shared/hooks/useFavourites";
 import { cn } from "@/shared/lib/cn";
+import { Wordmark } from "@/shared/components/Wordmark";
 
 const NAV = [
   { to: "/new-edit", label: "New Edit" },
@@ -10,6 +11,7 @@ const NAV = [
   { to: "/look", label: "Shop by Look" },
   { to: "/application", label: "Shop by Application" },
   { to: "/projects", label: "Projects" },
+  { to: "/clients", label: "Clients" },
   // Phase-1 feedback §4 renamed the label, not the path — a shared
   // /private-sourcing link must keep working.
   { to: "/private-sourcing", label: "Personalize Sourcing" },
@@ -40,8 +42,8 @@ export function Header() {
   return (
     <header className="sticky top-0 z-40 border-b border-ivory-dark/60 bg-ivory/95 backdrop-blur-sm">
       <div className="shell flex h-16 items-center justify-between gap-6 sm:h-20">
-        <Link to="/" className="wordmark -my-2 shrink-0 py-2 text-[0.95rem] sm:text-[1.05rem]">
-          MOSSANO
+        <Link to="/" className="-my-2 shrink-0 py-2">
+          <Wordmark className="text-[0.95rem] sm:text-[1.05rem]" />
         </Link>
 
         <nav className="hidden items-center gap-7 xl:flex" aria-label="Primary">

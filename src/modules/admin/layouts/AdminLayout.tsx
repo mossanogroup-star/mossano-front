@@ -7,6 +7,7 @@ import {
   Inbox,
   Share2,
   Users,
+  Building2,
   LogOut,
   ExternalLink,
 } from "lucide-react";
@@ -15,12 +16,14 @@ import { useSession, useLogout } from "../auth/useSession";
 import { adminApi } from "../api/adminApi";
 import { ScrollToTop } from "@/app/layouts/ScrollToTop";
 import { cn } from "@/shared/lib/cn";
+import { Wordmark } from "@/shared/components/Wordmark";
 
 const NAV = [
   { to: "/admin", end: true, label: "Dashboard", Icon: LayoutDashboard },
   { to: "/admin/stones", label: "Stones", Icon: Gem },
   { to: "/admin/edits", label: "Edits", Icon: CalendarRange },
   { to: "/admin/applications", label: "Applications", Icon: Images },
+  { to: "/admin/clients", label: "Clients", Icon: Building2 },
   {
     to: "/admin/enquiries",
     label: "Enquiries",
@@ -60,8 +63,8 @@ export function AdminLayout() {
       <div className="flex min-h-screen">
         <aside className="hidden w-56 shrink-0 border-r border-ivory-dark bg-ivory-deep lg:flex lg:flex-col">
           <div className="border-b border-ivory-dark px-6 py-6">
-            <Link to="/admin" className="wordmark text-[0.9rem]">
-              MOSSANO
+            <Link to="/admin">
+              <Wordmark className="text-[0.9rem]" />
             </Link>
             <p className="label mt-1">Admin</p>
           </div>

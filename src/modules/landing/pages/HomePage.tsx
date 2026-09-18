@@ -18,7 +18,12 @@ import { PartnerMarquee } from "../components/PartnerMarquee";
  */
 export function HomePage() {
   const { data } = useQuery(publicQueries.home());
+  const { data: clientCategories } = useQuery(publicQueries.clients());
   const { brand, whatsapp } = useSiteConfig();
+
+  // §2 asks for every logo in one strip, so the categories are flattened here.
+  // The Clients page renders the same query grouped.
+  const allClients = (clientCategories ?? []).flatMap((category) => category.clients);
 
   /**
    * Resolved on the server — see publicService.resolveHero.
@@ -84,11 +89,25 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* ── Clients & partners — Phase-1 feedback §1 ─────────────────────── */}
-      <Section className="py-14">
-        <p className="label text-center">Trusted by visionaries. Chosen by industry leaders.</p>
-        <PartnerMarquee />
-      </Section>
+      {/* ── Clients — Phase-1 feedback §1, Phase-2 feedback §2 ───────────────
+          Every logo in one moving strip. The roster is CRM-managed; the
+          Clients page shows the same clients grouped, and still. */}
+      {allClients.length > 0 && (
+        <Section className="py-14">
+          <p className="label text-center">Trusted by visionaries. Chosen by industry leaders.</p>
+          <div className="mt-8">
+            <PartnerMarquee clients={allClients} />
+          </div>
+          <p className="mt-8 text-center">
+            <Link
+              to="/clients"
+              className="label underline-offset-4 transition-colors hover:text-brass hover:underline"
+            >
+              All clients
+            </Link>
+          </p>
+        </Section>
+      )}
 
       {/* ── Who MOSSANO is ───────────────────────────────────────────────────
           Phase-1 feedback §1 asked for the footer write-up to become a proper

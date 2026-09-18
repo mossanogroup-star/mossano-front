@@ -42,7 +42,13 @@ check(
 
 await page.getByRole("button", { name: "Yes, I am" }).click();
 await page.waitForTimeout(300);
-check("Interested? → asks Quantity", await page.getByText(/how much do you need/i).isVisible());
+check("Interested? → asks what it is for", await page.getByText(/what is it for/i).isVisible());
+
+// Phase-2 feedback §7 added this step so the team's alert carries the selected
+// category. Tapping the chip is what maps the answer to a slug — typing does not.
+await page.getByRole("button", { name: "Hotel lobby" }).click();
+await page.waitForTimeout(300);
+check("Application? → asks Quantity", await page.getByText(/how much do you need/i).isVisible());
 
 await page.fill("#mossano-chat input", "5000 sqft");
 await page.keyboard.press("Enter");
@@ -133,6 +139,13 @@ check(
   lead?.sourcing?.projectLocation,
 );
 check("delivery kept", lead?.sourcing?.requiredBy === "1 month", lead?.sourcing?.requiredBy);
+// Phase-2 feedback §7 — the category has to survive as a slug, because the
+// team's WhatsApp alert renders it and the enquiry API validates the enum.
+check(
+  "application kept",
+  lead?.sourcing?.application === "hotel-lobby",
+  lead?.sourcing?.application,
+);
 check("contact kept", lead?.phone === "9820011223", lead?.phone);
 check("status is New", lead?.status === "new");
 

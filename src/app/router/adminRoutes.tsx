@@ -65,6 +65,11 @@ const SelectionEditPage = lazy(() =>
     default: m.SelectionEditPage,
   })),
 );
+const ClientListPage = lazy(() =>
+  import("@/modules/admin/client/pages/ClientListPage").then((m) => ({
+    default: m.ClientListPage,
+  })),
+);
 const ApplicationListPage = lazy(() =>
   import("@/modules/admin/application/pages/ApplicationListPage").then((m) => ({
     default: m.ApplicationListPage,
@@ -108,6 +113,7 @@ export const adminRoutes: RouteObject[] = [
       { path: "edits", element: wrap(<EditListPage />) },
       { path: "edits/:id", element: wrap(<EditDetailPage />) },
       { path: "applications", element: wrap(<ApplicationListPage />) },
+      { path: "clients", element: wrap(<ClientListPage />) },
       { path: "enquiries", element: wrap(<EnquiryListPage />) },
       { path: "enquiries/:id", element: wrap(<EnquiryDetailPage />) },
       { path: "selections", element: wrap(<SelectionListPage />) },

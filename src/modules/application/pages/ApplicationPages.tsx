@@ -6,6 +6,7 @@ import { StoneGrid } from "@/shared/components/StoneCard";
 import { Slab } from "@/shared/components/Slab";
 import { WhatsAppButton } from "@/shared/components/WhatsAppButton";
 import { useSiteConfig } from "@/shared/hooks/useSiteConfig";
+import { InstagramEmbed } from "../components/InstagramEmbed";
 
 /**
  * Website §7 and Admin Scope §4 — Shop by Application.
@@ -78,6 +79,7 @@ export function ApplicationDetailPage() {
   const { whatsapp } = useSiteConfig();
 
   const label = (data?.meta?.label as string) ?? slug.replace(/-/g, " ");
+  const content = data?.content;
   const projects = data?.projects ?? [];
   const stones = data?.stones ?? [];
 
@@ -91,8 +93,31 @@ export function ApplicationDetailPage() {
               Shop by Application
             </Link>
           </p>
-          <h1 className="h-display mt-2">{label}</h1>
+          <h1 className="h-display mt-2">{content?.headline || label}</h1>
+          {content?.description && (
+            <p className="mt-6 max-w-prose text-[0.95rem] leading-relaxed text-ink-soft">
+              {content.description}
+            </p>
+          )}
         </header>
+
+        {/* Phase-2 feedback §5 — the application's own imagery. Deliberately
+            above the projects and separate from them: this shows the use case,
+            a project below shows a named development MOSSANO supplied. */}
+        {content && content.images.length > 0 && (
+          <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {content.images.map((image, i) => (
+              <Slab
+                key={image.id}
+                media={image}
+                alt={image.alt || `${label} in natural stone`}
+                aspect="landscape"
+                priority={i < 3}
+                sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+              />
+            ))}
+          </div>
+        )}
 
         {projects.length > 0 && (
           <div className="mt-14 grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
@@ -207,6 +232,51 @@ export function ApplicationProjectPage() {
             />
           ))}
         </div>
+
+        {/* Phase-1 feedback §6 — uploaded video. */}
+        {data.videos.length > 0 && (
+          <div className="mt-6 grid gap-6 sm:grid-cols-2">
+            {data.videos.map((video) => (
+              <video
+                key={video.id}
+                src={video.url}
+                poster={video.thumbnailUrl ?? undefined}
+                controls
+                playsInline
+                preload="none"
+                className="w-full bg-ivory-deep"
+              />
+            ))}
+          </div>
+        )}
+
+        {/* Phase-2 feedback §3 — Instagram reels, by URL from the CRM. */}
+        {data.instagramUrls.length > 0 && (
+          <div className="mt-14">
+            <p className="label">On Instagram</p>
+            <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {data.instagramUrls.map((url) => (
+                <InstagramEmbed key={url} url={url} />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {data.links.length > 0 && (
+          <p className="mt-10 flex flex-wrap gap-x-6 gap-y-2">
+            {data.links.map((link) => (
+              <a
+                key={link.url}
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="label underline-offset-4 transition-colors hover:text-brass hover:underline"
+              >
+                {link.label}
+              </a>
+            ))}
+          </p>
+        )}
       </Section>
 
       {data.stones && data.stones.length > 0 && (
