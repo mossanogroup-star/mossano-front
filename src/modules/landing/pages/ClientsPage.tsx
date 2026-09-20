@@ -57,9 +57,13 @@ export function ClientsPage() {
                 category.clients.length === 1 ? "client" : "clients"
               }`}
             />
-            <ul className="mt-12 grid grid-cols-2 items-center gap-x-8 gap-y-10 sm:grid-cols-3 lg:grid-cols-5">
+            {/* Wrapping row, not a grid. A fixed column count strands a
+                one-client category alone in a five-column row with the rest of
+                the width empty beside it; fixed-width cells that wrap keep every
+                category packed to the same left edge whatever its size. */}
+            <ul className="mt-12 flex flex-wrap items-center gap-x-6 gap-y-10 sm:mt-14 sm:gap-x-10 sm:gap-y-12">
               {category.clients.map((client) => (
-                <li key={client.id}>
+                <li key={client.id} className="w-[calc(50%-0.75rem)] sm:w-[150px] lg:w-[170px]">
                   <ClientLogo client={client} />
                 </li>
               ))}
