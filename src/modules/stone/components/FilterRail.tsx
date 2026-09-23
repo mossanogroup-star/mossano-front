@@ -18,11 +18,24 @@ interface Group {
  * below is dropped when its facet has no buckets, and every option within a
  * group is dropped when its count is zero.
  */
+/**
+ * Phase-3 feedback — "remove verification, sold filter". Hidden from the rail
+ * only: the states stay in the database, in the admin and in `?availability=`,
+ * so nothing already shared breaks and the client can put either option back
+ * by deleting a slug from this list.
+ */
+const HIDDEN_AVAILABILITY = ["sold", "verification_required"];
+
 const GROUPS: Group[] = [
   { key: "availability", param: "availability", title: "Availability" },
   { key: "looks", param: "look", title: "Look" },
   { key: "colour", param: "colour", title: "Colour" },
+  // Phase-3 feedback — the sub-category under White, directly beneath Colour
+  // so it reads as a narrowing of it. It hides itself when the catalogue has
+  // none, like every other group here.
+  { key: "whiteSubcategory", param: "whiteSubcategory", title: "White" },
   { key: "material", param: "material", title: "Material" },
+  { key: "originCountry", param: "originCountry", title: "Origin" },
   { key: "applications", param: "application", title: "Application" },
   { key: "finish", param: "finish", title: "Finish" },
 ];
@@ -46,10 +59,16 @@ export function FilterRail({ facets, selected, onToggle, onClear, className }: P
       application: taxonomies.applications,
       material: taxonomies.materials,
       colour: taxonomies.colours,
+      whiteSubcategory: taxonomies.whiteSubcategories,
       finish: taxonomies.finishes,
     };
     if (param === "availability") {
       return taxonomies.availability[value as keyof typeof taxonomies.availability] ?? value;
+    }
+    // Countries are keyed by ISO code rather than by slug — see
+    // countries.generated.js, which the picker and the flags share.
+    if (param === "originCountry") {
+      return taxonomies.countries.find((c) => c.code === value)?.label ?? value;
     }
     return lists[param]?.find((t) => t.slug === value)?.label ?? value;
   };
@@ -58,7 +77,10 @@ export function FilterRail({ facets, selected, onToggle, onClear, className }: P
 
   const visible = GROUPS.map((group) => ({
     ...group,
-    buckets: (facets?.[group.key] ?? []).filter((b: FacetBucket) => b.count > 0),
+    buckets: (facets?.[group.key] ?? []).filter(
+      (b: FacetBucket) =>
+        b.count > 0 && !(group.param === "availability" && HIDDEN_AVAILABILITY.includes(b.value)),
+    ),
   })).filter(
     (group) =>
       group.buckets.length > 1 || (group.buckets.length === 1 && selected[group.param]?.length),

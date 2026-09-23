@@ -1,4 +1,16 @@
+import path from "path";
+import { fileURLToPath } from "url";
 import { BRAND_COLOURS } from "./src/data/colours.js";
+
+/**
+ * Absolute, not "./src/**" — Tailwind resolves a relative content glob against
+ * the process's working directory, and in development the process is
+ * mossano-back, which serves the storefront through Vite in middleware mode.
+ * From there "./src" is the API's source folder, Tailwind matches nothing, and
+ * the page arrives with the base layer but not one utility class: an unstyled
+ * site that builds perfectly in CI.
+ */
+const HERE = path.dirname(fileURLToPath(import.meta.url));
 
 /**
  * Design tokens. Every value is justified in DESIGN.md — read it before adding
@@ -7,7 +19,7 @@ import { BRAND_COLOURS } from "./src/data/colours.js";
  * @type {import('tailwindcss').Config}
  */
 export default {
-  content: ["./index.html", "./src/**/*.{js,jsx,ts,tsx}"],
+  content: [path.join(HERE, "index.html"), path.join(HERE, "src/**/*.{js,jsx,ts,tsx}")],
   theme: {
     extend: {
       screens: {

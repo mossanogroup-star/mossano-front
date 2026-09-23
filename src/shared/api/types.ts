@@ -53,6 +53,9 @@ export interface StoneCard {
   mossanoCode: string;
   name: string;
   origin: string | null;
+  /** ISO 3166-1 alpha-2 — the flag is /flags/<code>.svg. */
+  originCountry: string | null;
+  originCountryLabel: string | null;
   colour: string | null;
   availability: Availability;
   availabilityLabel: string;
@@ -79,6 +82,9 @@ export interface StoneSlab {
 export interface Stone extends Omit<StoneCard, "whatsapp"> {
   materialLabel: string | null;
   colourLabel: string | null;
+  /** Phase-3 feedback — the sub-category under White, null on any other lot. */
+  whiteSubcategory: string | null;
+  whiteSubcategoryLabel: string | null;
   finish: string | null;
   finishLabel: string | null;
   thicknessMm: number | null;
@@ -246,6 +252,15 @@ export interface ApplicationContent {
   isPublished: boolean;
 }
 
+/** Phase-3 — a Shop by Look page's own photography and copy. */
+export interface LookContent {
+  look: string;
+  headline: string;
+  description: string;
+  images: Media[];
+  isPublished: boolean;
+}
+
 export interface AdminApplicationProject extends ApplicationProject {
   isPublished: boolean;
   stoneIds: string[];
@@ -264,11 +279,12 @@ export interface FacetBucket {
 export interface StoneFacets {
   material: FacetBucket[];
   colour: FacetBucket[];
+  whiteSubcategory: FacetBucket[];
+  originCountry: FacetBucket[];
   finish: FacetBucket[];
   availability: FacetBucket[];
   looks: FacetBucket[];
   applications: FacetBucket[];
-  origin: FacetBucket[];
 }
 
 /** `state` and `postalCode` are empty for offices printed without them. */
@@ -305,6 +321,9 @@ export interface SiteConfig {
     applications: Array<{ slug: string; label: string }>;
     materials: Array<{ slug: string; label: string }>;
     colours: Array<{ slug: string; label: string }>;
+    whiteSubcategories: Array<{ slug: string; label: string }>;
+    /** Generated from the flag files on the server — see countries.generated.js. */
+    countries: Array<{ code: string; label: string }>;
     finishes: Array<{ slug: string; label: string }>;
     availability: Record<Availability, string>;
   };
@@ -326,6 +345,18 @@ export interface HomePayload {
   currentEdit: Edit | null;
   looks: LookTile[];
   applications: ApplicationTile[];
+  /** Countries the catalogue actually holds stock from, most-stocked first. */
+  sourceCountries: Array<{ code: string; label: string; count: number }>;
+  /** The full-screen quarry-to-project slider — steps with photography only. */
+  process: ProcessStep[];
+}
+
+/** One step of the home page's process slider. */
+export interface ProcessStep {
+  slug: string;
+  title: string;
+  body: string;
+  image: Media;
 }
 
 export interface StonePayload {

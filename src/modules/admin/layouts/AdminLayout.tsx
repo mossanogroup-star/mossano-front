@@ -8,6 +8,7 @@ import {
   Share2,
   Users,
   Building2,
+  Palette,
   LogOut,
   ExternalLink,
 } from "lucide-react";
@@ -23,6 +24,7 @@ const NAV = [
   { to: "/admin/stones", label: "Stones", Icon: Gem },
   { to: "/admin/edits", label: "Edits", Icon: CalendarRange },
   { to: "/admin/applications", label: "Applications", Icon: Images },
+  { to: "/admin/looks", label: "Looks", Icon: Palette },
   { to: "/admin/clients", label: "Clients", Icon: Building2 },
   {
     to: "/admin/enquiries",

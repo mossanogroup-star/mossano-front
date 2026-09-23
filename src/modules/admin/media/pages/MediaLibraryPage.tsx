@@ -11,6 +11,7 @@ const KINDS = [
   { value: "", label: "Everything" },
   { value: "slab", label: "Slabs" },
   { value: "application", label: "Projects" },
+  { value: "look", label: "Looks" },
   { value: "collection", label: "Collections" },
   { value: "selection", label: "Selections" },
   { value: "video", label: "Video" },

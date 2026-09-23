@@ -7,7 +7,7 @@ import { cn } from "@/shared/lib/cn";
 import type { Media } from "@/shared/api/types";
 
 interface Props {
-  kind: "slab" | "application" | "collection" | "selection" | "video" | "general";
+  kind: "slab" | "application" | "look" | "collection" | "selection" | "video" | "general";
   /** Ordered — the sequence is the gallery order the customer sees. */
   value: string[];
   onChange: (ids: string[]) => void;

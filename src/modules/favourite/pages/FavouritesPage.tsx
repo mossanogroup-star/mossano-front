@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { publicQueries } from "@/shared/api/publicQueries";
@@ -5,6 +6,7 @@ import { useFavourites } from "@/shared/hooks/useFavourites";
 import { Section, EmptyState } from "@/shared/components/Section";
 import { StoneGrid } from "@/shared/components/StoneCard";
 import { WhatsAppButton } from "@/shared/components/WhatsAppButton";
+import { EnquiryForm } from "@/modules/enquiry/components/EnquiryForm";
 import { useSiteConfig } from "@/shared/hooks/useSiteConfig";
 
 /**
@@ -20,8 +22,37 @@ export function FavouritesPage() {
   const { slugs, count, clear } = useFavourites();
   const { whatsapp } = useSiteConfig();
   const { data, isLoading } = useQuery(publicQueries.favourites(slugs));
+  const [downloading, setDownloading] = useState(false);
+  const [sending, setSending] = useState(false);
 
   const stones = data ?? [];
+
+  /**
+   * Phase-3 feedback — "wish list demo in pdf". The server builds it with the
+   * private-selection layout, so what the customer keeps looks like what
+   * MOSSANO sends. Fetched rather than linked because the shortlist lives on
+   * this device and has to be POSTed.
+   */
+  const downloadPdf = async () => {
+    setDownloading(true);
+    try {
+      const res = await fetch("/api/public/favourites/pdf", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ slugs }),
+      });
+      if (!res.ok) throw new Error("The PDF could not be prepared.");
+
+      const url = URL.createObjectURL(await res.blob());
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "MOSSANO-Shortlist.pdf";
+      link.click();
+      URL.revokeObjectURL(url);
+    } finally {
+      setDownloading(false);
+    }
+  };
 
   return (
     <Section className="pt-24 sm:pt-28">
@@ -80,10 +111,41 @@ export function FavouritesPage() {
                   )}`}
                   label="Send this shortlist"
                 />
-                <Link to="/contact" className="btn-outline">
-                  Send by email instead
-                </Link>
+                <button
+                  type="button"
+                  onClick={() => void downloadPdf()}
+                  disabled={downloading}
+                  className="btn-outline disabled:opacity-50"
+                >
+                  {downloading ? "Preparing…" : "Download as PDF"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSending((v) => !v)}
+                  className="btn-outline"
+                  aria-expanded={sending}
+                >
+                  Send it to MOSSANO
+                </button>
               </div>
+
+              {/* Phase-3 feedback — "if the client selects marble images, send
+                  it to us". The WhatsApp route was the only one, and it needs
+                  the customer to already be a WhatsApp contact; this reaches the
+                  enquiry inbox with their details attached to the list. */}
+              {sending && (
+                <EnquiryForm
+                  className="mt-12"
+                  type="general"
+                  subject={stones.map((s) => `${s.mossanoCode} ${s.name}`).join(", ")}
+                  // The subject is display only, so the list goes in the
+                  // message too — otherwise the inbox gets a name and no lots.
+                  defaultMessage={`My shortlist: ${stones
+                    .map((s) => `${s.mossanoCode} ${s.name}`)
+                    .join(", ")}.`}
+                  submitLabel="Send my shortlist"
+                />
+              )}
             </div>
           </>
         ) : (

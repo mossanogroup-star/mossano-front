@@ -19,6 +19,7 @@ import type {
   SiteConfig,
   StoneCard,
   StoneFacets,
+  LookContent,
   StonePayload,
 } from "./types";
 import type { ApiMeta } from "./http";
@@ -27,6 +28,8 @@ export interface ShopQuery {
   search?: string;
   material?: string[];
   colour?: string[];
+  whiteSubcategory?: string[];
+  originCountry?: string[];
   look?: string[];
   application?: string[];
   availability?: string[];
@@ -105,7 +108,7 @@ export const publicQueries = {
         });
         return {
           items: res.data,
-          meta: res.meta as ApiMeta & { label: string },
+          meta: res.meta as ApiMeta & { label: string; content?: LookContent },
         };
       },
     }),

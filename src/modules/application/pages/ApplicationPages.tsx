@@ -4,6 +4,7 @@ import { publicQueries } from "@/shared/api/publicQueries";
 import { Section, SectionHeading, EmptyState } from "@/shared/components/Section";
 import { StoneGrid } from "@/shared/components/StoneCard";
 import { Slab } from "@/shared/components/Slab";
+import { ZoomableSlab } from "@/shared/components/ZoomableSlab";
 import { WhatsAppButton } from "@/shared/components/WhatsAppButton";
 import { useSiteConfig } from "@/shared/hooks/useSiteConfig";
 import { InstagramEmbed } from "../components/InstagramEmbed";
@@ -107,10 +108,12 @@ export function ApplicationDetailPage() {
         {content && content.images.length > 0 && (
           <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {content.images.map((image, i) => (
-              <Slab
+              // Phase-3 feedback — every application picture opens full screen.
+              <ZoomableSlab
                 key={image.id}
                 media={image}
                 alt={image.alt || `${label} in natural stone`}
+                caption={image.alt || label}
                 aspect="landscape"
                 priority={i < 3}
                 sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
@@ -202,7 +205,14 @@ export function ApplicationProjectPage() {
       <Section className="pt-24 sm:pt-28">
         <header className="max-w-2xl">
           <div className="rule" />
+          {/* Phase-3 feedback — a project belongs to the Projects tab. The
+              application it was built for is still named, after it, rather than
+              standing in as the breadcrumb. */}
           <p className="label mt-4">
+            <Link to="/projects" className="underline-offset-4 hover:underline">
+              Projects
+            </Link>
+            <span className="text-ink-faint"> · </span>
             <Link
               to={`/application/${data.application}`}
               className="underline-offset-4 hover:underline"
@@ -222,10 +232,11 @@ export function ApplicationProjectPage() {
 
         <div className="mt-14 grid gap-6 sm:grid-cols-2">
           {data.images.map((image, i) => (
-            <Slab
+            <ZoomableSlab
               key={image.id}
               media={image}
               alt={image.alt || data.title}
+              caption={data.projectName ?? data.title}
               aspect="landscape"
               priority={i < 2}
               sizes="(min-width: 640px) 50vw, 100vw"

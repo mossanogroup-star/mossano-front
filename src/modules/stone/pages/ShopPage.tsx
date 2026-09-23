@@ -9,7 +9,16 @@ import { FilterRail } from "../components/FilterRail";
 import { WhatsAppButton } from "@/shared/components/WhatsAppButton";
 import { useSiteConfig } from "@/shared/hooks/useSiteConfig";
 
-const MULTI = ["material", "colour", "look", "application", "availability", "finish"] as const;
+const MULTI = [
+  "material",
+  "colour",
+  "whiteSubcategory",
+  "originCountry",
+  "look",
+  "application",
+  "availability",
+  "finish",
+] as const;
 
 /**
  * Phase-1 feedback §2 dropped "Largest lot". The server still accepts

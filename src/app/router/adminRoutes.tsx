@@ -70,6 +70,11 @@ const ClientListPage = lazy(() =>
     default: m.ClientListPage,
   })),
 );
+const LookContentPage = lazy(() =>
+  import("@/modules/admin/look/pages/LookContentPage").then((m) => ({
+    default: m.LookContentPage,
+  })),
+);
 const ApplicationListPage = lazy(() =>
   import("@/modules/admin/application/pages/ApplicationListPage").then((m) => ({
     default: m.ApplicationListPage,
@@ -113,6 +118,7 @@ export const adminRoutes: RouteObject[] = [
       { path: "edits", element: wrap(<EditListPage />) },
       { path: "edits/:id", element: wrap(<EditDetailPage />) },
       { path: "applications", element: wrap(<ApplicationListPage />) },
+      { path: "looks", element: wrap(<LookContentPage />) },
       { path: "clients", element: wrap(<ClientListPage />) },
       { path: "enquiries", element: wrap(<EnquiryListPage />) },
       { path: "enquiries/:id", element: wrap(<EnquiryDetailPage />) },

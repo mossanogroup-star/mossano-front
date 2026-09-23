@@ -9,7 +9,9 @@ import { AvailabilityBadge } from "@/shared/components/AvailabilityBadge";
 import { FavouriteButton } from "@/shared/components/FavouriteButton";
 import { WhatsAppButton } from "@/shared/components/WhatsAppButton";
 import { EnquiryForm } from "@/modules/enquiry/components/EnquiryForm";
+import { ZoomableSlab } from "@/shared/components/ZoomableSlab";
 import { cn } from "@/shared/lib/cn";
+import { Flag } from "@/shared/components/Flag";
 
 /**
  * Website §4.
@@ -58,10 +60,13 @@ export function StoneDetailPage() {
         <div className="grid gap-12 lg:grid-cols-[1.15fr_1fr] lg:gap-20">
           {/* ── Photography ───────────────────────────────────────────── */}
           <div>
-            <Slab
+            {/* Phase-3 feedback — opens full screen, captioned with the code
+                and the name and nothing else. */}
+            <ZoomableSlab
               media={current}
               url={stone.primaryImageUrl}
               alt={`${stone.name} — natural stone slab`}
+              caption={`${stone.mossanoCode} ${stone.name}`}
               aspect="landscape"
               priority
               sizes="(min-width: 1024px) 55vw, 100vw"
@@ -98,9 +103,12 @@ export function StoneDetailPage() {
                 <div className="mt-5 grid grid-cols-2 gap-4 sm:grid-cols-3">
                   {stone.slabs.map((slab) => (
                     <figure key={slab.id}>
-                      <Slab
+                      <ZoomableSlab
                         media={slab.image}
                         alt={`${stone.name}${slab.reference ? ` — slab ${slab.reference}` : ""}`}
+                        caption={`${stone.mossanoCode} ${stone.name}${
+                          slab.reference ? ` · ${slab.reference}` : ""
+                        }`}
                         aspect="portrait"
                         sizes="(min-width: 640px) 20vw, 45vw"
                         className={cn(slab.isSold && "opacity-45")}
@@ -131,7 +139,6 @@ export function StoneDetailPage() {
               className="mt-5"
               availability={stone.availability}
               label={stone.availabilityLabel}
-              verifiedLabel={stone.verifiedLabel}
               isVerifiedLot={stone.isVerifiedLot}
             />
 
@@ -149,7 +156,15 @@ export function StoneDetailPage() {
                 <div key={spec.label} className="spec">
                   <dt>{spec.label}</dt>
                   <dd className={cn(spec.value === "On request" && "text-ink-faint")}>
-                    {spec.value}
+                    {/* Phase-3 feedback — the origin carries its flag. The
+                        server resolved the row's text already ("Carrara, Italy"
+                        where a quarry is recorded), so the flag comes from the
+                        stone's country code and the text is printed as given. */}
+                    {spec.label === "Origin" && stone.originCountry ? (
+                      <Flag code={stone.originCountry} label={spec.value} withName />
+                    ) : (
+                      spec.value
+                    )}
                   </dd>
                 </div>
               ))}

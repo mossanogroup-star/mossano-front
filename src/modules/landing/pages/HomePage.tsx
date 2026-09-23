@@ -7,6 +7,9 @@ import { StoneGrid } from "@/shared/components/StoneCard";
 import { Slab } from "@/shared/components/Slab";
 import { WhatsAppButton } from "@/shared/components/WhatsAppButton";
 import { PartnerMarquee } from "../components/PartnerMarquee";
+import { RunningNumbers } from "../components/RunningNumbers";
+import { HeroSlider } from "../components/HeroSlider";
+import { Flag } from "@/shared/components/Flag";
 
 /**
  * Website §1.
@@ -37,57 +40,70 @@ export function HomePage() {
   const hero = data?.hero?.image ?? null;
   const heroUrl = hero?.url ?? data?.hero?.stone.primaryImageUrl ?? null;
 
+  /**
+   * Phase-3 feedback — the black slab leads, then the five process
+   * photographs. It is the measured hero (see resolveHero and
+   * `npm run measure:hero`): the darkest lot in the catalogue, and the only one
+   * ivory type reads cleanly over, so it is the right first impression and the
+   * wrong thing to have dropped when the slider arrived.
+   */
+  const slides = [
+    ...(hero
+      ? [
+          {
+            slug: "hero",
+            title: data?.hero?.stone.name ?? brand.name,
+            body: brand.tagline,
+            image: hero,
+          },
+        ]
+      : []),
+    ...(data?.process ?? []),
+  ];
+
   return (
     <>
-      {/* ── Hero ────────────────────────────────────────────────────────────
-          Text sits on the stone, so the slab is darkened by a gradient rather
-          than the type being given a box. DESIGN.md's rule is that the stone is
-          the content; a legibility panel over it is interface competing with
-          product. The gradient is weighted to the bottom-left, where the type
-          actually is, so the slab's figure stays readable. */}
-      <section className="relative isolate min-h-[78vh] short:min-h-[92vh] overflow-hidden bg-umber-deep">
-        <Slab
-          media={hero}
-          url={heroUrl}
-          alt=""
-          aspect="auto"
-          priority
-          sizes="100vw"
-          className="absolute inset-0 h-full w-full"
-          imgClassName="h-full w-full object-cover"
-        />
-        <div
-          className="absolute inset-0 bg-gradient-to-tr from-umber-deep/90 via-umber-deep/45 to-transparent"
-          aria-hidden="true"
-        />
-
-        <div className="shell relative flex min-h-[78vh] short:min-h-[92vh] flex-col justify-end pb-16 pt-28 sm:pb-24">
-          <div className="max-w-2xl">
-            <div className="rule" />
-            <h1 className="h-display mt-6 text-ivory">{brand.name}</h1>
-            <p className="mt-5 max-w-md text-[1rem] leading-relaxed text-ivory/80">
-              {brand.tagline}
-            </p>
-            {/* Phase-1 feedback §1 — a short message in the first section. The
+      {/* ── Hero — Phase-3 feedback ──────────────────────────────────────────
+          One screen, not two: the quarry-to-project photographs run behind the
+          wordmark rather than as a section under it. HeroSlider owns the images,
+          the gradient, the arrows and the step caption; everything below is the
+          hero's own content, unchanged and sitting on top of it. */}
+      <HeroSlider steps={slides} fallbackMedia={hero} fallbackUrl={heroUrl}>
+        <div className="shell relative flex min-h-[78vh] flex-col justify-end pb-10 pt-28 short:min-h-[92vh] sm:pb-12">
+          {/* Phase-3 feedback — the running numbers belong in this first
+              section, opposite the wordmark, rather than beside the client
+              logos. `items-end` lands them on the same baseline as the buttons,
+              so the two blocks read as one line of the page. */}
+          <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_14rem] lg:items-end lg:gap-16">
+            <div className="max-w-2xl">
+              <div className="rule" />
+              <h1 className="h-display mt-6 text-ivory">{brand.name}</h1>
+              <p className="mt-5 max-w-md text-[1rem] leading-relaxed text-ivory/80">
+                {brand.tagline}
+              </p>
+              {/* Phase-1 feedback §1 — a short message in the first section. The
                 client's own line, from the brochure. */}
-            <p className="mt-4 max-w-md font-display text-[0.95rem] leading-relaxed text-brass-light">
-              We don&rsquo;t just supply marble. We curate experiences in stone.
-            </p>
+              <p className="mt-4 max-w-md font-display text-[0.95rem] leading-relaxed text-brass-light">
+                We don&rsquo;t just supply marble. We curate experiences in stone.
+              </p>
 
-            <div className="mt-10 flex flex-wrap items-center gap-4">
-              <Link to="/new-edit" className="btn-light">
-                Explore New Edit
-              </Link>
-              <Link
-                to="/private-sourcing"
-                className="border-b border-ivory/35 py-1.5 font-sans text-[0.66rem] uppercase tracking-label text-ivory/80 transition-colors hover:border-ivory hover:text-ivory"
-              >
-                MOSSANO Sourcing Desk
-              </Link>
+              <div className="mt-10 flex flex-wrap items-center gap-4">
+                <Link to="/new-edit" className="btn-light">
+                  Explore New Edit
+                </Link>
+                <Link
+                  to="/private-sourcing"
+                  className="border-b border-ivory/35 py-1.5 font-sans text-[0.66rem] uppercase tracking-label text-ivory/80 transition-colors hover:border-ivory hover:text-ivory"
+                >
+                  MOSSANO Sourcing Desk
+                </Link>
+              </div>
             </div>
+
+            <RunningNumbers tone="light" className="space-y-6" />
           </div>
         </div>
-      </section>
+      </HeroSlider>
 
       {/* ── Clients — Phase-1 feedback §1, Phase-2 feedback §2 ───────────────
           Every logo in one moving strip. The roster is CRM-managed; the
@@ -260,6 +276,19 @@ export function HomePage() {
               curates what is worth specifying. Every lot is photographed as it actually is, and its
               availability is verified rather than assumed.
             </p>
+            {/* Phase-3 feedback — the sourcing countries as flags rather than
+                names, and read from the catalogue rather than written here:
+                these are the countries MOSSANO currently holds stock from. */}
+            {(data?.sourceCountries ?? []).length > 0 && (
+              <ul className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3">
+                {data?.sourceCountries.map((country) => (
+                  <li key={country.code} className="text-[1.6rem] leading-none">
+                    <Flag code={country.code} label={country.label} />
+                  </li>
+                ))}
+              </ul>
+            )}
+
             <Link to="/about" className="btn-light mt-10">
               About MOSSANO
             </Link>

@@ -15,6 +15,8 @@ interface FormValues {
   lotNumber: string;
   material: string;
   colour: string;
+  whiteSubcategory: string;
+  originCountry: string;
   origin: string;
   finish: string;
   thicknessMm: string;
@@ -68,16 +70,26 @@ export function StoneEditPage() {
     handleSubmit,
     reset,
     setError,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<FormValues>({
     defaultValues: {
       name: "",
       lotNumber: "",
-      material: "",
+      /**
+       * Phase-3 feedback — "Origin mostly Italy, Material marble, Finish
+       * polish, Thickness 18 or 20mm". Starting values for a new lot, not
+       * enforced ones: they are what almost every lot is, and the team clears
+       * or changes them on the ones that are not. An existing record overwrites
+       * all of this in the reset() below.
+       */
+      material: "marble",
       colour: "",
+      whiteSubcategory: "",
+      originCountry: "it",
       origin: "",
-      finish: "",
-      thicknessMm: "",
+      finish: "polished",
+      thicknessMm: "20",
       slabLengthIn: "",
       slabWidthIn: "",
       slabCount: "",
@@ -100,6 +112,8 @@ export function StoneEditPage() {
       lotNumber: stone.lotNumber ?? "",
       material: stone.material ?? "",
       colour: stone.colour ?? "",
+      whiteSubcategory: stone.whiteSubcategory ?? "",
+      originCountry: stone.originCountry ?? "",
       origin: stone.origin ?? "",
       finish: stone.finish ?? "",
       thicknessMm: stone.thicknessMm?.toString() ?? "",
@@ -132,6 +146,9 @@ export function StoneEditPage() {
     },
   });
 
+  /** The White sub-category field only exists while White is the colour. */
+  const colour = watch("colour");
+
   const onSubmit = handleSubmit(async (v) => {
     try {
       await save.mutateAsync({
@@ -139,6 +156,11 @@ export function StoneEditPage() {
         lotNumber: str(v.lotNumber),
         material: str(v.material),
         colour: str(v.colour),
+        // Only meaningful under White — see stone.constants.js. Cleared rather
+        // than left stale when the colour moves off White, so a lot cannot be
+        // filed as "Black / Statuario".
+        whiteSubcategory: v.colour === "white" ? str(v.whiteSubcategory) : undefined,
+        originCountry: str(v.originCountry),
         origin: str(v.origin),
         finish: str(v.finish),
         thicknessMm: num(v.thicknessMm),
@@ -231,15 +253,48 @@ export function StoneEditPage() {
             </Field>
           </div>
 
+          {/* Phase-3 feedback — the sub-category under White. Shown only when
+              White is chosen: on any other colour it is a field that can only
+              be filled in wrongly. */}
+          {colour === "white" && (
+            <Field label="White sub-category" htmlFor="whiteSubcategory">
+              <Select id="whiteSubcategory" {...register("whiteSubcategory")}>
+                <option value="">Not recorded</option>
+                {(taxonomies?.whiteSubcategories ?? []).map((w) => (
+                  <option key={w.slug} value={w.slug}>
+                    {w.label}
+                  </option>
+                ))}
+              </Select>
+            </Field>
+          )}
+
           {/* Left blank on purpose until the client confirms them. See
               docs/CLIENT-QUESTIONS.md — the site says "On request" rather than
               guessing, and that is a feature of the listing, not a gap. */}
           <p className="label mb-3 mt-8 border-t border-ivory-dark pt-6">
             Specification — leave blank if not confirmed
           </p>
-          <Field label="Origin" htmlFor="origin" hint='Shows as "On request" while blank'>
-            <TextInput id="origin" placeholder="e.g. Italy" {...register("origin")} />
-          </Field>
+          {/* Phase-3 feedback — the country is picked, not typed: the flag on
+              the stone page is built from this code, and "Itly" used to lose it
+              silently. The free-text box beside it keeps the quarry or region,
+              which a country code cannot carry. */}
+          <div className="grid gap-x-6 sm:grid-cols-2">
+            <Field label="Origin country" htmlFor="originCountry">
+              <Select id="originCountry" {...register("originCountry")}>
+                <option value="">Not recorded</option>
+                {(taxonomies?.countries ?? []).map((c) => (
+                  <option key={c.code} value={c.code}>
+                    {c.label}
+                  </option>
+                ))}
+              </Select>
+            </Field>
+
+            <Field label="Quarry or region" htmlFor="origin" hint="Optional, e.g. Carrara">
+              <TextInput id="origin" placeholder="e.g. Carrara" {...register("origin")} />
+            </Field>
+          </div>
 
           <div className="grid gap-x-6 sm:grid-cols-2">
             <Field label="Finish" htmlFor="finish">

@@ -4,6 +4,7 @@ import { publicQueries } from "@/shared/api/publicQueries";
 import { Section, EmptyState } from "@/shared/components/Section";
 import { StoneGrid } from "@/shared/components/StoneCard";
 import { Slab } from "@/shared/components/Slab";
+import { ZoomableSlab } from "@/shared/components/ZoomableSlab";
 import { WhatsAppButton } from "@/shared/components/WhatsAppButton";
 import { useSiteConfig } from "@/shared/hooks/useSiteConfig";
 
@@ -86,6 +87,8 @@ export function LookDetailPage() {
 
   const label = (data?.meta?.label as string) ?? slug.replace(/-/g, " ");
   const items = data?.items ?? [];
+  /** Phase-3 feedback — the look's own photography, where it has been uploaded. */
+  const content = data?.meta?.content;
 
   return (
     <Section className="pt-24 sm:pt-28">
@@ -96,8 +99,29 @@ export function LookDetailPage() {
             Shop by Look
           </Link>
         </p>
-        <h1 className="h-display mt-2">{label}</h1>
+        <h1 className="h-display mt-2">{content?.headline || label}</h1>
+        {content?.description && (
+          <p className="mt-6 max-w-prose text-[0.95rem] leading-relaxed text-ink-soft">
+            {content.description}
+          </p>
+        )}
       </header>
+
+      {content && content.images.length > 0 && (
+        <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {content.images.map((image, i) => (
+            <ZoomableSlab
+              key={image.id}
+              media={image}
+              alt={image.alt || `${label} natural stone`}
+              caption={image.alt || label}
+              aspect="landscape"
+              priority={i < 3}
+              sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+            />
+          ))}
+        </div>
+      )}
 
       <div className="mt-14">
         {items.length ? (

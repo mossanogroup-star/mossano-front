@@ -13,7 +13,12 @@ dist
 # `npm run slabs`. In production the images live in Cloudinary, uploaded once by
 # `seedStones.js` — git is not the delivery mechanism.
 #
-#   public/slabs  cropped slabs, the seed's input
+#   # Country flags, rendered from the flag-icons package by `npm run flags` —
+# which runs before every dev start and every build, so they are never missing
+# and never stale. Generated output does not belong in git.
+public/flags
+
+public/slabs  cropped slabs, the seed's input
 #   public/img    four WebP widths per slab, the old static pipeline's output,
 #                 now referenced by nothing — the storefront asks the storage
 #                 provider for the width it needs at render time

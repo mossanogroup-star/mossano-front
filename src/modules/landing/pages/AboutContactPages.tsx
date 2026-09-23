@@ -1,8 +1,11 @@
 import { Link } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { publicQueries } from "@/shared/api/publicQueries";
 import { Section, SectionHeading, EmptyState } from "@/shared/components/Section";
 import { WhatsAppButton } from "@/shared/components/WhatsAppButton";
 import { EnquiryForm } from "@/modules/enquiry/components/EnquiryForm";
 import { useSiteConfig } from "@/shared/hooks/useSiteConfig";
+import { Flag } from "@/shared/components/Flag";
 import type { BrandLocation } from "@/shared/api/types";
 
 /** "Mumbai, Maharashtra 400003" — and just "Dubai" where the rest is absent. */
@@ -36,7 +39,12 @@ const CAPABILITIES = [
   "Project Support",
 ];
 
-/** The brochure's "Why Choose Mossano Marmo" six, in its own words. */
+/**
+ * The brochure's "Why Choose Mossano Marmo" six, in its own words.
+ *
+ * Phase-3 feedback ran these as a carousel on the home page and then asked for
+ * it removed, so they are back to living here — read, not scrolled past.
+ */
 const REASONS = [
   { title: "Direct Factory Sourcing", body: "Better pricing, no middlemen." },
   { title: "Custom Selection", body: "Unique slabs for every project." },
@@ -45,8 +53,6 @@ const REASONS = [
   { title: "Global Network", body: "Exclusive materials worldwide." },
   { title: "Project Handling", body: "Bulk supply capability." },
 ];
-
-const SOURCE_COUNTRIES = ["Italy", "Turkey", "Greece", "Brazil", "Vietnam", "China"];
 
 /**
  * Phase-1 feedback §5's "Our Process / Journey".
@@ -87,6 +93,10 @@ const JOURNEY = [
 
 export function AboutPage() {
   const { whatsapp } = useSiteConfig();
+  // The same list the home page's flag row uses — the countries the catalogue
+  // actually holds stock from. Shared query, so this costs no extra request.
+  const { data: home } = useQuery(publicQueries.home());
+  const sourceCountries = home?.sourceCountries ?? [];
 
   return (
     <>
@@ -137,10 +147,20 @@ export function AboutPage() {
           ))}
         </ul>
         <p className="mt-12 max-w-prose text-[0.95rem] leading-relaxed text-ink-soft">
-          Strong relationships with international factories across{" "}
-          {SOURCE_COUNTRIES.slice(0, -1).join(", ")} and {SOURCE_COUNTRIES.at(-1)} allow us to
-          deliver exclusive and rare natural stones.
+          Strong relationships with international factories allow us to deliver exclusive and rare
+          natural stones.
         </p>
+        {/* Phase-3 feedback — flags, not names, and taken from the catalogue
+            rather than listed here. */}
+        {sourceCountries.length > 0 && (
+          <ul className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
+            {sourceCountries.map((country) => (
+              <li key={country.code} className="text-[1.7rem] leading-none">
+                <Flag code={country.code} label={country.label} />
+              </li>
+            ))}
+          </ul>
+        )}
       </Section>
 
       <Section tone="deep">

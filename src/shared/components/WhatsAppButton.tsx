@@ -34,16 +34,16 @@ export function WhatsAppButton({
   className,
   variant = "solid",
 }: Props) {
-  const styles = {
-    solid: "btn-wa",
-    outline: "btn-outline",
-    light: "btn-light",
-    quiet:
-      "inline-flex items-center gap-2 py-1.5 font-sans text-[0.66rem] uppercase tracking-label text-ink-soft transition-colors hover:text-whatsapp",
-    // -m-2/p-2 buys a ~44px tap target without shifting the layout, the same
-    // trick FavouriteButton uses so the two sit level beside each other.
-    icon: "-m-2 inline-flex items-center p-2 text-whatsapp transition-opacity hover:opacity-70",
-  }[variant];
+  // Phase-3 feedback — "WhatsApp MOSSANO in green colour". Every variant but
+  // the glyph is the green button now: the outline and light ones took their
+  // colour from the section they sat in, which meant the same action was ivory
+  // in the footer and brown on a light page. One action, one colour.
+  const styles =
+    variant === "icon"
+      ? // -m-2/p-2 buys a ~44px tap target without shifting the layout, the same
+        // trick FavouriteButton uses so the two sit level beside each other.
+        "-m-2 inline-flex items-center p-2 text-whatsapp transition-opacity hover:opacity-70"
+      : "btn-wa";
 
   const iconOnly = variant === "icon";
 

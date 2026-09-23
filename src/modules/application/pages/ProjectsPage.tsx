@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { Play } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { Section, SectionHeading, EmptyState } from "@/shared/components/Section";
 import { Slab } from "@/shared/components/Slab";
@@ -21,13 +22,27 @@ import type { ApplicationProject } from "@/shared/api/types";
 function ProjectCard({ project, priority }: { project: ApplicationProject; priority: boolean }) {
   return (
     <article className="group relative">
-      <Slab
-        media={project.coverImage}
-        alt={project.projectName ?? project.title}
-        aspect="landscape"
-        priority={priority}
-        sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-      />
+      <div className="relative">
+        <Slab
+          media={project.coverImage}
+          alt={project.projectName ?? project.title}
+          aspect="landscape"
+          priority={priority}
+          sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+        />
+        {/* Phase-3 feedback — "projects: images and videos". The video plays on
+            the project's own page; here it is marked on the photograph, where
+            the word "Video" under the caption was being read as a tag. */}
+        {project.hasVideo && (
+          <span
+            className="pointer-events-none absolute bottom-3 left-3 inline-flex items-center gap-1.5 bg-ink/70 px-2.5 py-1 font-sans text-[0.6rem] uppercase tracking-label text-ivory"
+            aria-hidden="true"
+          >
+            <Play className="h-2.5 w-2.5 fill-current" strokeWidth={0} />
+            Video
+          </span>
+        )}
+      </div>
 
       <div className="mt-4">
         <h3 className="font-display text-[1.05rem] uppercase leading-tight tracking-wide">
@@ -48,9 +63,8 @@ function ProjectCard({ project, priority }: { project: ApplicationProject; prior
         )}
 
         {/* z-10 lifts these clear of the stretched link above. */}
-        {(project.hasVideo || project.links.length > 0) && (
+        {project.links.length > 0 && (
           <p className="relative z-10 mt-3 flex flex-wrap gap-x-4 gap-y-1">
-            {project.hasVideo && <span className="label text-ink-faint">Video</span>}
             {project.links.map((link) => (
               <a
                 key={link.url}

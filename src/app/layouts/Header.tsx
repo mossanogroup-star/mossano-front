@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { Heart, Menu, X } from "lucide-react";
 import { useFavourites } from "@/shared/hooks/useFavourites";
+import { useSiteConfig } from "@/shared/hooks/useSiteConfig";
+import { WhatsAppButton } from "@/shared/components/WhatsAppButton";
 import { cn } from "@/shared/lib/cn";
 import { Wordmark } from "@/shared/components/Wordmark";
 
@@ -22,6 +24,7 @@ const NAV = [
 export function Header() {
   const [open, setOpen] = useState(false);
   const { count } = useFavourites();
+  const { whatsapp } = useSiteConfig();
   const { pathname } = useLocation();
 
   // Close the drawer on navigation. Without this a tap on a nav link changes
@@ -43,7 +46,7 @@ export function Header() {
     <header className="sticky top-0 z-40 border-b border-ivory-dark/60 bg-ivory/95 backdrop-blur-sm">
       <div className="shell flex h-16 items-center justify-between gap-6 sm:h-20">
         <Link to="/" className="-my-2 shrink-0 py-2">
-          <Wordmark className="text-[0.95rem] sm:text-[1.05rem]" />
+          <Wordmark tm className="text-[0.95rem] sm:text-[1.05rem]" />
         </Link>
 
         <nav className="hidden items-center gap-7 xl:flex" aria-label="Primary">
@@ -64,6 +67,11 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-5">
+          {/* Phase-3 feedback — WhatsApp in the header, next to Contact. The
+              glyph only: the nav is already nine words wide at this breakpoint
+              and a tenth would wrap it. */}
+          <WhatsAppButton href={whatsapp.general} variant="icon" />
+
           <Link
             to="/favourites"
             className="relative -m-2 inline-flex items-center gap-2 p-2 text-ink-faint transition-colors hover:text-ink"
@@ -115,6 +123,7 @@ export function Header() {
               {item.label}
             </NavLink>
           ))}
+          <WhatsAppButton href={whatsapp.general} className="mt-6 w-full" />
         </nav>
       </div>
     </header>

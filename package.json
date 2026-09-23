@@ -22,7 +22,10 @@
     "visual-audit": "node scripts/visual-audit.mjs",
     "format:check": "prettier --check .",
     "typecheck": "tsc -b",
-    "audit": "npm run api-audit && npm run nav-audit && npm run journey-audit && npm run chatbot-audit && npm run ux-audit && npm run visual-audit"
+    "audit": "npm run api-audit && npm run nav-audit && npm run journey-audit && npm run chatbot-audit && npm run ux-audit && npm run visual-audit",
+    "flags": "node scripts/build-flags.mjs",
+    "predev": "npm run flags",
+    "prebuild": "npm run flags"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
@@ -48,6 +51,7 @@
     "eslint": "^9.16.0",
     "eslint-plugin-react-hooks": "^5.1.0",
     "eslint-plugin-react-refresh": "^0.4.16",
+    "flag-icons": "^7.5.0",
     "globals": "^15.13.0",
     "postcss": "^8.4.49",
     "prettier": "^3.4.2",

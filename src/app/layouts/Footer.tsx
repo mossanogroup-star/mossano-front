@@ -1,7 +1,11 @@
 import { Link } from "react-router-dom";
 import { useSiteConfig } from "@/shared/hooks/useSiteConfig";
-import { WhatsAppButton } from "@/shared/components/WhatsAppButton";
 import { Wordmark } from "@/shared/components/Wordmark";
+import type { BrandLocation } from "@/shared/api/types";
+
+/** "Mumbai, Maharashtra 400003" — and just "Dubai" where the rest is absent. */
+const cityLine = ({ city, state, postalCode }: BrandLocation) =>
+  [[city, state].filter(Boolean).join(", "), postalCode].filter(Boolean).join(" ");
 
 const COLUMNS = [
   {
@@ -27,15 +31,15 @@ const COLUMNS = [
 ];
 
 export function Footer() {
-  const { brand, whatsapp } = useSiteConfig();
-  const { address } = brand;
+  const { brand } = useSiteConfig();
+  const { locations } = brand;
 
   return (
     <footer className="bg-umber text-ivory">
       <div className="shell py-20">
-        <div className="grid gap-12 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr]">
+        <div className="grid gap-12 lg:grid-cols-[1.2fr_1fr_1fr_1.4fr]">
           <div>
-            <Wordmark text={brand.wordmark} className="block text-[1.05rem]" />
+            <Wordmark text={brand.wordmark} tm className="block text-[1.05rem]" />
             <p className="mt-4 max-w-xs text-[0.9rem] leading-relaxed text-ivory/65">
               {brand.strapline}
             </p>
@@ -43,7 +47,9 @@ export function Footer() {
 
           {COLUMNS.map((column) => (
             <nav key={column.title} aria-label={column.title}>
-              <p className="label text-ivory/45">{column.title}</p>
+              <h2 className="font-display text-[1.35rem] uppercase leading-none tracking-wide text-ivory">
+                {column.title}
+              </h2>
               <ul className="mt-5 space-y-3">
                 {column.links.map((link) => (
                   <li key={link.to}>
@@ -60,17 +66,29 @@ export function Footer() {
           ))}
 
           <div>
-            <p className="label text-ivory/45">Contact</p>
-            <address className="mt-5 space-y-1 not-italic text-[0.9rem] leading-relaxed text-ivory/75">
-              <p>{address.line1}</p>
-              <p>{address.line2}</p>
-              <p>
-                {address.city}, {address.state} {address.postalCode}
-              </p>
-              <p>{address.country}</p>
-            </address>
+            <h2 className="font-display text-[1.35rem] uppercase leading-none tracking-wide text-ivory">
+              Contact
+            </h2>
 
-            <div className="mt-5 space-y-1 text-[0.9rem]">
+            {/* Phase-3 feedback — all three offices, not just the head office.
+                They were already in the brand config and already on the Contact
+                page; the footer was the only place showing one of them. */}
+            <div className="mt-5 space-y-5">
+              {locations.map((location) => (
+                <address
+                  key={location.label}
+                  className="space-y-0.5 not-italic text-[0.9rem] leading-relaxed text-ivory/75"
+                >
+                  <p className="label text-ivory/45">{location.label}</p>
+                  <p>{location.line1}</p>
+                  {location.line2 && <p>{location.line2}</p>}
+                  <p>{cityLine(location)}</p>
+                  <p>{location.country}</p>
+                </address>
+              ))}
+            </div>
+
+            <div className="mt-6 space-y-1 text-[0.9rem]">
               {brand.phones.map((phone) => (
                 <p key={phone}>
                   <a
@@ -90,8 +108,6 @@ export function Footer() {
                 </a>
               </p>
             </div>
-
-            <WhatsAppButton href={whatsapp.general} variant="light" className="mt-7" />
           </div>
         </div>
 

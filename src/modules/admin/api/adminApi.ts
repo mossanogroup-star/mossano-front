@@ -8,6 +8,7 @@ import type {
   AdminApplicationProject,
   AdminClient,
   AdminClientCategory,
+  LookContent,
   ApplicationContent,
   AdminEdit,
   AdminSelection,
@@ -89,6 +90,11 @@ export const adminApi = {
     unwrap<ApplicationContent[]>(api.get("/applications/content", undefined, AUTH)),
   saveApplicationContent: (application: string, body: unknown) =>
     unwrap<ApplicationContent>(api.put(`/applications/content/${application}`, body, AUTH)),
+
+  // Phase-3 feedback — each Shop by Look page's own photography.
+  lookContent: () => unwrap<LookContent[]>(api.get("/looks/content", undefined, AUTH)),
+  saveLookContent: (look: string, body: unknown) =>
+    unwrap<LookContent>(api.put(`/looks/content/${look}`, body, AUTH)),
 
   // Phase-2 feedback §1 and §2 — clients and their categories.
   clientCategories: () =>

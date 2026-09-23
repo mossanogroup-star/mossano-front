@@ -40,11 +40,10 @@ export function ClientLogo({ client, className }: { client: ClientTile; classNam
 
   const shell = cn(
     "flex h-14 w-full items-center justify-center sm:h-16 lg:h-20",
-    // Greyscale at rest keeps two dozen brand palettes from fighting the
-    // page; colour on hover confirms the logo is real. 85% rather than 70%:
-    // several of the marks are pale to begin with and were disappearing into
-    // the ivory once desaturated on top of that.
-    logo && "opacity-85 grayscale transition duration-300 hover:opacity-100 hover:grayscale-0",
+    // Phase-3 feedback — every logo in its own colours, at rest and on hover.
+    // They were desaturated until hovered, which made the strip read as a
+    // muted graphic; the client wants the marks shown as their owners drew
+    // them. Everywhere: the home strip and the Clients page share this file.
     className,
   );
 

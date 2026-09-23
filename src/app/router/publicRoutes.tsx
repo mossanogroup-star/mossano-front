@@ -213,6 +213,31 @@ export const publicRoutes: PublicRoute[] = [
         },
       },
       {
+        path: "projects/:projectSlug",
+        Component: ApplicationProjectPage,
+        prefetch: (qc, params) =>
+          qc.prefetchQuery(publicQueries.applicationProject(params.projectSlug!)),
+        meta: (qc, params) => {
+          const project = qc.getQueryData(
+            publicQueries.applicationProject(params.projectSlug!).queryKey,
+          );
+          return project
+            ? {
+                title: `${project.projectName ?? project.title} — ${SITE_TITLE}`,
+                description: project.description || SITE_DESCRIPTION,
+                image: project.coverImage?.url ?? null,
+              }
+            : { title: withSuffix("Project") };
+        },
+      },
+
+      /**
+       * Phase-3 feedback keeps Projects and Shop by Application as two tabs, so
+       * a project lives at /projects/:slug. This is the address they were
+       * published under before, kept working because those links have been
+       * forwarded on WhatsApp.
+       */
+      {
         path: "application/:slug/:projectSlug",
         Component: ApplicationProjectPage,
         prefetch: (qc, params) =>

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -5,7 +6,8 @@ import { Field, TextInput, TextArea } from "./Field";
 import { useSubmitEnquiry } from "../api/submitEnquiry";
 import { ApiError } from "@/shared/api/http";
 import { cn } from "@/shared/lib/cn";
-import type { EnquiryType } from "@/shared/api/types";
+import { ReferenceImageUpload } from "@/modules/sourcing/components/ReferenceImageUpload";
+import type { EnquiryType, Media } from "@/shared/api/types";
 
 /**
  * Mirrors the server's rule, and for the same reason: an enquiry MOSSANO cannot
@@ -36,6 +38,12 @@ interface Props {
   editId?: string;
   /** Prefilled and shown above the fields, e.g. "MM-024 Calacatta Viola". */
   subject?: string;
+  /**
+   * Prefills the message. The subject line above is display only — it is not
+   * submitted — so anything the team needs in the inbox belongs here. The
+   * favourites shortlist is the case this exists for.
+   */
+  defaultMessage?: string;
   requirementLabel?: string;
   submitLabel?: string;
   className?: string;
@@ -48,12 +56,20 @@ export function EnquiryForm({
   selectionToken,
   editId,
   subject,
+  defaultMessage,
   requirementLabel,
   submitLabel = "Send enquiry",
   className,
   onSuccess,
 }: Props) {
   const submit = useSubmitEnquiry();
+
+  /**
+   * Phase-3 feedback — the Sourcing Desk's uploader, on every enquiry. An
+   * architect asking about one lot usually has the reference to hand, and
+   * describing a vein in words is the step that was making them give up.
+   */
+  const [referenceImages, setReferenceImages] = useState<Media[]>([]);
 
   const {
     register,
@@ -69,7 +85,7 @@ export function EnquiryForm({
       company: "",
       projectName: "",
       requirement: "",
-      message: "",
+      message: defaultMessage ?? "",
     },
   });
 
@@ -89,6 +105,11 @@ export function EnquiryForm({
         projectName: values.projectName || undefined,
         requirement: values.requirement || undefined,
         message: values.message || undefined,
+        // The enquiry stores attachments under the sourcing brief, whatever
+        // kind of enquiry it is — one place for the team to look.
+        sourcing: referenceImages.length
+          ? { referenceImages: referenceImages.map((image) => image.id) }
+          : undefined,
       });
       onSuccess?.(receipt.reference);
     } catch (err) {
@@ -179,6 +200,15 @@ export function EnquiryForm({
         >
           <TextArea id="message" {...register("message")} />
         </Field>
+      </div>
+
+      <div className="mt-8 border-t border-ivory-dark pt-8">
+        <p className="label mb-4">Reference image</p>
+        <ReferenceImageUpload
+          id={`enquiry-reference-images-${type}`}
+          images={referenceImages}
+          onChange={setReferenceImages}
+        />
       </div>
 
       {errors.root && (

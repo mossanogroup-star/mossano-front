@@ -20,8 +20,6 @@ const DOT: Record<Availability, string> = {
 interface Props {
   availability: Availability;
   label: string;
-  /** The "verified today" line from Website §2 and §4. */
-  verifiedLabel?: string | null;
   isVerifiedLot?: boolean;
   className?: string;
   /** Over photography the type has to be light. */
@@ -31,11 +29,18 @@ interface Props {
 export function AvailabilityBadge({
   availability,
   label,
-  verifiedLabel,
   isVerifiedLot,
   className,
   tone = "dark",
 }: Props) {
+  /**
+   * Phase-3 feedback — "remove verification required" and the "verified 12
+   * hours ago" line. A lot whose availability has not been checked now says
+   * nothing rather than announcing the gap: the customer asks, which is what
+   * the enquiry buttons underneath are for.
+   */
+  if (availability === "verification_required") return null;
+
   return (
     <div className={cn("flex flex-wrap items-center gap-x-3 gap-y-1", className)}>
       <span className="inline-flex items-center gap-2">
@@ -67,17 +72,6 @@ export function AvailabilityBadge({
           )}
         >
           MOSSANO verified lot
-        </span>
-      )}
-
-      {verifiedLabel && (
-        <span
-          className={cn(
-            "font-sans text-[0.72rem] tracking-wide",
-            tone === "light" ? "text-ivory/55" : "text-ink-faint",
-          )}
-        >
-          {verifiedLabel}
         </span>
       )}
     </div>

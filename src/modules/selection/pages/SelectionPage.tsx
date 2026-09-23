@@ -125,7 +125,6 @@ export function SelectionPage() {
                     className="mt-3"
                     availability={stone.availability}
                     label={stone.availabilityLabel}
-                    verifiedLabel={stone.verifiedLabel}
                     isVerifiedLot={stone.isVerifiedLot}
                   />
 
