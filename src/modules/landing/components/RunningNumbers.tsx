@@ -88,25 +88,35 @@ function Stat({
 
   return (
     <div
-      className={cn("border-t pt-4", tone === "light" ? "border-ivory/25" : "border-ivory-dark")}
+      className={cn(
+        "border-t pt-2 sm:pt-3 lg:pt-4",
+        tone === "light" ? "border-ivory/25" : "border-ivory-dark",
+      )}
     >
       <p
         ref={ref}
         className={cn(
-          "font-display text-[1.9rem] leading-none tabular-nums",
+          // Smaller on a phone, where the three stack under the wordmark and
+          // the hero has to fit the window whole.
+          "font-display text-[1.15rem] leading-none tabular-nums sm:text-[1.5rem] lg:text-[1.9rem]",
           tone === "light" ? "text-brass-light" : "text-brass",
         )}
       >
         {format(display)}
         {suffix}
       </p>
-      <p className={cn("label mt-2", tone === "light" ? "text-ivory/70" : "text-ink-soft")}>
+      <p
+        className={cn(
+          "label mt-1 text-[0.6rem] leading-tight lg:mt-2 lg:text-[0.66rem]",
+          tone === "light" ? "text-ivory/70" : "text-ink-soft",
+        )}
+      >
         {label}
       </p>
       {note && (
         <p
           className={cn(
-            "mt-1 text-[0.8rem] leading-relaxed",
+            "mt-0.5 text-[0.65rem] leading-snug lg:mt-1 lg:text-[0.8rem]",
             tone === "light" ? "text-ivory/50" : "text-ink-faint",
           )}
         >

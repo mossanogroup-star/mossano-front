@@ -239,7 +239,7 @@ export function StoneDetailPage() {
                   slug={stone.slug}
                   name={stone.name}
                   withLabel
-                  className="btn-outline justify-center"
+                  variant="button"
                 />
               </div>
 

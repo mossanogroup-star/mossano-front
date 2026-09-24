@@ -1,38 +1,30 @@
 import { useCallback, useState, type ReactNode } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Slab } from "@/shared/components/Slab";
 import { cn } from "@/shared/lib/cn";
-import type { Media, ProcessStep } from "@/shared/api/types";
 
 /**
- * Phase-3 feedback — the home page's first screen is the quarry-to-project
- * story, running behind the wordmark rather than beside it.
+ * Phase-3 feedback — the home page's first screen is two slides: the black
+ * slab under the wordmark, then the "Why MOSSANO" process panel laid out as the
+ * client's reference image.
  *
- * The five photographs cross-fade in place; the hero's own content — wordmark,
- * strapline, the two calls to action, the running numbers — sits on top and
- * never moves. One screen, not two: the client was explicit that this replaces
- * the single static slab rather than adding a section under it.
- *
- * Every slide stays mounted and is faded rather than swapped, so stepping
- * through never shows a blank frame while the next image decodes. Only the
- * first loads eagerly — the rest are lazy, because on arrival only one is
- * visible and the hero is the page's largest paint.
+ * The slides share one grid cell, so the section is as tall as the taller of
+ * the two and neither jumps the page when it fades in. Both stay mounted and
+ * are faded rather than swapped, so stepping never shows a blank frame while an
+ * image decodes. `invisible` on the hidden one keeps its links out of the tab
+ * order and the accessibility tree.
  */
-interface Props {
-  steps: ProcessStep[];
-  /** The pinned hero slab, used until the five step photographs are uploaded. */
-  fallbackMedia?: Media | null;
-  fallbackUrl?: string | null;
-  children: ReactNode;
+export interface HeroSlide {
+  key: string;
+  /** Read out and shown beside the dots. */
+  label: string;
+  content: ReactNode;
 }
 
-export function HeroSlider({ steps, fallbackMedia, fallbackUrl, children }: Props) {
+export function HeroSlider({ slides }: { slides: HeroSlide[] }) {
   const [index, setIndex] = useState(0);
-  const count = steps.length;
-  const active = count > 0 ? steps[index] : null;
+  const count = slides.length;
 
   const go = useCallback(
-    // Wraps, so neither arrow is ever a dead end on a five-slide loop.
     (delta: number) => setIndex((current) => (current + delta + count) % count),
     [count],
   );
@@ -55,9 +47,7 @@ export function HeroSlider({ steps, fallbackMedia, fallbackUrl, children }: Prop
 
   return (
     <section
-      {...(count > 1
-        ? { "aria-roledescription": "carousel", "aria-label": "From the quarry to your project" }
-        : {})}
+      {...(count > 1 ? { "aria-roledescription": "carousel", "aria-label": "MOSSANO MARMO" } : {})}
       tabIndex={count > 1 ? 0 : undefined}
       onKeyDown={onKeyDown}
       onTouchStart={(e) => setTouchX(e.touches[0].clientX)}
@@ -67,130 +57,84 @@ export function HeroSlider({ steps, fallbackMedia, fallbackUrl, children }: Prop
         if (Math.abs(dx) > 40) go(dx < 0 ? 1 : -1);
         setTouchX(null);
       }}
-      className="relative isolate min-h-[78vh] overflow-hidden bg-umber-deep focus:outline-none short:min-h-[92vh]"
+      /**
+       * `svh`, not `vh`: on iOS `vh` is the height with the browser chrome
+       * hidden, so a viewport-height hero plus the 4rem header overflowed the
+       * window it was supposed to fit.
+       *
+       * `minmax(0,1fr)`, not the implicit `auto` column: auto grows to the
+       * slides' min-content, so the scrolling step row on a phone widened the
+       * whole hero past the screen and clipped the copy at the right edge.
+       */
+      className="relative isolate grid min-h-[calc(100svh-4rem)] grid-cols-[minmax(0,1fr)] overflow-hidden bg-umber-deep focus:outline-none lg:min-h-[78vh] short:lg:min-h-[92vh]"
     >
-      {count > 0 ? (
-        steps.map((step, i) => (
-          <div
-            key={step.slug}
-            aria-hidden={i !== index}
-            className={cn(
-              "absolute inset-0 transition-opacity duration-700 ease-out",
-              i === index ? "opacity-100" : "opacity-0",
-            )}
-          >
-            <Slab
-              media={step.image}
-              alt={i === 0 ? step.image?.alt || step.title : ""}
-              aspect="auto"
-              priority={i === 0}
-              sizes="100vw"
-              className="h-full w-full"
-              imgClassName="h-full w-full object-cover"
-            />
+      {slides.map((slide, i) => (
+        <div
+          key={slide.key}
+          className={cn(
+            "relative col-start-1 row-start-1 flex flex-col transition-[opacity,visibility] duration-700 ease-out",
+            i === index ? "visible opacity-100" : "invisible opacity-0",
+          )}
+        >
+          {slide.content}
+        </div>
+      ))}
+
+      {count > 1 && (
+        /**
+         * Pinned to the bottom edge; each slide reserves the space for it with
+         * its own bottom padding, so it never lands on the running numbers.
+         * Beside the dots, not at the screen edges: the right edge is where the
+         * chatbot launcher sits.
+         */
+        <div className="shell absolute inset-x-0 bottom-0 z-10 flex flex-wrap items-center gap-x-5 gap-y-3 pb-6 max-sm:tiny:pb-3 sm:gap-x-6 sm:pb-8">
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => go(-1)}
+              aria-label="Previous slide"
+              className="grid h-9 w-9 place-items-center border border-ivory/30 text-ivory transition-colors hover:border-ivory hover:bg-ivory hover:text-ink sm:h-10 sm:w-10"
+            >
+              <ChevronLeft className="h-4 w-4" strokeWidth={1.25} />
+            </button>
+            <button
+              type="button"
+              onClick={() => go(1)}
+              aria-label="Next slide"
+              className="grid h-9 w-9 place-items-center border border-ivory/30 text-ivory transition-colors hover:border-ivory hover:bg-ivory hover:text-ink sm:h-10 sm:w-10"
+            >
+              <ChevronRight className="h-4 w-4" strokeWidth={1.25} />
+            </button>
           </div>
-        ))
-      ) : (
-        <Slab
-          media={fallbackMedia}
-          url={fallbackUrl}
-          alt=""
-          aspect="auto"
-          priority
-          sizes="100vw"
-          className="absolute inset-0 h-full w-full"
-          imgClassName="h-full w-full object-cover"
-        />
+
+          <ul className="flex items-center gap-2.5">
+            {slides.map((slide, i) => (
+              <li key={slide.key}>
+                <button
+                  type="button"
+                  onClick={() => setIndex(i)}
+                  aria-label={slide.label}
+                  aria-current={i === index}
+                  className={cn(
+                    "h-1 w-5 transition-colors sm:w-7",
+                    i === index ? "bg-brass-light" : "bg-ivory/30 hover:bg-ivory/60",
+                  )}
+                />
+              </li>
+            ))}
+          </ul>
+
+          {/* Hidden on a phone, where it wrapped under the Sourcing Desk
+              launcher; the dots carry the position there. */}
+          <p className="label hidden text-ivory/70 sm:block" aria-live="polite">
+            <span className="tabular-nums text-brass-light">
+              {String(index + 1).padStart(2, "0")}
+            </span>
+            <span className="mx-2 text-ivory/30">/</span>
+            {slides[index]?.label}
+          </p>
+        </div>
       )}
-
-      {/* Text sits on the stone, so the slab is darkened rather than the type
-          being given a box — DESIGN.md's rule. Weighted to the bottom-left,
-          where the wordmark and the buttons actually are, and now also across
-          the bottom, because the step caption and dots sit there. */}
-      <div
-        className="absolute inset-0 bg-gradient-to-tr from-umber-deep/90 via-umber-deep/45 to-transparent"
-        aria-hidden="true"
-      />
-      {/* The running numbers sit on the right, which the bottom-left gradient
-          leaves as bare quarry — brass on sunlit limestone is unreadable. A
-          second gradient carries the darkness across, and a flat wash holds the
-          middle. Still gradients over the photograph, never a panel behind the
-          type. */}
-      <div
-        className="absolute inset-0 bg-gradient-to-l from-umber-deep/75 via-umber-deep/10 to-transparent"
-        aria-hidden="true"
-      />
-      <div className="absolute inset-0 bg-umber-deep/20" aria-hidden="true" />
-      <div
-        className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-umber-deep/85 to-transparent"
-        aria-hidden="true"
-      />
-
-      <div className="relative">
-        {children}
-
-        {count > 1 && (
-          /**
-           * In the flow under the hero's content rather than pinned over it.
-           * Absolutely positioned, this bar landed on top of the running
-           * numbers on a phone, where the content is twice as tall as the
-           * viewport minimum.
-           */
-          <div className="shell relative z-10 flex flex-wrap items-center gap-x-6 gap-y-4 pb-8">
-            <div className="flex items-center gap-2">
-              {/* Beside the dots, not at the screen edges: the right edge is
-                  where the chatbot launcher sits, and at phone width an edge
-                  arrow lands on the wordmark. */}
-              <button
-                type="button"
-                onClick={() => go(-1)}
-                aria-label="Previous step"
-                className="grid h-10 w-10 place-items-center border border-ivory/30 text-ivory transition-colors hover:border-ivory hover:bg-ivory hover:text-ink"
-              >
-                <ChevronLeft className="h-4 w-4" strokeWidth={1.25} />
-              </button>
-              <button
-                type="button"
-                onClick={() => go(1)}
-                aria-label="Next step"
-                className="grid h-10 w-10 place-items-center border border-ivory/30 text-ivory transition-colors hover:border-ivory hover:bg-ivory hover:text-ink"
-              >
-                <ChevronRight className="h-4 w-4" strokeWidth={1.25} />
-              </button>
-            </div>
-
-            <ul className="flex items-center gap-2.5">
-              {steps.map((step, i) => (
-                <li key={step.slug}>
-                  <button
-                    type="button"
-                    onClick={() => setIndex(i)}
-                    aria-label={step.title}
-                    aria-current={i === index}
-                    className={cn(
-                      "h-1 w-7 transition-colors",
-                      i === index ? "bg-brass-light" : "bg-ivory/30 hover:bg-ivory/60",
-                    )}
-                  />
-                </li>
-              ))}
-            </ul>
-
-            {/* aria-live so the step change is announced without the arrows
-                having to describe where they lead. */}
-            <p className="label text-ivory/70" aria-live="polite">
-              <span className="tabular-nums text-brass-light">
-                {String(index + 1).padStart(2, "0")}
-              </span>
-              <span className="mx-2 text-ivory/30">/</span>
-              {active?.title}
-              <span className="ml-3 hidden font-sans normal-case tracking-normal text-ivory/55 lg:inline">
-                {active?.body}
-              </span>
-            </p>
-          </div>
-        )}
-      </div>
     </section>
   );
 }

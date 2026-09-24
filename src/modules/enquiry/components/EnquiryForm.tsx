@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useId, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -63,6 +63,10 @@ export function EnquiryForm({
   onSuccess,
 }: Props) {
   const submit = useSubmitEnquiry();
+  // Prefixes every field id, so two enquiry forms on one page never point
+  // both labels at the first form's inputs.
+  const uid = useId();
+  const fid = (name: string) => `${uid}${name}`;
 
   /**
    * Phase-3 feedback — the Sourcing Desk's uploader, on every enquiry. An
@@ -128,6 +132,14 @@ export function EnquiryForm({
     }
   });
 
+  const uploader = (
+    <ReferenceImageUpload
+      id={fid("reference-images")}
+      images={referenceImages}
+      onChange={setReferenceImages}
+    />
+  );
+
   if (submit.isSuccess) {
     return (
       <div className={cn("border-t border-ivory-dark pt-10", className)}>
@@ -151,64 +163,60 @@ export function EnquiryForm({
       )}
 
       <div className="grid gap-x-8 sm:grid-cols-2">
-        <Field label="Name" htmlFor="name" required error={errors.name?.message}>
-          <TextInput id="name" autoComplete="name" {...register("name")} />
+        <Field label="Name" htmlFor={fid("name")} required error={errors.name?.message}>
+          <TextInput id={fid("name")} autoComplete="name" {...register("name")} />
         </Field>
 
-        <Field label="Company" htmlFor="company" error={errors.company?.message}>
-          <TextInput id="company" autoComplete="organization" {...register("company")} />
+        <Field label="Company" htmlFor={fid("company")} error={errors.company?.message}>
+          <TextInput id={fid("company")} autoComplete="organization" {...register("company")} />
         </Field>
 
         <Field
           label="Email"
-          htmlFor="email"
+          htmlFor={fid("email")}
           error={errors.email?.message}
           hint="Email or phone — at least one"
         >
-          <TextInput id="email" type="email" autoComplete="email" {...register("email")} />
+          <TextInput id={fid("email")} type="email" autoComplete="email" {...register("email")} />
         </Field>
 
-        <Field label="Phone" htmlFor="phone" error={errors.phone?.message}>
-          <TextInput id="phone" type="tel" autoComplete="tel" {...register("phone")} />
+        <Field label="Phone" htmlFor={fid("phone")} error={errors.phone?.message}>
+          <TextInput id={fid("phone")} type="tel" autoComplete="tel" {...register("phone")} />
         </Field>
 
         <Field
           label="Project"
-          htmlFor="projectName"
+          htmlFor={fid("projectName")}
           error={errors.projectName?.message}
           className="sm:col-span-2"
         >
-          <TextInput id="projectName" {...register("projectName")} />
+          <TextInput id={fid("projectName")} {...register("projectName")} />
         </Field>
 
         {requirementLabel && (
           <Field
             label={requirementLabel}
-            htmlFor="requirement"
+            htmlFor={fid("requirement")}
             error={errors.requirement?.message}
             className="sm:col-span-2"
           >
-            <TextInput id="requirement" {...register("requirement")} />
+            <TextInput id={fid("requirement")} {...register("requirement")} />
           </Field>
         )}
 
         <Field
           label="Message"
-          htmlFor="message"
+          htmlFor={fid("message")}
           error={errors.message?.message}
           className="sm:col-span-2"
         >
-          <TextArea id="message" {...register("message")} />
+          <TextArea id={fid("message")} {...register("message")} />
         </Field>
       </div>
 
       <div className="mt-8 border-t border-ivory-dark pt-8">
         <p className="label mb-4">Reference image</p>
-        <ReferenceImageUpload
-          id={`enquiry-reference-images-${type}`}
-          images={referenceImages}
-          onChange={setReferenceImages}
-        />
+        {uploader}
       </div>
 
       {errors.root && (

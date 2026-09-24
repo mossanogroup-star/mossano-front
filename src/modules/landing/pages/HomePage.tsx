@@ -9,7 +9,8 @@ import { WhatsAppButton } from "@/shared/components/WhatsAppButton";
 import { PartnerMarquee } from "../components/PartnerMarquee";
 import { RunningNumbers } from "../components/RunningNumbers";
 import { HeroSlider } from "../components/HeroSlider";
-import { Flag } from "@/shared/components/Flag";
+import { WhyMossano } from "../components/WhyMossano";
+import { CountryFlags } from "@/shared/components/CountryFlags";
 
 /**
  * Website §1.
@@ -40,70 +41,102 @@ export function HomePage() {
   const hero = data?.hero?.image ?? null;
   const heroUrl = hero?.url ?? data?.hero?.stone.primaryImageUrl ?? null;
 
-  /**
-   * Phase-3 feedback — the black slab leads, then the five process
-   * photographs. It is the measured hero (see resolveHero and
-   * `npm run measure:hero`): the darkest lot in the catalogue, and the only one
-   * ivory type reads cleanly over, so it is the right first impression and the
-   * wrong thing to have dropped when the slider arrived.
-   */
-  const slides = [
-    ...(hero
-      ? [
-          {
-            slug: "hero",
-            title: data?.hero?.stone.name ?? brand.name,
-            body: brand.tagline,
-            image: hero,
-          },
-        ]
-      : []),
-    ...(data?.process ?? []),
-  ];
-
   return (
     <>
       {/* ── Hero — Phase-3 feedback ──────────────────────────────────────────
-          One screen, not two: the quarry-to-project photographs run behind the
-          wordmark rather than as a section under it. HeroSlider owns the images,
-          the gradient, the arrows and the step caption; everything below is the
-          hero's own content, unchanged and sitting on top of it. */}
-      <HeroSlider steps={slides} fallbackMedia={hero} fallbackUrl={heroUrl}>
-        <div className="shell relative flex min-h-[78vh] flex-col justify-end pb-10 pt-28 short:min-h-[92vh] sm:pb-12">
-          {/* Phase-3 feedback — the running numbers belong in this first
-              section, opposite the wordmark, rather than beside the client
-              logos. `items-end` lands them on the same baseline as the buttons,
-              so the two blocks read as one line of the page. */}
-          <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_14rem] lg:items-end lg:gap-16">
-            <div className="max-w-2xl">
-              <div className="rule" />
-              <h1 className="h-display mt-6 text-ivory">{brand.name}</h1>
-              <p className="mt-5 max-w-md text-[1rem] leading-relaxed text-ivory/80">
-                {brand.tagline}
-              </p>
-              {/* Phase-1 feedback §1 — a short message in the first section. The
+          Two slides: the black slab under the wordmark, then "Why MOSSANO" as
+          the client's reference image. The slab is the measured hero (see
+          resolveHero and `npm run measure:hero`) — the darkest lot in the
+          catalogue, and the only one ivory type reads cleanly over. */}
+      <HeroSlider
+        slides={[
+          {
+            key: "hero",
+            label: brand.name,
+            content: (
+              <div className="relative flex flex-1 flex-col justify-center pb-20 max-sm:tiny:pb-14 sm:pb-24">
+                <Slab
+                  media={hero}
+                  url={heroUrl}
+                  alt={hero?.alt || data?.hero?.stone.name || ""}
+                  aspect="auto"
+                  priority
+                  sizes="100vw"
+                  className="absolute inset-0 h-full w-full"
+                  imgClassName="h-full w-full object-cover"
+                />
+                {/* Text sits on the stone, so the slab is darkened rather than
+                    the type being given a box — DESIGN.md's rule. */}
+                <div
+                  className="absolute inset-0 bg-gradient-to-tr from-umber-deep/90 via-umber-deep/45 to-transparent"
+                  aria-hidden="true"
+                />
+                <div
+                  className="absolute inset-0 bg-gradient-to-l from-umber-deep/75 via-umber-deep/10 to-transparent"
+                  aria-hidden="true"
+                />
+                <div className="absolute inset-0 bg-umber-deep/20" aria-hidden="true" />
+                <div
+                  className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-umber-deep/85 to-transparent"
+                  aria-hidden="true"
+                />
+
+                {/**
+                 * One screen on every device — Phase-3 feedback.
+                 *
+                 * The spacing steps up rather than down: a phone gets the tight
+                 * version, a laptop the roomy one. `svh` not `vh`, because on iOS `vh`
+                 * is the height with the browser chrome *hidden*, so a 78vh hero plus
+                 * a 64px header overflowed the visible window on arrival and pushed
+                 * the wordmark under the header.
+                 */}
+                <div className="shell relative flex flex-col justify-center pb-4 pt-6 max-sm:tiny:pb-2 max-sm:tiny:pt-3 sm:pb-6 sm:pt-24">
+                  {/* The running numbers sit opposite the wordmark on a laptop,
+                      and stacked beneath it on a phone — Phase-3 feedback, the
+                      client wanted them read down, not across. Kept tight so
+                      the whole slide still fits an iPhone SE. */}
+                  <div className="grid gap-5 max-sm:tiny:gap-3.5 sm:gap-8 lg:grid-cols-[minmax(0,1fr)_14rem] lg:items-end lg:gap-16">
+                    <div className="max-w-2xl">
+                      <div className="rule max-sm:tiny:hidden" />
+                      <h1 className="h-display mt-3 text-[1.4rem] max-sm:tiny:mt-0 text-ivory sm:mt-6 sm:text-[2rem] lg:text-[2.6rem]">
+                        {brand.name}
+                      </h1>
+                      <p className="mt-2.5 max-w-md text-[0.85rem] max-sm:tiny:mt-1.5 leading-relaxed text-ivory/80 sm:mt-5 sm:text-[1rem]">
+                        {brand.tagline}
+                      </p>
+                      {/* Phase-1 feedback §1 — a short message in the first section. The
                 client's own line, from the brochure. */}
-              <p className="mt-4 max-w-md font-display text-[0.95rem] leading-relaxed text-brass-light">
-                We don&rsquo;t just supply marble. We curate experiences in stone.
-              </p>
+                      <p className="mt-2.5 max-w-md font-display max-sm:tiny:mt-1.5 text-[0.82rem] leading-relaxed text-brass-light sm:mt-4 sm:text-[0.95rem]">
+                        We don&rsquo;t just supply marble. We curate experiences in stone.
+                      </p>
 
-              <div className="mt-10 flex flex-wrap items-center gap-4">
-                <Link to="/new-edit" className="btn-light">
-                  Explore New Edit
-                </Link>
-                <Link
-                  to="/private-sourcing"
-                  className="border-b border-ivory/35 py-1.5 font-sans text-[0.66rem] uppercase tracking-label text-ivory/80 transition-colors hover:border-ivory hover:text-ivory"
-                >
-                  MOSSANO Sourcing Desk
-                </Link>
+                      <div className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-3 max-sm:tiny:mt-3 max-sm:tiny:gap-y-2 sm:mt-10 sm:gap-4">
+                        <Link to="/new-edit" className="btn-light max-sm:tiny:py-2.5">
+                          Explore New Edit
+                        </Link>
+                        <Link
+                          to="/private-sourcing"
+                          className="border-b border-ivory/35 py-1.5 font-sans text-[0.66rem] uppercase tracking-label text-ivory/80 transition-colors hover:border-ivory hover:text-ivory"
+                        >
+                          MOSSANO Sourcing Desk
+                        </Link>
+                      </div>
+                    </div>
+
+                    <RunningNumbers
+                      tone="light"
+                      className="grid max-w-[18rem] gap-2.5 max-sm:tiny:gap-1.5 sm:gap-4 lg:block lg:max-w-none lg:space-y-6"
+                    />
+                  </div>
+                </div>
               </div>
-            </div>
-
-            <RunningNumbers tone="light" className="space-y-6" />
-          </div>
-        </div>
-      </HeroSlider>
+            ),
+          },
+          ...(data?.process?.length
+            ? [{ key: "why", label: "Why MOSSANO", content: <WhyMossano steps={data.process} /> }]
+            : []),
+        ]}
+      />
 
       {/* ── Clients — Phase-1 feedback §1, Phase-2 feedback §2 ───────────────
           Every logo in one moving strip. The roster is CRM-managed; the
@@ -144,6 +177,7 @@ export function HomePage() {
               deliver exclusive and rare natural stone — with every lot photographed as it actually
               is, and its availability verified before you specify it.
             </p>
+            <CountryFlags />
             <Link
               to="/about"
               className="label mt-8 inline-block border-b border-ivory/35 py-1.5 text-ivory/80 transition-colors hover:border-ivory hover:text-ivory"
@@ -276,18 +310,9 @@ export function HomePage() {
               curates what is worth specifying. Every lot is photographed as it actually is, and its
               availability is verified rather than assumed.
             </p>
-            {/* Phase-3 feedback — the sourcing countries as flags rather than
-                names, and read from the catalogue rather than written here:
-                these are the countries MOSSANO currently holds stock from. */}
-            {(data?.sourceCountries ?? []).length > 0 && (
-              <ul className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3">
-                {data?.sourceCountries.map((country) => (
-                  <li key={country.code} className="text-[1.6rem] leading-none">
-                    <Flag code={country.code} label={country.label} />
-                  </li>
-                ))}
-              </ul>
-            )}
+            {/* Phase-3 feedback — all six factory countries, as in the section
+                above. Read from stock it showed Italy alone. */}
+            <CountryFlags />
 
             <Link to="/about" className="btn-light mt-10">
               About MOSSANO

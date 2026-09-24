@@ -195,6 +195,27 @@ export function EnquiryDetailPage() {
                 <Row label="Required by">{enquiry.sourcing.requiredBy}</Row>
               </dl>
 
+              {enquiry.sourcing.referenceImages.length > 0 && (
+                <>
+                  <p className="label mb-3 mt-8">Reference images</p>
+                  <ul className="grid grid-cols-3 gap-3">
+                    {enquiry.sourcing.referenceImages.map((image) => (
+                      <li key={image.id}>
+                        {/* Opens full size — the thumbnail is too small to
+                            judge a vein by. */}
+                        <a href={image.url} target="_blank" rel="noreferrer" className="block">
+                          <img
+                            src={image.thumbnailUrl || image.url}
+                            alt={image.alt || "Customer reference image"}
+                            className="aspect-square w-full border border-ivory-dark object-cover"
+                          />
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )}
+
               {/* Website §8's "please select the best options for my project" —
                   this is the flag that turns a brief into a private selection. */}
               {enquiry.sourcing.wantsMossanoToSelect && (

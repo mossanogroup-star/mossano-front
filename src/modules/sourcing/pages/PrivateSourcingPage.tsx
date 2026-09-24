@@ -284,6 +284,7 @@ export function PrivateSourcingPage() {
                 <p className="label mb-4">Reference image</p>
                 <ReferenceImageUpload
                   id="s-reference-images"
+                  highlight
                   images={referenceImages}
                   onChange={setReferenceImages}
                 />

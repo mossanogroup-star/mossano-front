@@ -3,6 +3,7 @@ import { Header } from "./Header";
 import { Footer } from "./Footer";
 import { ScrollToTop } from "./ScrollToTop";
 import { Chatbot } from "@/modules/chatbot/components/Chatbot";
+import { ReferenceImageLauncher } from "@/modules/enquiry/components/ReferenceImageLauncher";
 
 export function PublicLayout() {
   return (
@@ -23,6 +24,8 @@ export function PublicLayout() {
       <Footer />
       {/* Website Notes, second drop. Public pages only — never /admin. */}
       <Chatbot />
+      {/* Phase-3 feedback — stacked directly above the Sourcing Desk. */}
+      <ReferenceImageLauncher />
     </>
   );
 }

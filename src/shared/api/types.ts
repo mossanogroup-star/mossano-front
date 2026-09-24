@@ -392,7 +392,8 @@ export type EnquiryType =
   | "prebook"
   | "register_interest"
   | "selection"
-  | "chatbot";
+  | "chatbot"
+  | "reference_image";
 
 export type EnquiryStatus =
   "new" | "contacted" | "interested" | "reserved" | "purchased" | "closed";
@@ -413,7 +414,8 @@ export interface SourcingBrief {
 
 export interface EnquiryInput {
   type?: EnquiryType;
-  name: string;
+  /** Optional only for "reference_image" — the server enforces it for the rest. */
+  name?: string;
   email?: string;
   phone?: string;
   company?: string;
@@ -457,7 +459,7 @@ export interface Enquiry {
   selection: { id: string; title: string | null; token: string | null } | null;
   requirement: string | null;
   message: string | null;
-  sourcing: (SourcingBrief & { referenceImages: Media[] }) | null;
+  sourcing: (Omit<SourcingBrief, "referenceImages"> & { referenceImages: Media[] }) | null;
   status: EnquiryStatus;
   statusLabel: string;
   assignedTo: { id: string; name: string | null } | null;

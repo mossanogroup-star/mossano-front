@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { ImageUp } from "lucide-react";
 import { useUploadReferenceImages } from "../api/uploadReferenceImages";
 import { cn } from "@/shared/lib/cn";
 import type { Media } from "@/shared/api/types";
@@ -24,6 +25,11 @@ interface Props {
   onChange: (images: Media[]) => void;
   /** Unique per form — two uploaders on one page must not share an id. */
   id?: string;
+  /**
+   * Phase-3 feedback — on Personalize Sourcing the uploader is the point of the
+   * page, so it is filled in brass and given an icon rather than left dashed.
+   */
+  highlight?: boolean;
   className?: string;
 }
 
@@ -31,6 +37,7 @@ export function ReferenceImageUpload({
   images,
   onChange,
   id = "reference-images",
+  highlight = false,
   className,
 }: Props) {
   const upload = useUploadReferenceImages();
@@ -86,11 +93,26 @@ export function ReferenceImageUpload({
           void onPickFiles(e.dataTransfer.files);
         }}
         className={cn(
-          "block cursor-pointer border border-dashed border-brass/60 bg-brass/[0.04] px-6 py-8 text-center transition-colors hover:border-brass hover:bg-brass/[0.08]",
+          "block cursor-pointer text-center transition-colors",
+          highlight
+            ? "border-2 border-brass bg-brass-light/35 px-6 py-10 hover:bg-brass-light/55"
+            : "border border-dashed border-brass/60 bg-brass/[0.04] px-6 py-8 hover:border-brass hover:bg-brass/[0.08]",
           (upload.isPending || full) && "pointer-events-none opacity-55",
         )}
       >
-        <span className="block font-display text-[1.05rem] uppercase tracking-wide text-ink">
+        {highlight && (
+          <ImageUp
+            className="mx-auto mb-4 h-8 w-8 text-brass"
+            strokeWidth={1.2}
+            aria-hidden="true"
+          />
+        )}
+        <span
+          className={cn(
+            "block font-display uppercase tracking-wide text-ink",
+            highlight ? "text-[1.2rem] sm:text-[1.35rem]" : "text-[1.05rem]",
+          )}
+        >
           {upload.isPending ? "Uploading…" : "Upload your reference image"}
         </span>
         <span className="mt-2 block text-[0.85rem] leading-relaxed text-ink-soft">

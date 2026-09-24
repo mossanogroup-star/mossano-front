@@ -6,6 +6,7 @@ import { useSiteConfig } from "@/shared/hooks/useSiteConfig";
 import { cn } from "@/shared/lib/cn";
 import { STEPS, OPENING, BROWSING_REPLY, toEnquiry, type Answers } from "../constants/script";
 import { Wordmark } from "@/shared/components/Wordmark";
+import { PANEL_EVENT } from "@/modules/enquiry/components/ReferenceImageLauncher";
 
 interface Line {
   from: "mossano" | "customer";
@@ -28,6 +29,15 @@ export function Chatbot() {
   const [draft, setDraft] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [finished, setFinished] = useState<"lead" | "browsing" | null>(null);
+
+  // Shares the corner with the reference-image panel — whichever opens last wins.
+  useEffect(() => {
+    const onPanel = (event: Event) => {
+      if ((event as CustomEvent<string>).detail !== "chat") setOpen(false);
+    };
+    window.addEventListener(PANEL_EVENT, onPanel);
+    return () => window.removeEventListener(PANEL_EVENT, onPanel);
+  }, []);
 
   const submit = useSubmitEnquiry();
   const { whatsapp, brand } = useSiteConfig();
@@ -127,6 +137,7 @@ export function Chatbot() {
       <button
         type="button"
         onClick={() => {
+          if (!open) window.dispatchEvent(new CustomEvent(PANEL_EVENT, { detail: "chat" }));
           setOpen((v) => !v);
           if (!open && lines.length === 1) {
             // Ask the first question the moment it is opened, not before.

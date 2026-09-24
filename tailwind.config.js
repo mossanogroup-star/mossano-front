@@ -27,6 +27,9 @@ export default {
         // is ~1536px wide but only ~730px tall; a hero sized for a 1000px-tall
         // window pushes its call to action off the bottom of the screen.
         short: { raw: "(max-height: 820px)" },
+        // A phone with the browser chrome showing — an iPhone SE in Safari has
+        // under 560px of window. Used with max-sm: to tighten the hero there.
+        tiny: { raw: "(max-height: 700px)" },
       },
 
       colors: BRAND_COLOURS,
