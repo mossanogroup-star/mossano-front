@@ -1,14 +1,11 @@
 import { useEffect, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { X } from "lucide-react";
 import { adminApi } from "../../api/adminApi";
 import { PageHeader, DataTable, TableEmpty, Pill } from "../../components/AdminUi";
-import { StonePicker } from "../../components/StonePicker";
 import { MediaPicker } from "../../media/components/MediaPicker";
 import { Field, TextInput, TextArea, Select } from "@/modules/enquiry/components/Field";
 import { useSiteConfig } from "@/shared/hooks/useSiteConfig";
-import { ApplicationContentEditor } from "../components/ApplicationContentEditor";
 
 const BLANK = {
   title: "",
@@ -30,11 +27,6 @@ const SECTORS = [
   { slug: "infrastructure", label: "Infrastructure" },
 ];
 
-interface ProjectLink {
-  label: string;
-  url: string;
-}
-
 /**
  * Admin Scope §4 — application and project photography.
  *
@@ -49,11 +41,6 @@ export function ApplicationListPage() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState(BLANK);
   const [imageIds, setImageIds] = useState<string[]>([]);
-  const [videoIds, setVideoIds] = useState<string[]>([]);
-  const [links, setLinks] = useState<ProjectLink[]>([]);
-  /** Phase-2 feedback §3 — Instagram reels, one URL per line. */
-  const [instagramUrls, setInstagramUrls] = useState("");
-  const [stoneIds, setStoneIds] = useState<Array<{ id: string; name: string; code: string }>>([]);
 
   const { data } = useQuery({
     queryKey: ["admin-applications"],
@@ -79,26 +66,12 @@ export function ApplicationListPage() {
       areaSqFt: editing.areaSqFt?.toString() ?? "",
     });
     setImageIds(editing.imageIds);
-    setVideoIds(editing.videoIds ?? []);
-    setLinks(editing.links ?? []);
-    setInstagramUrls((editing.instagramUrls ?? []).join("\n"));
-    setStoneIds(
-      (editing.stones ?? []).map((s) => ({
-        id: s.id,
-        name: s.name,
-        code: s.mossanoCode,
-      })),
-    );
   }, [editing]);
 
   const reset = () => {
     setEditingId(null);
     setForm(BLANK);
     setImageIds([]);
-    setVideoIds([]);
-    setLinks([]);
-    setInstagramUrls("");
-    setStoneIds([]);
   };
 
   const save = useMutation({
@@ -125,14 +98,14 @@ export function ApplicationListPage() {
   return (
     <>
       <PageHeader
-        title="Applications"
+        title="Project Images"
         subtitle="Project photography, connected to the stone that was used."
       />
 
       <div className="grid gap-x-12 lg:grid-cols-[1fr_20rem]">
         <section>
           <DataTable
-            head={["Project", "Application", "Stones", "Images", ""]}
+            head={["Project", "Application", "Images", ""]}
             empty={
               projects.length === 0 ? (
                 <TableEmpty message="No project photography yet. The client has not supplied any." />
@@ -158,7 +131,6 @@ export function ApplicationListPage() {
                 <td className="py-3 pr-6 text-[0.8rem] text-ink-soft">
                   {project.applicationLabel}
                 </td>
-                <td className="py-3 pr-6 text-[0.8rem] tabular-nums">{project.stoneCount}</td>
                 <td className="py-3 pr-6 text-[0.8rem] tabular-nums">{project.images.length}</td>
                 <td className="py-3">
                   <div className="flex gap-4">
@@ -282,107 +254,6 @@ export function ApplicationListPage() {
               max={30}
             />
 
-            <MediaPicker
-              kind="video"
-              label="Project video"
-              value={videoIds}
-              onChange={setVideoIds}
-              max={12}
-            />
-
-            {/* Phase-2 feedback §3. A textarea rather than a repeating row:
-                the team pastes these straight from Instagram, several at a
-                time, and one per line is the shape that arrives. */}
-            <Field
-              label="Instagram videos"
-              htmlFor="app-instagram"
-              hint="One URL per line — a post or reel link"
-            >
-              <TextArea
-                id="app-instagram"
-                rows={3}
-                placeholder="https://www.instagram.com/reel/…"
-                value={instagramUrls}
-                onChange={(e) => setInstagramUrls(e.target.value)}
-              />
-            </Field>
-
-            <div className="mt-8">
-              <p className="label mb-3">Entry links</p>
-              {links.map((link, i) => (
-                <div key={i} className="mb-2 flex items-start gap-2">
-                  <TextInput
-                    aria-label={`Link ${i + 1} label`}
-                    placeholder="Label"
-                    value={link.label}
-                    onChange={(e) =>
-                      setLinks(links.map((l, j) => (j === i ? { ...l, label: e.target.value } : l)))
-                    }
-                  />
-                  <TextInput
-                    aria-label={`Link ${i + 1} URL`}
-                    placeholder="https://…"
-                    value={link.url}
-                    onChange={(e) =>
-                      setLinks(links.map((l, j) => (j === i ? { ...l, url: e.target.value } : l)))
-                    }
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setLinks(links.filter((_, j) => j !== i))}
-                    className="mt-2 shrink-0 text-ink-faint hover:text-ink"
-                    aria-label={`Remove link ${i + 1}`}
-                  >
-                    <X className="h-3.5 w-3.5" strokeWidth={1.4} />
-                  </button>
-                </div>
-              ))}
-              {links.length < 8 && (
-                <button
-                  type="button"
-                  onClick={() => setLinks([...links, { label: "", url: "" }])}
-                  className="label underline-offset-4 hover:underline"
-                >
-                  Add a link
-                </button>
-              )}
-            </div>
-
-            <div className="mt-8">
-              <p className="label mb-3">Stone used</p>
-              <StonePicker
-                selectedIds={stoneIds.map((s) => s.id)}
-                onAdd={(stone) =>
-                  setStoneIds((prev) => [
-                    ...prev,
-                    { id: stone.id, name: stone.name, code: stone.mossanoCode },
-                  ])
-                }
-              />
-              {stoneIds.length > 0 && (
-                <ul className="mt-3 space-y-1">
-                  {stoneIds.map((stone) => (
-                    <li
-                      key={stone.id}
-                      className="flex items-center justify-between gap-2 text-[0.8rem]"
-                    >
-                      <span className="truncate">
-                        {stone.code} {stone.name}
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() => setStoneIds((prev) => prev.filter((s) => s.id !== stone.id))}
-                        className="text-ink-faint hover:text-ink"
-                        aria-label={`Remove ${stone.name}`}
-                      >
-                        <X className="h-3.5 w-3.5" strokeWidth={1.4} />
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-
             <button
               type="button"
               className="btn-solid mt-8 w-full"
@@ -397,25 +268,11 @@ export function ApplicationListPage() {
                   sector: form.sector || undefined,
                   areaSqFt: form.areaSqFt.trim() === "" ? undefined : Number(form.areaSqFt),
                   imageIds,
-                  videoIds,
-                  instagramUrls: instagramUrls
-                    .split("\n")
-                    .map((u) => u.trim())
-                    .filter(Boolean),
-                  // A half-typed row must not fail the whole save on the URL rule.
-                  links: links.filter((l) => l.label.trim() && l.url.trim()),
-                  stoneIds: stoneIds.map((s) => s.id),
                 })
               }
             >
               {save.isPending ? "Saving…" : editingId ? "Save project" : "Add project"}
             </button>
-          </div>
-
-          {/* Phase-2 feedback §5 — the application pages themselves, which are
-              not projects and are edited separately. */}
-          <div className="mt-10">
-            <ApplicationContentEditor />
           </div>
         </aside>
       </div>

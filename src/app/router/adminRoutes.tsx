@@ -80,6 +80,16 @@ const ApplicationListPage = lazy(() =>
     default: m.ApplicationListPage,
   })),
 );
+const ApplicationContentPage = lazy(() =>
+  import("@/modules/admin/application/pages/ApplicationContentPage").then((m) => ({
+    default: m.ApplicationContentPage,
+  })),
+);
+const ProjectVideoPage = lazy(() =>
+  import("@/modules/admin/application/pages/ProjectVideoPage").then((m) => ({
+    default: m.ProjectVideoPage,
+  })),
+);
 const MediaLibraryPage = lazy(() =>
   import("@/modules/admin/media/pages/MediaLibraryPage").then((m) => ({
     default: m.MediaLibraryPage,
@@ -117,7 +127,9 @@ export const adminRoutes: RouteObject[] = [
       { path: "stones/:id", element: wrap(<StoneEditPage />) },
       { path: "edits", element: wrap(<EditListPage />) },
       { path: "edits/:id", element: wrap(<EditDetailPage />) },
-      { path: "applications", element: wrap(<ApplicationListPage />) },
+      { path: "applications", element: wrap(<ApplicationContentPage />) },
+      { path: "projects", element: wrap(<ApplicationListPage />) },
+      { path: "project-videos", element: wrap(<ProjectVideoPage />) },
       { path: "looks", element: wrap(<LookContentPage />) },
       { path: "clients", element: wrap(<ClientListPage />) },
       { path: "enquiries", element: wrap(<EnquiryListPage />) },

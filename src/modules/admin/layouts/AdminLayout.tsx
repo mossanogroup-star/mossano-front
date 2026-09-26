@@ -1,6 +1,8 @@
 import { NavLink, Outlet, Link } from "react-router-dom";
 import {
   LayoutDashboard,
+  LayoutGrid,
+  Clapperboard,
   Gem,
   CalendarRange,
   Images,
@@ -23,7 +25,9 @@ const NAV = [
   { to: "/admin", end: true, label: "Dashboard", Icon: LayoutDashboard },
   { to: "/admin/stones", label: "Stones", Icon: Gem },
   { to: "/admin/edits", label: "Edits", Icon: CalendarRange },
-  { to: "/admin/applications", label: "Applications", Icon: Images },
+  { to: "/admin/applications", label: "Applications", Icon: LayoutGrid },
+  { to: "/admin/projects", label: "Project Images", Icon: Images },
+  { to: "/admin/project-videos", label: "Project Videos", Icon: Clapperboard },
   { to: "/admin/looks", label: "Looks", Icon: Palette },
   { to: "/admin/clients", label: "Clients", Icon: Building2 },
   {

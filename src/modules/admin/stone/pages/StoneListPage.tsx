@@ -11,6 +11,7 @@ import {
   Pill,
 } from "../../components/AdminUi";
 import { useSiteConfig } from "@/shared/hooks/useSiteConfig";
+import { useSession } from "../../auth/useSession";
 import type { Availability } from "@/shared/api/types";
 
 /**
@@ -45,6 +46,19 @@ export function StoneListPage() {
       queryClient.invalidateQueries({ queryKey: ["verification-queue"] });
     },
     onError: (err) => toast.error(err instanceof Error ? err.message : "Could not update"),
+  });
+
+  // Admin only, matching the API. Soft delete: the record stays in the database,
+  // off the site and out of this list.
+  const isAdmin = useSession().user?.role === "admin";
+  const remove = useMutation({
+    mutationFn: (id: string) => adminApi.deleteStone(id),
+    onSuccess: () => {
+      toast.success("Stone removed");
+      queryClient.invalidateQueries({ queryKey: ["admin-stones"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard"] });
+    },
+    onError: (err) => toast.error(err instanceof Error ? err.message : "Could not remove"),
   });
 
   const stones = data?.data ?? [];
@@ -140,6 +154,19 @@ export function StoneListPage() {
               >
                 View
               </a>
+              {isAdmin && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (window.confirm(`Remove ${stone.name} (${stone.mossanoCode})?`))
+                      remove.mutate(stone.id);
+                  }}
+                  disabled={remove.isPending}
+                  className="label ml-4 hover:text-[#b23b2e] disabled:opacity-40"
+                >
+                  Delete
+                </button>
+              )}
             </td>
           </tr>
         ))}

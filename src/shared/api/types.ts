@@ -19,6 +19,10 @@ export interface Media {
   kind: string;
   url: string;
   thumbnailUrl: string;
+  /** Video only — a compressed rendition; `url` stays the original. */
+  streamUrl?: string | null;
+  /** Video only — small and silent, for looping tiles. */
+  previewUrl?: string | null;
   alt: string;
   caption: string;
   mimeType: string;
@@ -171,6 +175,7 @@ export interface ApplicationTile {
   label: string;
   projectCount: number;
   stoneCount: number;
+  imageCount: number;
   href: string;
   isEmpty: boolean;
 }
@@ -203,6 +208,20 @@ export interface ApplicationProject {
   sectorLabel: string | null;
   areaSqFt: number | null;
   areaLabel: string | null;
+}
+
+/**
+ * Phase-3 feedback — one entry on the Projects page's Videos tab. `video` is an
+ * uploaded file and plays in place; `instagramUrl` alone falls back to the embed.
+ */
+export interface ProjectVideo {
+  id: string;
+  title: string;
+  instagramUrl: string | null;
+  video: Media | null;
+  videoId: string | null;
+  location: string | null;
+  isPublished: boolean;
 }
 
 /** Landmark projects, grouped the way the client's brochure groups them. */
@@ -250,6 +269,9 @@ export interface ApplicationContent {
   description: string;
   images: Media[];
   isPublished: boolean;
+  /** Admin list only. False for an application the team added. */
+  label?: string;
+  builtIn?: boolean;
 }
 
 /** Phase-3 — a Shop by Look page's own photography and copy. */

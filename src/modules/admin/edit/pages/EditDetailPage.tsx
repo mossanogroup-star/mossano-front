@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { X } from "lucide-react";
 import { adminApi } from "../../api/adminApi";
 import { PageHeader, Pill } from "../../components/AdminUi";
+import { useSession } from "../../auth/useSession";
 import { StonePicker } from "../../components/StonePicker";
 import { MediaPicker } from "../../media/components/MediaPicker";
 import { Field, TextInput, TextArea } from "@/modules/enquiry/components/Field";
@@ -62,6 +63,29 @@ export function EditDetailPage() {
     onSuccess: () => invalidate(),
   });
 
+  const navigate = useNavigate();
+  const isAdmin = useSession().user?.role === "admin";
+
+  const publish = useMutation({
+    mutationFn: (isPublished: boolean) => adminApi.updateEdit(id, { isPublished }),
+    onSuccess: (saved) => {
+      toast.success(saved.isPublished ? `${saved.title} is live` : `${saved.title} hidden`);
+      invalidate();
+    },
+    onError: (err) => toast.error(err instanceof Error ? err.message : "Could not update"),
+  });
+
+  const remove = useMutation({
+    mutationFn: () => adminApi.deleteEdit(id),
+    onSuccess: () => {
+      toast.success("Edit removed");
+      queryClient.invalidateQueries({ queryKey: ["admin-edits"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard"] });
+      navigate("/admin/edits", { replace: true });
+    },
+    onError: (err) => toast.error(err instanceof Error ? err.message : "Could not remove"),
+  });
+
   if (!edit) return <p className="label">Loading…</p>;
 
   return (
@@ -70,12 +94,32 @@ export function EditDetailPage() {
         title={edit.title}
         subtitle={`${edit.statusLabel} · ${edit.stoneCount} stone${edit.stoneCount === 1 ? "" : "s"}`}
         actions={
-          <>
+          <div className="flex flex-wrap items-center gap-3">
+            {edit.isPublished ? <Pill tone="brass">Live</Pill> : <Pill tone="muted">Draft</Pill>}
             <Link to="/admin/edits" className="btn-outline">
               Back
             </Link>
-            {edit.isPublished ? <Pill tone="brass">Live</Pill> : <Pill tone="muted">Draft</Pill>}
-          </>
+            <button
+              type="button"
+              onClick={() => publish.mutate(!edit.isPublished)}
+              disabled={publish.isPending}
+              className={edit.isPublished ? "btn-outline" : "btn-solid"}
+            >
+              {edit.isPublished ? "Hide from site" : "Publish"}
+            </button>
+            {isAdmin && (
+              <button
+                type="button"
+                onClick={() => {
+                  if (window.confirm(`Remove the Edit "${edit.title}"?`)) remove.mutate();
+                }}
+                disabled={remove.isPending}
+                className="btn-outline hover:border-[#b23b2e] hover:bg-[#b23b2e]"
+              >
+                Delete
+              </button>
+            )}
+          </div>
         }
       />
 

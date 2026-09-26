@@ -56,7 +56,9 @@ export function ApplicationIndexPage() {
                 <span className="label tabular-nums">
                   {application.projectCount
                     ? `${application.projectCount} project${application.projectCount === 1 ? "" : "s"}`
-                    : `${application.stoneCount} lot${application.stoneCount === 1 ? "" : "s"}`}
+                    : application.stoneCount
+                      ? `${application.stoneCount} lot${application.stoneCount === 1 ? "" : "s"}`
+                      : `${application.imageCount} image${application.imageCount === 1 ? "" : "s"}`}
                 </span>
               </Link>
             )}

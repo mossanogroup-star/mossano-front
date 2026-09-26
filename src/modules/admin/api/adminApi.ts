@@ -19,6 +19,7 @@ import type {
   Enquiry,
   EnquiryStatus,
   Media,
+  ProjectVideo,
   Session,
   StoneCard,
   User,
@@ -84,6 +85,20 @@ export const adminApi = {
   updateApplication: (id: string, body: unknown) =>
     unwrap<AdminApplicationProject>(api.patch(`/applications/${id}`, body, AUTH)),
   deleteApplication: (id: string) => unwrap(api.delete(`/applications/${id}`, AUTH)),
+
+  // Phase-3 feedback — the Projects page's Videos tab.
+  projectVideos: () => unwrap<ProjectVideo[]>(api.get("/applications/videos", undefined, AUTH)),
+  createProjectVideo: (body: unknown) =>
+    unwrap<ProjectVideo>(api.post("/applications/videos", body, AUTH)),
+  updateProjectVideo: (id: string, body: unknown) =>
+    unwrap<ProjectVideo>(api.patch(`/applications/videos/${id}`, body, AUTH)),
+  deleteProjectVideo: (id: string) => unwrap(api.delete(`/applications/videos/${id}`, AUTH)),
+
+  // New Shop by Application categories.
+  createApplicationCategory: (label: string) =>
+    unwrap<{ slug: string; label: string }>(api.post("/applications/categories", { label }, AUTH)),
+  deleteApplicationCategory: (slug: string) =>
+    unwrap(api.delete(`/applications/categories/${slug}`, AUTH)),
 
   // Phase-2 feedback §5 — each Shop by Application page's own content.
   applicationContent: () =>

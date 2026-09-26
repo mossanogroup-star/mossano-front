@@ -6,6 +6,7 @@ import { adminApi } from "../../api/adminApi";
 import { PageHeader, DataTable, TableEmpty, Pill } from "../../components/AdminUi";
 import { Field, TextInput } from "@/modules/enquiry/components/Field";
 import type { EditStatus } from "@/shared/api/types";
+import { useSession } from "../../auth/useSession";
 
 const STATUSES: Array<{ value: EditStatus; label: string }> = [
   { value: "current", label: "Current" },
@@ -60,6 +61,17 @@ export function EditListPage() {
       queryClient.invalidateQueries({ queryKey: ["admin-edits"] });
       queryClient.invalidateQueries({ queryKey: ["dashboard"] });
     },
+  });
+
+  const isAdmin = useSession().user?.role === "admin";
+  const remove = useMutation({
+    mutationFn: (id: string) => adminApi.deleteEdit(id),
+    onSuccess: () => {
+      toast.success("Edit removed");
+      queryClient.invalidateQueries({ queryKey: ["admin-edits"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard"] });
+    },
+    onError: (err) => toast.error(err instanceof Error ? err.message : "Could not remove"),
   });
 
   const edits = data ?? [];
@@ -147,22 +159,41 @@ export function EditListPage() {
                   })
                 }
                 disabled={publish.isPending}
-                className="disabled:opacity-40"
+                title={edit.isPublished ? "Click to hide from the site" : "Click to publish"}
+                className="group inline-flex items-center gap-2 disabled:opacity-40"
               >
                 {edit.isPublished ? (
                   <Pill tone="brass">Live</Pill>
                 ) : (
                   <Pill tone="muted">Draft</Pill>
                 )}
+                <span className="font-sans text-[0.6rem] uppercase tracking-label text-ink-faint opacity-0 transition-opacity group-hover:opacity-100">
+                  {edit.isPublished ? "Hide" : "Publish"}
+                </span>
               </button>
             </td>
             <td className="py-3">
-              <Link
-                to={`/admin/edits/${edit.id}`}
-                className="label underline-offset-4 hover:underline"
-              >
-                Manage stones
-              </Link>
+              <div className="flex gap-4">
+                <Link
+                  to={`/admin/edits/${edit.id}`}
+                  className="label underline-offset-4 hover:underline"
+                >
+                  Manage stones
+                </Link>
+                {isAdmin && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (window.confirm(`Remove the Edit "${edit.title}"?`))
+                        remove.mutate(edit.id);
+                    }}
+                    disabled={remove.isPending}
+                    className="label hover:text-[#b23b2e] disabled:opacity-40"
+                  >
+                    Delete
+                  </button>
+                )}
+              </div>
             </td>
           </tr>
         ))}

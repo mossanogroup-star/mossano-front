@@ -8,6 +8,7 @@ import { api, unwrap } from "./http";
 import type {
   ApplicationProject,
   ProjectGroup,
+  ProjectVideo,
   ClientCategory,
   ApplicationContent,
   ApplicationTile,
@@ -143,6 +144,13 @@ export const publicQueries = {
     queryOptions({
       queryKey: ["projects"] as const,
       queryFn: () => unwrap<ProjectGroup[]>(api.get("/public/projects")),
+    }),
+
+  /** Phase-3 feedback — the Projects page's Videos tab. */
+  projectVideos: () =>
+    queryOptions({
+      queryKey: ["project-videos"] as const,
+      queryFn: () => unwrap<ProjectVideo[]>(api.get("/public/projects/videos")),
     }),
 
   /**

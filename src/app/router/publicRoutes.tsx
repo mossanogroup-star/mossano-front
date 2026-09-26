@@ -14,7 +14,7 @@ import {
   ApplicationDetailPage,
   ApplicationProjectPage,
 } from "@/modules/application/pages/ApplicationPages";
-import { ProjectsPage } from "@/modules/application/pages/ProjectsPage";
+import { ProjectsPage, ProjectVideosPage } from "@/modules/application/pages/ProjectsPage";
 import { ClientsPage } from "@/modules/landing/pages/ClientsPage";
 import { FavouritesPage } from "@/modules/favourite/pages/FavouritesPage";
 import { PrivateSourcingPage } from "@/modules/sourcing/pages/PrivateSourcingPage";
@@ -275,6 +275,19 @@ export const publicRoutes: PublicRoute[] = [
           title: withSuffix("Landmark Projects"),
           description:
             "Residences, hotels, corporate headquarters and infrastructure finished in MOSSANO stone — from intimate residences to landmark developments.",
+        }),
+      },
+
+      // Phase-3 feedback — the Videos tab. A static segment, so it outranks
+      // projects/:projectSlug.
+      {
+        path: "projects/videos",
+        Component: ProjectVideosPage,
+        prefetch: (qc) => qc.prefetchQuery(publicQueries.projectVideos()),
+        meta: () => ({
+          title: withSuffix("Project Videos"),
+          description:
+            "Walkthroughs of residences, hotels and landmark developments finished in MOSSANO stone.",
         }),
       },
 
