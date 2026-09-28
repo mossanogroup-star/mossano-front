@@ -106,6 +106,7 @@ export interface Stone extends Omit<StoneCard, "whatsapp"> {
   images: Media[];
   videos: Media[];
   hasVideo: boolean;
+  applicationImages: Media[];
   slabs: StoneSlab[];
   isFeatured: boolean;
   whatsapp: Required<StoneWhatsapp>;
@@ -119,6 +120,7 @@ export interface AdminStone extends Stone {
   isPublished: boolean;
   imageIds: string[];
   videoIds: string[];
+  applicationImageIds: string[];
   createdAt: string;
   updatedAt: string;
 }

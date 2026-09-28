@@ -17,6 +17,15 @@
     scroll-padding-top: 5rem;
   }
 
+  /* Deterrent, not protection — the watermark and signed URLs are the real
+     measure. Stops drag-to-desktop and the long-press "Save image" menu. */
+  img,
+  video {
+    -webkit-user-drag: none;
+    -webkit-touch-callout: none;
+    user-select: none;
+  }
+
   body {
     @apply bg-ivory font-sans text-ink antialiased;
     font-size: 1rem;

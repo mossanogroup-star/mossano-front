@@ -255,6 +255,8 @@ export function ApplicationProjectPage() {
                 src={video.url}
                 poster={video.thumbnailUrl ?? undefined}
                 controls
+                controlsList="nodownload noplaybackrate"
+                disablePictureInPicture
                 playsInline
                 preload="none"
                 className="w-full bg-ivory-deep"

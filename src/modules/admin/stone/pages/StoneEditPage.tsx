@@ -56,7 +56,7 @@ export function StoneEditPage() {
   const { taxonomies } = useSiteConfig();
 
   const [imageIds, setImageIds] = useState<string[]>([]);
-  const [videoIds, setVideoIds] = useState<string[]>([]);
+  const [applicationImageIds, setApplicationImageIds] = useState<string[]>([]);
 
   const { data: stone } = useQuery({
     queryKey: ["admin-stone", id],
@@ -131,7 +131,7 @@ export function StoneEditPage() {
       applications: stone.applications.map((a) => a.slug),
     });
     setImageIds(stone.imageIds);
-    setVideoIds(stone.videoIds);
+    setApplicationImageIds(stone.applicationImageIds);
   }, [stone, reset]);
 
   const save = useMutation({
@@ -177,7 +177,7 @@ export function StoneEditPage() {
         looks: v.looks,
         applications: v.applications,
         imageIds,
-        videoIds,
+        applicationImageIds,
       });
     } catch (err) {
       const entries = err instanceof ApiError ? Object.entries(err.fieldErrors()) : [];
@@ -463,12 +463,12 @@ export function StoneEditPage() {
           max={60}
         />
         <MediaPicker
-          kind="video"
-          label="Slab video"
-          hint='Customers can request this from the stone page — "Request Actual Slab Video".'
-          value={videoIds}
-          onChange={setVideoIds}
-          max={10}
+          kind="application"
+          label="Application images"
+          hint="The stone installed. Shown small under the slab photography; click opens full screen."
+          value={applicationImageIds}
+          onChange={setApplicationImageIds}
+          max={60}
         />
       </div>
 

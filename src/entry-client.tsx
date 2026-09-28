@@ -44,6 +44,20 @@ function AfterHydration({ children }: { children: React.ReactNode }) {
   return ready ? <>{children}</> : null;
 }
 
+/**
+ * No "Save image as…" / "Save video as…" on the photography. One listener for
+ * every image and video on the site, current and future. A deterrent only:
+ * the watermark on every delivered file is what actually protects them.
+ */
+document.addEventListener("contextmenu", (e) => {
+  if (e.target instanceof HTMLImageElement || e.target instanceof HTMLVideoElement) {
+    e.preventDefault();
+  }
+});
+document.addEventListener("dragstart", (e) => {
+  if (e.target instanceof HTMLImageElement) e.preventDefault();
+});
+
 const queryClient = createQueryClient();
 const dehydratedState = window.__MOSSANO_STATE__;
 const container = document.getElementById("root")!;

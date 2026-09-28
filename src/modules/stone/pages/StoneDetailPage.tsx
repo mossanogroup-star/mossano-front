@@ -94,6 +94,25 @@ export function StoneDetailPage() {
               </div>
             )}
 
+            {/* The stone installed — small, each opening full screen. */}
+            {stone.applicationImages.length > 0 && (
+              <div className="mt-10">
+                <p className="label">In application</p>
+                <div className="mt-4 grid grid-cols-5 gap-3">
+                  {stone.applicationImages.map((image, i) => (
+                    <ZoomableSlab
+                      key={image.id}
+                      media={image}
+                      alt={`${stone.name} — application ${i + 1}`}
+                      caption={`${stone.mossanoCode} ${stone.name}`}
+                      aspect="square"
+                      sizes="(min-width: 1024px) 10vw, 20vw"
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* Website §4 — "individual slab images where available". Shown
                 only when the team has actually photographed the lot piece by
                 piece, which is the whole value of the section. */}

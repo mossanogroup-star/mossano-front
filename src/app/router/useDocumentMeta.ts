@@ -22,6 +22,13 @@ export function useDocumentMeta() {
   const queryClient = useQueryClient();
 
   useEffect(() => {
+    // Admin pages would otherwise fall into the public catch-all "*" and be
+    // titled "Page not found".
+    if (location.pathname.startsWith("/admin")) {
+      document.title = "MOSSANO Admin";
+      return;
+    }
+
     const matches = matchRoutes(asRouteObjects(publicRoutes), location.pathname);
     if (!matches?.length) return;
 
