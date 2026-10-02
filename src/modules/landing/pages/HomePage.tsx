@@ -39,7 +39,7 @@ export function HomePage() {
    * *selling* changed it too.
    */
   const hero = data?.hero?.image ?? null;
-  const heroUrl = hero?.url ?? data?.hero?.stone.primaryImageUrl ?? null;
+  const heroUrl = hero?.url ?? data?.hero?.stone?.primaryImageUrl ?? null;
 
   return (
     <>
@@ -58,7 +58,7 @@ export function HomePage() {
                 <Slab
                   media={hero}
                   url={heroUrl}
-                  alt={hero?.alt || data?.hero?.stone.name || ""}
+                  alt={hero?.alt || data?.hero?.stone?.name || ""}
                   aspect="auto"
                   priority
                   sizes="100vw"

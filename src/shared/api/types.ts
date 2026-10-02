@@ -358,9 +358,12 @@ export interface SiteConfig {
 }
 
 export interface HeroPayload {
-  /** "pinned" when HERO_STONE_CODE resolved, "ranked" when it fell back. */
-  source: "pinned" | "ranked";
-  stone: StoneCard;
+  /**
+   * "pinned" when HERO_STONE_CODE resolved, "ranked" when it fell back, "media"
+   * when there is no stock and the image captioned "hero" stands in.
+   */
+  source: "pinned" | "ranked" | "media";
+  stone: StoneCard | null;
   image: Media | null;
 }
 
