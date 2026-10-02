@@ -3,6 +3,7 @@ import { ImageUp, X } from "lucide-react";
 import { Wordmark } from "@/shared/components/Wordmark";
 import { cn } from "@/shared/lib/cn";
 import { ReferenceImageUpload } from "@/modules/sourcing/components/ReferenceImageUpload";
+import { Field, TextInput } from "./Field";
 import { useSubmitEnquiry } from "../api/submitEnquiry";
 import type { Media } from "@/shared/api/types";
 
@@ -10,8 +11,9 @@ import type { Media } from "@/shared/api/types";
  * Phase-3 feedback — "Upload your reference image", on every page, sitting
  * directly above the Sourcing Desk launcher and working the same way.
  *
- * The photograph and nothing else — no name, no contact fields; the client was
- * explicit. It lands in the enquiry inbox as its own type, with the images
+ * The photograph and a mobile number, nothing else — no name, no email; the
+ * client was explicit. Both are required: an image with no number is a lead
+ * nobody can call back. It lands in the enquiry inbox as its own type, with the images
  * under the brief, so the team sees it beside every other lead.
  *
  * Highlighted in brass where the Sourcing Desk is ivory: the client asked for
@@ -93,6 +95,8 @@ export function ReferenceImageLauncher() {
 function ReferencePanel() {
   const submit = useSubmitEnquiry();
   const [images, setImages] = useState<Media[]>([]);
+  const [phone, setPhone] = useState("");
+  const [error, setError] = useState<string | null>(null);
 
   if (submit.isSuccess) {
     return (
@@ -103,24 +107,45 @@ function ReferencePanel() {
     );
   }
 
+  const send = () => {
+    const mobile = phone.trim();
+    if (!images.length) return setError("Add at least one reference image");
+    if (!mobile) return setError("Add your mobile number so MOSSANO can reply");
+    // Same rule as the server's phoneSchema, so the customer hears it here.
+    if (mobile.replace(/\D/g, "").length < 8) return setError("Enter a valid mobile number");
+    setError(null);
+    submit.mutate({
+      type: "reference_image",
+      phone: mobile,
+      sourcing: { referenceImages: images.map((image) => image.id) },
+    });
+  };
+
+  const message = error ?? submit.error?.message;
+
   return (
     <>
       <ReferenceImageUpload id="launcher-reference-images" images={images} onChange={setImages} />
-      {submit.error && (
+      <Field label="Mobile number" htmlFor="launcher-reference-phone" required className="mt-5">
+        <TextInput
+          id="launcher-reference-phone"
+          type="tel"
+          autoComplete="tel"
+          maxLength={24}
+          value={phone}
+          onChange={(event) => setPhone(event.target.value)}
+        />
+      </Field>
+      {message && (
         <p className="mt-3 text-[0.8rem] text-[#b23b2e]" role="alert">
-          {submit.error.message}
+          {message}
         </p>
       )}
       <button
         type="button"
         className="btn-solid mt-5 w-full"
-        disabled={!images.length || submit.isPending}
-        onClick={() =>
-          submit.mutate({
-            type: "reference_image",
-            sourcing: { referenceImages: images.map((image) => image.id) },
-          })
-        }
+        disabled={submit.isPending}
+        onClick={send}
       >
         {submit.isPending ? "Sending…" : "Send"}
       </button>
