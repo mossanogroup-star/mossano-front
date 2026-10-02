@@ -19,14 +19,6 @@ const BLANK = {
   areaSqFt: "",
 };
 
-/** Mirrors PROJECT_SECTORS in application.model.js. */
-const SECTORS = [
-  { slug: "residential", label: "Residential" },
-  { slug: "hospitality", label: "Hospitality" },
-  { slug: "commercial", label: "Commercial" },
-  { slug: "infrastructure", label: "Infrastructure" },
-];
-
 /**
  * Admin Scope §4 — application and project photography.
  *
@@ -41,6 +33,7 @@ export function ApplicationListPage() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState(BLANK);
   const [imageIds, setImageIds] = useState<string[]>([]);
+  const [newSector, setNewSector] = useState("");
 
   const { data } = useQuery({
     queryKey: ["admin-applications"],
@@ -91,6 +84,18 @@ export function ApplicationListPage() {
       toast.success("Removed");
       queryClient.invalidateQueries({ queryKey: ["admin-applications"] });
     },
+  });
+
+  const addSector = useMutation({
+    mutationFn: (label: string) => adminApi.createProjectSector(label),
+    onSuccess: (sector) => {
+      toast.success(`${sector.label} added`);
+      // The dropdown reads the sector list from the site config.
+      queryClient.invalidateQueries({ queryKey: ["config"] });
+      setForm((f) => ({ ...f, sector: sector.slug }));
+      setNewSector("");
+    },
+    onError: (err) => toast.error(err instanceof Error ? err.message : "Could not add sector"),
   });
 
   const projects = data ?? [];
@@ -228,13 +233,29 @@ export function ApplicationListPage() {
                 onChange={(e) => setForm({ ...form, sector: e.target.value })}
               >
                 <option value="">Not a landmark project</option>
-                {SECTORS.map((s) => (
+                {(taxonomies?.projectSectors ?? []).map((s) => (
                   <option key={s.slug} value={s.slug}>
                     {s.label}
                   </option>
                 ))}
               </Select>
             </Field>
+            <div className="-mt-2 mb-5 flex gap-3">
+              <TextInput
+                aria-label="New landmark sector"
+                placeholder="New sector, e.g. Retail"
+                value={newSector}
+                onChange={(e) => setNewSector(e.target.value)}
+              />
+              <button
+                type="button"
+                className="label shrink-0 hover:text-brass disabled:opacity-40"
+                disabled={newSector.trim().length < 2 || addSector.isPending}
+                onClick={() => addSector.mutate(newSector.trim())}
+              >
+                {addSector.isPending ? "Adding…" : "+ Add"}
+              </button>
+            </div>
 
             <Field label="Area (sq ft)" htmlFor="app-area" hint="Orders the Projects page">
               <TextInput

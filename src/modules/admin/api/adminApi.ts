@@ -94,6 +94,10 @@ export const adminApi = {
     unwrap<ProjectVideo>(api.patch(`/applications/videos/${id}`, body, AUTH)),
   deleteProjectVideo: (id: string) => unwrap(api.delete(`/applications/videos/${id}`, AUTH)),
 
+  // New landmark sectors for the Projects page.
+  createProjectSector: (label: string) =>
+    unwrap<{ slug: string; label: string }>(api.post("/applications/sectors", { label }, AUTH)),
+
   // New Shop by Application categories.
   createApplicationCategory: (label: string) =>
     unwrap<{ slug: string; label: string }>(api.post("/applications/categories", { label }, AUTH)),
