@@ -263,38 +263,41 @@ export function HomePage() {
       </Section>
 
       {/* ── Shop by Application (Website §7) ─────────────────────────────── */}
-      <Section>
-        <SectionHeading
-          label="Shop by Application"
-          title="Stone in Place"
-          action={{ to: "/application", label: "All applications" }}
-        />
-        <ul className="mt-12 grid gap-x-8 gap-y-0 sm:grid-cols-2 lg:grid-cols-3">
-          {(data?.applications ?? []).map((application) => (
-            <li key={application.slug} className="border-b border-ivory-dark">
-              {application.isEmpty ? (
-                // Stated rather than linked. The client has supplied no
-                // application photography yet, and a link to nothing is worse
-                // than an honest "not yet".
-                <span className="flex items-baseline justify-between gap-4 py-5 text-[0.95rem] text-ink-faint">
-                  {application.label}
-                  <span className="label">Coming soon</span>
-                </span>
-              ) : (
-                <Link
-                  to={application.href}
-                  className="flex items-baseline justify-between gap-4 py-5 text-[0.95rem] transition-colors hover:text-brass"
-                >
-                  {application.label}
-                  <span className="label tabular-nums">
-                    {application.projectCount || application.stoneCount}
+      {/* Hidden until the team adds an application — an empty band is a hole. */}
+      {Boolean(data?.applications?.length) && (
+        <Section>
+          <SectionHeading
+            label="Shop by Application"
+            title="Stone in Place"
+            action={{ to: "/application", label: "All applications" }}
+          />
+          <ul className="mt-12 grid gap-x-8 gap-y-0 sm:grid-cols-2 lg:grid-cols-3">
+            {(data?.applications ?? []).map((application) => (
+              <li key={application.slug} className="border-b border-ivory-dark">
+                {application.isEmpty ? (
+                  // Stated rather than linked. The client has supplied no
+                  // application photography yet, and a link to nothing is worse
+                  // than an honest "not yet".
+                  <span className="flex items-baseline justify-between gap-4 py-5 text-[0.95rem] text-ink-faint">
+                    {application.label}
+                    <span className="label">Coming soon</span>
                   </span>
-                </Link>
-              )}
-            </li>
-          ))}
-        </ul>
-      </Section>
+                ) : (
+                  <Link
+                    to={application.href}
+                    className="flex items-baseline justify-between gap-4 py-5 text-[0.95rem] transition-colors hover:text-brass"
+                  >
+                    {application.label}
+                    <span className="label tabular-nums">
+                      {application.projectCount || application.stoneCount}
+                    </span>
+                  </Link>
+                )}
+              </li>
+            ))}
+          </ul>
+        </Section>
+      )}
 
       {/* ── About + WhatsApp ─────────────────────────────────────────────── */}
       <Section tone="dark">

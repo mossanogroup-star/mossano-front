@@ -10,19 +10,18 @@ export type StepId =
   "interested" | "application" | "quantity" | "location" | "delivery" | "name" | "phone";
 
 /**
- * Phase-2 feedback §7 asks the team's WhatsApp alert to carry the selected
- * category, so the flow has to collect one. The slugs match APPLICATIONS in
- * stone.constants.js — the enquiry API validates against that enum, so a label
- * changed here without its slug would be rejected on submit.
+ * Phase-2 feedback §7 — what the stone is for. Sent as text, not as an
+ * application slug: applications are now added from the admin, so a fixed slug
+ * here could name one that no longer exists and the enquiry would be rejected.
  */
-export const APPLICATION_CHOICES: Array<{ slug: string; label: string }> = [
-  { slug: "bathroom-wall-floor", label: "Bathroom" },
-  { slug: "kitchen-wall-floor", label: "Kitchen" },
-  { slug: "reception-wall-floor", label: "Reception" },
-  { slug: "flooring", label: "Flooring" },
-  { slug: "hotel-lobby", label: "Hotel lobby" },
-  { slug: "bar", label: "Bar" },
-  { slug: "penthouse-flooring", label: "Penthouse" },
+const APPLICATION_CHOICES = [
+  "Bathroom",
+  "Kitchen",
+  "Reception",
+  "Flooring",
+  "Hotel lobby",
+  "Bar",
+  "Penthouse",
 ];
 
 export interface Step {
@@ -56,7 +55,7 @@ export const STEPS: Step[] = [
   {
     id: "application",
     prompt: "What is it for?",
-    chips: APPLICATION_CHOICES.map((a) => a.label),
+    chips: APPLICATION_CHOICES,
     allowFreeText: true,
     placeholder: "e.g. lobby flooring",
   },
@@ -107,23 +106,13 @@ export type Answers = Partial<Record<StepId, string>>;
  identically to one from the Private Sourcing form.
  */
 export function toEnquiry(answers: Answers, stoneSlug?: string): EnquiryInput {
-  /**
-   * Only a tapped chip maps to a slug. Free text is kept as the message rather
-   * than guessed at — "lobby flooring" could be two of the seven, and a wrong
-   * category on the team's alert is worse than none.
-   */
-  const chosen = APPLICATION_CHOICES.find(
-    (a) => a.label.toLowerCase() === answers.application?.trim().toLowerCase(),
-  );
-
   return {
     type: "chatbot",
     name: answers.name?.trim() || "Chatbot enquiry",
     phone: answers.phone?.trim(),
     stoneSlug,
-    message: chosen ? undefined : answers.application?.trim() || undefined,
+    message: answers.application?.trim() ? `For: ${answers.application.trim()}` : undefined,
     sourcing: {
-      application: chosen?.slug,
       quantity: answers.quantity,
       projectLocation: answers.location,
       requiredBy: answers.delivery,
