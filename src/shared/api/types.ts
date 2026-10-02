@@ -23,6 +23,8 @@ export interface Media {
   streamUrl?: string | null;
   /** Video only — small and silent, for looping tiles. */
   previewUrl?: string | null;
+  /** Image only, Cloudinary only — ~1 KB blurred copy shown while loading. */
+  placeholderUrl?: string | null;
   alt: string;
   caption: string;
   mimeType: string;
@@ -343,6 +345,8 @@ export interface SiteConfig {
   taxonomies: {
     looks: Array<{ slug: string; label: string }>;
     applications: Array<{ slug: string; label: string }>;
+    /** Landmark sectors for the Projects page, including any the team added. */
+    projectSectors: Array<{ slug: string; label: string }>;
     materials: Array<{ slug: string; label: string }>;
     colours: Array<{ slug: string; label: string }>;
     whiteSubcategories: Array<{ slug: string; label: string }>;
