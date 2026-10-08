@@ -1,11 +1,9 @@
 import { Link } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
-import { publicQueries } from "@/shared/api/publicQueries";
 import { Section, SectionHeading, EmptyState } from "@/shared/components/Section";
 import { WhatsAppButton } from "@/shared/components/WhatsAppButton";
 import { EnquiryForm } from "@/modules/enquiry/components/EnquiryForm";
 import { useSiteConfig } from "@/shared/hooks/useSiteConfig";
-import { Flag } from "@/shared/components/Flag";
+import { CountryFlags } from "@/shared/components/CountryFlags";
 import type { BrandLocation } from "@/shared/api/types";
 
 /** "Mumbai, Maharashtra 400003" — and just "Dubai" where the rest is absent. */
@@ -93,10 +91,6 @@ const JOURNEY = [
 
 export function AboutPage() {
   const { whatsapp } = useSiteConfig();
-  // The same list the home page's flag row uses — the countries the catalogue
-  // actually holds stock from. Shared query, so this costs no extra request.
-  const { data: home } = useQuery(publicQueries.home());
-  const sourceCountries = home?.sourceCountries ?? [];
 
   return (
     <>
@@ -150,17 +144,9 @@ export function AboutPage() {
           Strong relationships with international factories allow us to deliver exclusive and rare
           natural stones.
         </p>
-        {/* Phase-3 feedback — flags, not names, and taken from the catalogue
-            rather than listed here. */}
-        {sourceCountries.length > 0 && (
-          <ul className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
-            {sourceCountries.map((country) => (
-              <li key={country.code} className="text-[1.7rem] leading-none">
-                <Flag code={country.code} label={country.label} />
-              </li>
-            ))}
-          </ul>
-        )}
+        {/* Phase-4 feedback — all six factory countries with their names, as
+            on the home page. Read from stock it showed Italy alone. */}
+        <CountryFlags className="mt-6" labelClassName="text-ink-soft" />
       </Section>
 
       <Section tone="deep">

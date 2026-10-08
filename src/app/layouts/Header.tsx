@@ -7,11 +7,12 @@ import { WhatsAppButton } from "@/shared/components/WhatsAppButton";
 import { cn } from "@/shared/lib/cn";
 import { Wordmark } from "@/shared/components/Wordmark";
 
-const NAV = [
+// `page` items are switched on and off in admin Site Settings — Phase-4 feedback.
+const NAV: Array<{ to: string; label: string; page?: "looks" | "applications" }> = [
   { to: "/new-edit", label: "New Edit" },
   { to: "/shop", label: "Stone Shop" },
-  { to: "/look", label: "Shop by Look" },
-  { to: "/application", label: "Shop by Application" },
+  { to: "/look", label: "Shop by Look", page: "looks" },
+  { to: "/application", label: "Shop by Application", page: "applications" },
   { to: "/projects", label: "Projects" },
   { to: "/clients", label: "Clients" },
   // Phase-1 feedback §4 renamed the label, not the path — a shared
@@ -24,7 +25,8 @@ const NAV = [
 export function Header() {
   const [open, setOpen] = useState(false);
   const { count } = useFavourites();
-  const { whatsapp } = useSiteConfig();
+  const { whatsapp, pages } = useSiteConfig();
+  const nav = NAV.filter((item) => !item.page || pages[item.page]);
   const { pathname } = useLocation();
 
   // Close the drawer on navigation. Without this a tap on a nav link changes
@@ -50,7 +52,7 @@ export function Header() {
         </Link>
 
         <nav className="hidden items-center gap-7 xl:flex" aria-label="Primary">
-          {NAV.map((item) => (
+          {nav.map((item) => (
             <NavLink
               key={item.to}
               to={item.to}
@@ -109,7 +111,7 @@ export function Header() {
         className="border-t border-ivory-dark/60 bg-ivory xl:hidden"
       >
         <nav className="shell flex flex-col py-4" aria-label="Primary, mobile">
-          {NAV.map((item) => (
+          {nav.map((item) => (
             <NavLink
               key={item.to}
               to={item.to}

@@ -64,7 +64,9 @@ export function Slab({
       className={cn("slab-frame bg-cover bg-center", ASPECT[aspect], className)}
       // The blurred copy arrives long before the photograph; the <img> simply
       // paints over it, so no load state is needed.
-      style={media?.placeholderUrl ? { backgroundImage: `url("${media.placeholderUrl}")` } : undefined}
+      style={
+        media?.placeholderUrl ? { backgroundImage: `url("${media.placeholderUrl}")` } : undefined
+      }
     >
       <img
         src={src}

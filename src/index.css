@@ -121,8 +121,11 @@
   .slab-frame {
     @apply relative overflow-hidden bg-ivory-deep;
   }
+  /* Cropped from the bottom-right corner, not the centre, and zoomed from it on
+     hover: that corner carries the MOSSANO watermark, and a centred crop cut it
+     off on any image wider or taller than its frame — Phase-4 feedback. */
   .slab-frame img {
-    @apply h-full w-full object-cover transition-transform duration-[1200ms] ease-out;
+    @apply h-full w-full origin-bottom-right object-cover object-right-bottom transition-transform duration-[1200ms] ease-out;
   }
   .group:hover .slab-frame img {
     @apply scale-[1.04];

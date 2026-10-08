@@ -7,14 +7,17 @@ import type { BrandLocation } from "@/shared/api/types";
 const cityLine = ({ city, state, postalCode }: BrandLocation) =>
   [[city, state].filter(Boolean).join(", "), postalCode].filter(Boolean).join(" ");
 
-const COLUMNS = [
+const COLUMNS: Array<{
+  title: string;
+  links: Array<{ to: string; label: string; page?: "looks" | "applications" }>;
+}> = [
   {
     title: "Browse",
     links: [
       { to: "/new-edit", label: "New Edit" },
       { to: "/shop", label: "Stone Shop" },
-      { to: "/look", label: "Shop by Look" },
-      { to: "/application", label: "Shop by Application" },
+      { to: "/look", label: "Shop by Look", page: "looks" },
+      { to: "/application", label: "Shop by Application", page: "applications" },
       { to: "/favourites", label: "Favourites" },
     ],
   },
@@ -31,7 +34,7 @@ const COLUMNS = [
 ];
 
 export function Footer() {
-  const { brand } = useSiteConfig();
+  const { brand, pages } = useSiteConfig();
   const { locations } = brand;
 
   return (
@@ -51,16 +54,18 @@ export function Footer() {
                 {column.title}
               </h2>
               <ul className="mt-5 space-y-3">
-                {column.links.map((link) => (
-                  <li key={link.to}>
-                    <Link
-                      to={link.to}
-                      className="inline-block py-1 text-[0.9rem] text-ivory/75 transition-colors hover:text-ivory"
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
+                {column.links
+                  .filter((link) => !link.page || pages[link.page])
+                  .map((link) => (
+                    <li key={link.to}>
+                      <Link
+                        to={link.to}
+                        className="inline-block py-1 text-[0.9rem] text-ivory/75 transition-colors hover:text-ivory"
+                      >
+                        {link.label}
+                      </Link>
+                    </li>
+                  ))}
               </ul>
             </nav>
           ))}
@@ -107,6 +112,18 @@ export function Footer() {
                   {brand.email}
                 </a>
               </p>
+              {brand.instagram.map((account) => (
+                <p key={account.url}>
+                  <a
+                    href={account.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-block py-1 text-ivory/75 transition-colors hover:text-ivory"
+                  >
+                    Instagram — {account.label}
+                  </a>
+                </p>
+              ))}
             </div>
           </div>
         </div>

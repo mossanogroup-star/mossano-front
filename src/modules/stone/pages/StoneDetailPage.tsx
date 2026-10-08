@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link, useParams } from "react-router-dom";
+import { Instagram, Share2 } from "lucide-react";
+import { useSiteConfig } from "@/shared/hooks/useSiteConfig";
 import { publicQueries } from "@/shared/api/publicQueries";
 import { Section, SectionHeading, EmptyState } from "@/shared/components/Section";
 import { StoneGrid } from "@/shared/components/StoneCard";
@@ -26,6 +28,8 @@ export function StoneDetailPage() {
   const { data, isError } = useQuery(publicQueries.stone(slug));
   const [active, setActive] = useState(0);
   const [enquiryType, setEnquiryType] = useState<"reserve" | "slab_video" | "stone" | null>(null);
+  const [copied, setCopied] = useState(false);
+  const { brand, pages } = useSiteConfig();
 
   if (isError) {
     return (
@@ -199,12 +203,16 @@ export function StoneDetailPage() {
                     ? stone.applications.map((app, i) => (
                         <span key={app.slug}>
                           {i > 0 && ", "}
-                          <Link
-                            to={`/application/${app.slug}`}
-                            className="underline-offset-4 transition-colors hover:text-brass hover:underline"
-                          >
-                            {app.label}
-                          </Link>
+                          {pages.applications ? (
+                            <Link
+                              to={`/application/${app.slug}`}
+                              className="underline-offset-4 transition-colors hover:text-brass hover:underline"
+                            >
+                              {app.label}
+                            </Link>
+                          ) : (
+                            app.label
+                          )}
                         </span>
                       ))
                     : "On request"}
@@ -212,7 +220,7 @@ export function StoneDetailPage() {
               </div>
             </dl>
 
-            {stone.looks.length > 0 && (
+            {pages.looks && stone.looks.length > 0 && (
               <div className="mt-8 flex flex-wrap gap-x-5 gap-y-2">
                 {stone.looks.map((look) => (
                   <Link
@@ -254,17 +262,49 @@ export function StoneDetailPage() {
                 >
                   Request slab video
                 </button>
-                <FavouriteButton
-                  slug={stone.slug}
-                  name={stone.name}
-                  withLabel
-                  variant="button"
-                />
+                <FavouriteButton slug={stone.slug} name={stone.name} withLabel variant="button" />
               </div>
 
               {/* A plain anchor with the message already composed, so it works
                   with JavaScript off — Admin Scope §8. */}
               <WhatsAppButton href={stone.whatsapp.enquire} className="w-full" />
+            </div>
+
+            {/* Phase-4 feedback — share this marble, and both Instagram
+                accounts. The phone's own share sheet already lists WhatsApp
+                and Instagram; a desktop browser without one copies the link. */}
+            <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
+              <button
+                type="button"
+                onClick={async () => {
+                  const url = window.location.href;
+                  if (navigator.share) {
+                    // Dismissing the sheet rejects; nothing to report.
+                    await navigator
+                      .share({ title: `${stone.name} — ${brand.name}`, url })
+                      .catch(() => {});
+                    return;
+                  }
+                  await navigator.clipboard.writeText(url);
+                  setCopied(true);
+                }}
+                className="label inline-flex items-center gap-2 py-1.5 transition-colors hover:text-brass"
+              >
+                <Share2 className="h-4 w-4" strokeWidth={1.25} aria-hidden="true" />
+                {copied ? "Link copied" : "Share"}
+              </button>
+              {brand.instagram.map((account) => (
+                <a
+                  key={account.url}
+                  href={account.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="label inline-flex items-center gap-2 py-1.5 transition-colors hover:text-brass"
+                >
+                  <Instagram className="h-4 w-4" strokeWidth={1.25} aria-hidden="true" />
+                  {account.label}
+                </a>
+              ))}
             </div>
 
             {appearsIn.length > 0 && (

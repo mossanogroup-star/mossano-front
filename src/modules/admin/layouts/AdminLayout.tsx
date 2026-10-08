@@ -12,6 +12,7 @@ import {
   Building2,
   Palette,
   LogOut,
+  Settings,
   ExternalLink,
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
@@ -38,6 +39,7 @@ const NAV = [
   },
   { to: "/admin/selections", label: "Selections", Icon: Share2 },
   { to: "/admin/media", label: "Media", Icon: Images },
+  { to: "/admin/settings", label: "Site Settings", Icon: Settings },
   { to: "/admin/team", label: "Team", Icon: Users, adminOnly: true },
 ];
 

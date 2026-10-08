@@ -335,6 +335,8 @@ export interface BrandConfig {
   /** The head office — for the single-address footer and PDF. */
   address: BrandLocation;
   locations: BrandLocation[];
+  /** Phase-4 feedback — MOSSANO Marmo and MOSSANO Atelier. */
+  instagram: Array<{ label: string; url: string }>;
   canonicalDomain: string;
   baseUrl: string;
 }
@@ -342,6 +344,8 @@ export interface BrandConfig {
 export interface SiteConfig {
   brand: BrandConfig;
   whatsapp: { general: string; number: string };
+  /** Phase-4 feedback — optional pages, switched in Site Settings. */
+  pages: { looks: boolean; applications: boolean };
   taxonomies: {
     looks: Array<{ slug: string; label: string }>;
     applications: Array<{ slug: string; label: string }>;
@@ -365,6 +369,13 @@ export interface HeroPayload {
   source: "pinned" | "ranked" | "media";
   stone: StoneCard | null;
   image: Media | null;
+}
+
+/** Admin Site Settings — mirrors toSettingsDto in mossano-back. */
+export interface SiteSettings {
+  showLooks: boolean;
+  showApplications: boolean;
+  heroImage: Media | null;
 }
 
 export interface HomePayload {

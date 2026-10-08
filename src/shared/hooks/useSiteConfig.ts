@@ -51,6 +51,10 @@ const FALLBACK: SiteConfig["brand"] = {
       country: "United Arab Emirates",
     },
   ],
+  instagram: [
+    { label: "MOSSANO Marmo", url: "https://www.instagram.com/mossano.marmo/" },
+    { label: "MOSSANO Atelier", url: "https://www.instagram.com/mossano.atelier/" },
+  ],
   canonicalDomain: "www.mossanomarmo.com",
   baseUrl: "https://www.mossanomarmo.com",
 };
@@ -63,6 +67,8 @@ export function useSiteConfig() {
       general: `https://wa.me/${FALLBACK.whatsappNumber}`,
       number: FALLBACK.whatsappNumber,
     },
+    // Hidden until the config says otherwise — the client asked for them out.
+    pages: data?.pages ?? { looks: false, applications: false },
     taxonomies: data?.taxonomies,
   };
 }

@@ -95,6 +95,11 @@ const MediaLibraryPage = lazy(() =>
     default: m.MediaLibraryPage,
   })),
 );
+const SiteSettingsPage = lazy(() =>
+  import("@/modules/admin/settings/pages/SiteSettingsPage").then((m) => ({
+    default: m.SiteSettingsPage,
+  })),
+);
 const TeamPage = lazy(() =>
   import("@/modules/admin/team/pages/TeamPage").then((m) => ({
     default: m.TeamPage,
@@ -138,6 +143,7 @@ export const adminRoutes: RouteObject[] = [
       { path: "selections/new", element: wrap(<SelectionEditPage />) },
       { path: "selections/:id", element: wrap(<SelectionEditPage />) },
       { path: "media", element: wrap(<MediaLibraryPage />) },
+      { path: "settings", element: wrap(<SiteSettingsPage />) },
       { path: "team", element: wrap(<TeamPage />) },
     ],
   },

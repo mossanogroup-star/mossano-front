@@ -23,7 +23,7 @@ import { CountryFlags } from "@/shared/components/CountryFlags";
 export function HomePage() {
   const { data } = useQuery(publicQueries.home());
   const { data: clientCategories } = useQuery(publicQueries.clients());
-  const { brand, whatsapp } = useSiteConfig();
+  const { brand, whatsapp, pages } = useSiteConfig();
 
   // §2 asks for every logo in one strip, so the categories are flattened here.
   // The Clients page renders the same query grouped.
@@ -65,22 +65,8 @@ export function HomePage() {
                   className="absolute inset-0 h-full w-full"
                   imgClassName="h-full w-full object-cover"
                 />
-                {/* Text sits on the stone, so the slab is darkened rather than
-                    the type being given a box — DESIGN.md's rule. */}
-                <div
-                  className="absolute inset-0 bg-gradient-to-tr from-umber-deep/90 via-umber-deep/45 to-transparent"
-                  aria-hidden="true"
-                />
-                <div
-                  className="absolute inset-0 bg-gradient-to-l from-umber-deep/75 via-umber-deep/10 to-transparent"
-                  aria-hidden="true"
-                />
-                <div className="absolute inset-0 bg-umber-deep/20" aria-hidden="true" />
-                <div
-                  className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-umber-deep/85 to-transparent"
-                  aria-hidden="true"
-                />
-
+                {/* Phase-4 feedback — no tint over the slab: the client wants
+                    the Black Marquina shown as photographed. */}
                 {/**
                  * One screen on every device — Phase-3 feedback.
                  *
@@ -111,9 +97,6 @@ export function HomePage() {
                       </p>
 
                       <div className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-3 max-sm:tiny:mt-3 max-sm:tiny:gap-y-2 sm:mt-10 sm:gap-4">
-                        <Link to="/new-edit" className="btn-light max-sm:tiny:py-2.5">
-                          Explore New Edit
-                        </Link>
                         <Link
                           to="/private-sourcing"
                           className="border-b border-ivory/35 py-1.5 font-sans text-[0.66rem] uppercase tracking-label text-ivory/80 transition-colors hover:border-ivory hover:text-ivory"
@@ -231,40 +214,44 @@ export function HomePage() {
       </Section>
 
       {/* ── Shop by Look (Website §6) ────────────────────────────────────── */}
-      <Section tone="deep">
-        <SectionHeading
-          label="Shop by Look"
-          title="Find the Mood First"
-          intro="Most projects begin with a feeling rather than a material. Start there."
-          action={{ to: "/look", label: "All looks" }}
-        />
-        <div className="mt-14 grid grid-cols-2 gap-x-5 gap-y-10 lg:grid-cols-3">
-          {(data?.looks ?? [])
-            // A look with nothing tagged to it would open an empty listing,
-            // which reads as a broken site rather than an empty category.
-            .filter((look) => !look.isEmpty)
-            .map((look) => (
-              <Link key={look.slug} to={look.href} className="group block">
-                <Slab
-                  url={look.image}
-                  alt={look.imageAlt ?? look.label}
-                  aspect="square"
-                  sizes="(min-width: 1024px) 30vw, 45vw"
-                />
-                <div className="mt-4 flex items-baseline justify-between gap-3">
-                  <h3 className="font-display text-[0.95rem] uppercase tracking-wide">
-                    {look.label}
-                  </h3>
-                  <span className="label tabular-nums">{look.count}</span>
-                </div>
-              </Link>
-            ))}
-        </div>
-      </Section>
+      {/* Phase-4 feedback — switched in admin Site Settings. */}
+      {pages.looks && (
+        <Section tone="deep">
+          <SectionHeading
+            label="Shop by Look"
+            title="Find the Mood First"
+            intro="Most projects begin with a feeling rather than a material. Start there."
+            action={{ to: "/look", label: "All looks" }}
+          />
+          <div className="mt-14 grid grid-cols-2 gap-x-5 gap-y-10 lg:grid-cols-3">
+            {(data?.looks ?? [])
+              // A look with nothing tagged to it would open an empty listing,
+              // which reads as a broken site rather than an empty category.
+              .filter((look) => !look.isEmpty)
+              .map((look) => (
+                <Link key={look.slug} to={look.href} className="group block">
+                  <Slab
+                    url={look.image}
+                    alt={look.imageAlt ?? look.label}
+                    aspect="square"
+                    sizes="(min-width: 1024px) 30vw, 45vw"
+                  />
+                  <div className="mt-4 flex items-baseline justify-between gap-3">
+                    <h3 className="font-display text-[0.95rem] uppercase tracking-wide">
+                      {look.label}
+                    </h3>
+                    <span className="label tabular-nums">{look.count}</span>
+                  </div>
+                </Link>
+              ))}
+          </div>
+        </Section>
+      )}
 
       {/* ── Shop by Application (Website §7) ─────────────────────────────── */}
-      {/* Hidden until the team adds an application — an empty band is a hole. */}
-      {Boolean(data?.applications?.length) && (
+      {/* Hidden until the team adds an application — an empty band is a hole —
+          and while switched off in Site Settings. */}
+      {pages.applications && Boolean(data?.applications?.length) && (
         <Section>
           <SectionHeading
             label="Shop by Application"

@@ -22,9 +22,12 @@ const FACTORY_COUNTRIES = [
 export function CountryFlags({
   countries = FACTORY_COUNTRIES,
   className = "mt-8",
+  labelClassName = "text-ivory/70",
 }: {
   countries?: Array<{ code: string; label: string }>;
   className?: string;
+  /** The default suits a dark section; a light one passes its own colour. */
+  labelClassName?: string;
 }) {
   return (
     <ul
@@ -38,7 +41,7 @@ export function CountryFlags({
           <span className="text-[1.6rem] leading-none">
             <Flag code={country.code} />
           </span>
-          <span className="label text-ivory/70">{country.label}</span>
+          <span className={cn("label", labelClassName)}>{country.label}</span>
         </li>
       ))}
     </ul>

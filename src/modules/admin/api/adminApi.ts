@@ -9,6 +9,7 @@ import type {
   AdminClient,
   AdminClientCategory,
   LookContent,
+  SiteSettings,
   ApplicationContent,
   AdminEdit,
   AdminSelection,
@@ -114,6 +115,10 @@ export const adminApi = {
   lookContent: () => unwrap<LookContent[]>(api.get("/looks/content", undefined, AUTH)),
   saveLookContent: (look: string, body: unknown) =>
     unwrap<LookContent>(api.put(`/looks/content/${look}`, body, AUTH)),
+
+  // Site Settings — Phase-4 feedback
+  settings: () => unwrap<SiteSettings>(api.get("/settings", undefined, AUTH)),
+  saveSettings: (body: unknown) => unwrap<SiteSettings>(api.put("/settings", body, AUTH)),
 
   // Phase-2 feedback §1 and §2 — clients and their categories.
   clientCategories: () =>

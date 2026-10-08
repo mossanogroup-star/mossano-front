@@ -235,7 +235,7 @@ function VideoTile({ media, title, onOpen }: { media: Media; title: string; onOp
         loop
         playsInline
         preload="none"
-        className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+        className="h-full w-full origin-bottom-right object-cover object-right-bottom transition-transform duration-700 ease-out group-hover:scale-[1.04]"
       />
       <span className="absolute inset-0 bg-gradient-to-t from-ink/60 via-transparent to-transparent opacity-80 transition-opacity duration-500 group-hover:opacity-100" />
       <span className="absolute bottom-3 right-3 grid h-9 w-9 place-items-center rounded-full border border-ivory/50 bg-ink/30 text-ivory backdrop-blur-sm transition-colors duration-300 group-hover:border-brass group-hover:bg-brass">
