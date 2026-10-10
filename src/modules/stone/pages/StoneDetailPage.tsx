@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link, useParams } from "react-router-dom";
-import { Instagram, Share2 } from "lucide-react";
+import { Share2 } from "lucide-react";
 import { useSiteConfig } from "@/shared/hooks/useSiteConfig";
 import { publicQueries } from "@/shared/api/publicQueries";
 import { Section, SectionHeading, EmptyState } from "@/shared/components/Section";
@@ -10,6 +10,7 @@ import { Slab } from "@/shared/components/Slab";
 import { AvailabilityBadge } from "@/shared/components/AvailabilityBadge";
 import { FavouriteButton } from "@/shared/components/FavouriteButton";
 import { WhatsAppButton } from "@/shared/components/WhatsAppButton";
+import { InstagramIcon } from "@/shared/components/InstagramIcon";
 import { EnquiryForm } from "@/modules/enquiry/components/EnquiryForm";
 import { ZoomableSlab } from "@/shared/components/ZoomableSlab";
 import { cn } from "@/shared/lib/cn";
@@ -301,7 +302,7 @@ export function StoneDetailPage() {
                   rel="noopener noreferrer"
                   className="label inline-flex items-center gap-2 py-1.5 transition-colors hover:text-brass"
                 >
-                  <Instagram className="h-4 w-4" strokeWidth={1.25} aria-hidden="true" />
+                  <InstagramIcon />
                   {account.label}
                 </a>
               ))}

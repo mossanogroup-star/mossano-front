@@ -89,7 +89,8 @@ export function StoneEditPage() {
       originCountry: "it",
       origin: "",
       finish: "polished",
-      thicknessMm: "20",
+      // Client request (10 Oct 2026) — 18mm is the default, not 20.
+      thicknessMm: "18",
       slabLengthIn: "",
       slabWidthIn: "",
       slabCount: "",

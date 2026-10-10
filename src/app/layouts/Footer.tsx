@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useSiteConfig } from "@/shared/hooks/useSiteConfig";
 import { Wordmark } from "@/shared/components/Wordmark";
+import { InstagramIcon } from "@/shared/components/InstagramIcon";
 import type { BrandLocation } from "@/shared/api/types";
 
 /** "Mumbai, Maharashtra 400003" — and just "Dubai" where the rest is absent. */
@@ -118,9 +119,10 @@ export function Footer() {
                     href={account.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-block py-1 text-ivory/75 transition-colors hover:text-ivory"
+                    className="inline-flex items-center gap-2 py-1 text-ivory/75 transition-colors hover:text-ivory"
                   >
-                    Instagram — {account.label}
+                    <InstagramIcon />
+                    {account.label}
                   </a>
                 </p>
               ))}
