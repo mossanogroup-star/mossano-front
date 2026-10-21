@@ -13,6 +13,7 @@ const MULTI = [
   "material",
   "colour",
   "whiteSubcategory",
+  "graniteColour",
   "originCountry",
   "look",
   "application",

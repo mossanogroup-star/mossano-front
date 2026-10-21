@@ -29,11 +29,15 @@ const HIDDEN_AVAILABILITY = ["sold", "verification_required"];
 const GROUPS: Group[] = [
   { key: "availability", param: "availability", title: "Availability" },
   { key: "looks", param: "look", title: "Look" },
-  { key: "colour", param: "colour", title: "Colour" },
+  // Client request (22 Oct 2026) — renamed from "Colour" now that Granite has
+  // a colour list of its own below White.
+  { key: "colour", param: "colour", title: "Marble Colour" },
   // Phase-3 feedback — the sub-category under White, directly beneath Colour
   // so it reads as a narrowing of it. It hides itself when the catalogue has
   // none, like every other group here.
   { key: "whiteSubcategory", param: "whiteSubcategory", title: "White" },
+  // Client request (22 Oct 2026) — every colour again, for granite lots.
+  { key: "graniteColour", param: "graniteColour", title: "Granite" },
   { key: "material", param: "material", title: "Material" },
   { key: "originCountry", param: "originCountry", title: "Origin" },
   { key: "applications", param: "application", title: "Application" },
@@ -60,6 +64,7 @@ export function FilterRail({ facets, selected, onToggle, onClear, className }: P
       material: taxonomies.materials,
       colour: taxonomies.colours,
       whiteSubcategory: taxonomies.whiteSubcategories,
+      graniteColour: taxonomies.graniteColours,
       finish: taxonomies.finishes,
     };
     if (param === "availability") {

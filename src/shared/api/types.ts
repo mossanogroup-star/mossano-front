@@ -91,6 +91,9 @@ export interface Stone extends Omit<StoneCard, "whatsapp"> {
   /** Phase-3 feedback — the sub-category under White, null on any other lot. */
   whiteSubcategory: string | null;
   whiteSubcategoryLabel: string | null;
+  /** Client request (22 Oct 2026) — the colour under Granite, null on any other lot. */
+  graniteColour: string | null;
+  graniteColourLabel: string | null;
   finish: string | null;
   finishLabel: string | null;
   thicknessMm: number | null;
@@ -306,6 +309,7 @@ export interface StoneFacets {
   material: FacetBucket[];
   colour: FacetBucket[];
   whiteSubcategory: FacetBucket[];
+  graniteColour: FacetBucket[];
   originCountry: FacetBucket[];
   finish: FacetBucket[];
   availability: FacetBucket[];
@@ -354,6 +358,7 @@ export interface SiteConfig {
     materials: Array<{ slug: string; label: string }>;
     colours: Array<{ slug: string; label: string }>;
     whiteSubcategories: Array<{ slug: string; label: string }>;
+    graniteColours: Array<{ slug: string; label: string }>;
     /** Generated from the flag files on the server — see countries.generated.js. */
     countries: Array<{ code: string; label: string }>;
     finishes: Array<{ slug: string; label: string }>;

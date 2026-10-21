@@ -16,6 +16,7 @@ interface FormValues {
   material: string;
   colour: string;
   whiteSubcategory: string;
+  graniteColour: string;
   originCountry: string;
   origin: string;
   finish: string;
@@ -86,6 +87,7 @@ export function StoneEditPage() {
       material: "marble",
       colour: "",
       whiteSubcategory: "",
+      graniteColour: "",
       originCountry: "it",
       origin: "",
       finish: "polished",
@@ -114,6 +116,7 @@ export function StoneEditPage() {
       material: stone.material ?? "",
       colour: stone.colour ?? "",
       whiteSubcategory: stone.whiteSubcategory ?? "",
+      graniteColour: stone.graniteColour ?? "",
       originCountry: stone.originCountry ?? "",
       origin: stone.origin ?? "",
       finish: stone.finish ?? "",
@@ -149,6 +152,8 @@ export function StoneEditPage() {
 
   /** The White sub-category field only exists while White is the colour. */
   const colour = watch("colour");
+  /** Likewise the Granite colour, while Granite is the material. */
+  const material = watch("material");
 
   const onSubmit = handleSubmit(async (v) => {
     try {
@@ -161,6 +166,7 @@ export function StoneEditPage() {
         // than left stale when the colour moves off White, so a lot cannot be
         // filed as "Black / Statuario".
         whiteSubcategory: v.colour === "white" ? str(v.whiteSubcategory) : undefined,
+        graniteColour: v.material === "granite" ? str(v.graniteColour) : undefined,
         originCountry: str(v.originCountry),
         origin: str(v.origin),
         finish: str(v.finish),
@@ -264,6 +270,21 @@ export function StoneEditPage() {
                 {(taxonomies?.whiteSubcategories ?? []).map((w) => (
                   <option key={w.slug} value={w.slug}>
                     {w.label}
+                  </option>
+                ))}
+              </Select>
+            </Field>
+          )}
+
+          {/* Client request (22 Oct 2026) — the shop's Granite filter. Shown
+              only when Granite is the material, as White's is under White. */}
+          {material === "granite" && (
+            <Field label="Granite colour" htmlFor="graniteColour">
+              <Select id="graniteColour" {...register("graniteColour")}>
+                <option value="">Not recorded</option>
+                {(taxonomies?.graniteColours ?? []).map((g) => (
+                  <option key={g.slug} value={g.slug}>
+                    {g.label}
                   </option>
                 ))}
               </Select>
