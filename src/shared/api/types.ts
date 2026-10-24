@@ -100,6 +100,9 @@ export interface Stone extends Omit<StoneCard, "whatsapp"> {
   finish: string | null;
   finishLabel: string | null;
   thicknessMm: number | null;
+  /** Client request (24 Oct 2026) — interior, exterior or both. */
+  placements: string[];
+  placementLabels: string[];
   slabLengthIn: number | null;
   slabWidthIn: number | null;
   /** Free text; falls back to slabLengthIn × slabWidthIn when empty. */
@@ -368,6 +371,13 @@ export interface SiteConfig {
     /** Generated from the flag files on the server — see countries.generated.js. */
     countries: Array<{ code: string; label: string }>;
     finishes: Array<{ slug: string; label: string }>;
+    placements: Array<{ slug: string; label: string }>;
+    /** Client request (24 Oct 2026) — what the admin offers while Granite is the material. */
+    graniteSpec: {
+      origin: string;
+      finishes: string[];
+      thicknessMm: { min: number; max: number };
+    };
     availability: Record<Availability, string>;
   };
 }

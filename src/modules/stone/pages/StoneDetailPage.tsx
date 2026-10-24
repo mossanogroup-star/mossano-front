@@ -199,24 +199,36 @@ export function StoneDetailPage() {
                   repeated as a chip underneath. */}
               <div className="spec">
                 <dt>Application</dt>
-                <dd className={cn(stone.applications.length === 0 && "text-ink-faint")}>
-                  {stone.applications.length > 0
-                    ? stone.applications.map((app, i) => (
-                        <span key={app.slug}>
-                          {i > 0 && ", "}
-                          {pages.applications ? (
-                            <Link
-                              to={`/application/${app.slug}`}
-                              className="underline-offset-4 transition-colors hover:text-brass hover:underline"
-                            >
-                              {app.label}
-                            </Link>
-                          ) : (
-                            app.label
-                          )}
-                        </span>
-                      ))
-                    : "On request"}
+                <dd
+                  className={cn(
+                    stone.applications.length === 0 &&
+                      stone.placementLabels.length === 0 &&
+                      "text-ink-faint",
+                  )}
+                >
+                  {/* Client request (24 Oct 2026) — interior / exterior. */}
+                  {stone.applications.length === 0 && stone.placementLabels.length > 0
+                    ? stone.placementLabels.join(" / ")
+                    : stone.applications.length > 0
+                      ? stone.applications.map((app, i) => (
+                          <span key={app.slug}>
+                            {i > 0 && ", "}
+                            {pages.applications ? (
+                              <Link
+                                to={`/application/${app.slug}`}
+                                className="underline-offset-4 transition-colors hover:text-brass hover:underline"
+                              >
+                                {app.label}
+                              </Link>
+                            ) : (
+                              app.label
+                            )}
+                          </span>
+                        ))
+                      : "On request"}
+                  {stone.applications.length > 0 &&
+                    stone.placementLabels.length > 0 &&
+                    ` · ${stone.placementLabels.join(" / ")}`}
                 </dd>
               </div>
             </dl>

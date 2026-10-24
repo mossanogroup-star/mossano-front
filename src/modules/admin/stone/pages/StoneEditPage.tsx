@@ -22,6 +22,7 @@ interface FormValues {
   origin: string;
   finish: string;
   thicknessMm: string;
+  placements: string[];
   slabLengthIn: string;
   slabWidthIn: string;
   slabCount: string;
@@ -73,6 +74,8 @@ export function StoneEditPage() {
     reset,
     setError,
     watch,
+    getValues,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<FormValues>({
     defaultValues: {
@@ -95,6 +98,7 @@ export function StoneEditPage() {
       finish: "polished",
       // Client request (10 Oct 2026) — 18mm is the default, not 20.
       thicknessMm: "18",
+      placements: [],
       slabLengthIn: "",
       slabWidthIn: "",
       slabCount: "",
@@ -124,6 +128,7 @@ export function StoneEditPage() {
       origin: stone.origin ?? "",
       finish: stone.finish ?? "",
       thicknessMm: stone.thicknessMm?.toString() ?? "",
+      placements: stone.placements,
       slabLengthIn: stone.slabLengthIn?.toString() ?? "",
       slabWidthIn: stone.slabWidthIn?.toString() ?? "",
       slabCount: stone.slabCount?.toString() ?? "",
@@ -157,6 +162,11 @@ export function StoneEditPage() {
   const colour = watch("colour");
   /** Likewise the Granite colour, while Granite is the material. */
   const material = watch("material");
+  const granite = material === "granite" ? taxonomies?.graniteSpec : undefined;
+  /** While Granite is the material, only the finishes granite is offered in. */
+  const finishes = (taxonomies?.finishes ?? []).filter(
+    (f) => !granite || granite.finishes.includes(f.slug),
+  );
 
   const onSubmit = handleSubmit(async (v) => {
     try {
@@ -175,6 +185,7 @@ export function StoneEditPage() {
         origin: str(v.origin),
         finish: str(v.finish),
         thicknessMm: num(v.thicknessMm),
+        placements: v.material === "granite" ? v.placements : [],
         slabLengthIn: num(v.slabLengthIn),
         slabWidthIn: num(v.slabWidthIn),
         slabCount: num(v.slabCount),
@@ -243,7 +254,19 @@ export function StoneEditPage() {
 
           <div className="grid gap-x-6 sm:grid-cols-2">
             <Field label="Material" htmlFor="material">
-              <Select id="material" {...register("material")}>
+              <Select
+                id="material"
+                {...register("material", {
+                  // Client request (24 Oct 2026) — granite is Indo Italian, so
+                  // picking it fills the origin in when nothing is there yet.
+                  onChange: (e) => {
+                    const spec = taxonomies?.graniteSpec;
+                    if (e.target.value === "granite" && spec && !getValues("origin").trim()) {
+                      setValue("origin", spec.origin);
+                    }
+                  },
+                })}
+              >
                 <option value="">Not recorded</option>
                 {(taxonomies?.materials ?? []).map((m) => (
                   <option key={m.slug} value={m.slug}>
@@ -341,17 +364,46 @@ export function StoneEditPage() {
             <Field label="Finish" htmlFor="finish">
               <Select id="finish" {...register("finish")}>
                 <option value="">Not recorded</option>
-                {(taxonomies?.finishes ?? []).map((f) => (
+                {finishes.map((f) => (
                   <option key={f.slug} value={f.slug}>
                     {f.label}
                   </option>
                 ))}
               </Select>
             </Field>
-            <Field label="Thickness (mm)" htmlFor="thicknessMm">
-              <TextInput id="thicknessMm" type="number" min={0} {...register("thicknessMm")} />
+            <Field
+              label="Thickness (mm)"
+              htmlFor="thicknessMm"
+              hint={
+                granite
+                  ? `Granite: ${granite.thicknessMm.min}–${granite.thicknessMm.max} mm`
+                  : undefined
+              }
+            >
+              <TextInput
+                id="thicknessMm"
+                type="number"
+                min={granite?.thicknessMm.min ?? 0}
+                max={granite?.thicknessMm.max}
+                {...register("thicknessMm")}
+              />
             </Field>
           </div>
+
+          {/* Client request (24 Oct 2026) — "Application: interior / exterior",
+              asked for on granite. Shown on the stone page's Application row. */}
+          {granite && (
+            <Field label="Application" htmlFor="placements">
+              <div id="placements" className="flex gap-6">
+                {(taxonomies?.placements ?? []).map((p) => (
+                  <label key={p.slug} className="flex items-center gap-2 text-[0.85rem]">
+                    <input type="checkbox" value={p.slug} {...register("placements")} />
+                    {p.label}
+                  </label>
+                ))}
+              </div>
+            </Field>
+          )}
 
           <p className="label mb-3 mt-8 border-t border-ivory-dark pt-6">The lot</p>
           <div className="grid gap-x-6 sm:grid-cols-2">
