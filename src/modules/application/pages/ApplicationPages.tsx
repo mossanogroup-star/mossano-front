@@ -214,13 +214,17 @@ export function ApplicationProjectPage() {
             <Link to="/projects" className="underline-offset-4 hover:underline">
               Projects
             </Link>
-            <span className="text-ink-faint"> · </span>
-            <Link
-              to={`/application/${data.application}`}
-              className="underline-offset-4 hover:underline"
-            >
-              {data.applicationLabel}
-            </Link>
+            {data.application && (
+              <>
+                <span className="text-ink-faint"> · </span>
+                <Link
+                  to={`/application/${data.application}`}
+                  className="underline-offset-4 hover:underline"
+                >
+                  {data.applicationLabel}
+                </Link>
+              </>
+            )}
           </p>
           <h1 className="h-display mt-2">{data.projectName ?? data.title}</h1>
           {/* Phase-1 feedback §7 — architect credit removed from public view. */}

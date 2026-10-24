@@ -9,7 +9,6 @@ import { useSiteConfig } from "@/shared/hooks/useSiteConfig";
 
 const BLANK = {
   title: "",
-  application: "",
   projectName: "",
   location: "",
   architect: "",
@@ -50,7 +49,6 @@ export function ApplicationListPage() {
     if (!editing) return;
     setForm({
       title: editing.title,
-      application: editing.application,
       projectName: editing.projectName ?? "",
       location: editing.location ?? "",
       architect: editing.architect ?? "",
@@ -110,7 +108,7 @@ export function ApplicationListPage() {
       <div className="grid gap-x-12 lg:grid-cols-[1fr_20rem]">
         <section>
           <DataTable
-            head={["Project", "Application", "Images", ""]}
+            head={["Project", "Images", ""]}
             empty={
               projects.length === 0 ? (
                 <TableEmpty message="No project photography yet. The client has not supplied any." />
@@ -132,9 +130,6 @@ export function ApplicationListPage() {
                       {[project.architect, project.location].filter(Boolean).join(" · ")}
                     </span>
                   )}
-                </td>
-                <td className="py-3 pr-6 text-[0.8rem] text-ink-soft">
-                  {project.applicationLabel}
                 </td>
                 <td className="py-3 pr-6 text-[0.8rem] tabular-nums">{project.images.length}</td>
                 <td className="py-3">
@@ -168,22 +163,9 @@ export function ApplicationListPage() {
             )}
           </div>
 
+          {/* Client request (24 Oct 2026) — no Application field here. A project
+              saved before then keeps its application; editing leaves it alone. */}
           <div className="mt-5">
-            <Field label="Application" htmlFor="application" required>
-              <Select
-                id="application"
-                value={form.application}
-                onChange={(e) => setForm({ ...form, application: e.target.value })}
-              >
-                <option value="">Choose one</option>
-                {(taxonomies?.applications ?? []).map((a) => (
-                  <option key={a.slug} value={a.slug}>
-                    {a.label}
-                  </option>
-                ))}
-              </Select>
-            </Field>
-
             <Field label="Title" htmlFor="app-title" required>
               <TextInput
                 id="app-title"
@@ -278,7 +260,7 @@ export function ApplicationListPage() {
             <button
               type="button"
               className="btn-solid mt-8 w-full"
-              disabled={save.isPending || !form.title || !form.application}
+              disabled={save.isPending || !form.title}
               onClick={() =>
                 save.mutate({
                   ...form,

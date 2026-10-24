@@ -194,7 +194,8 @@ export interface ApplicationProject {
   id: string;
   slug: string;
   title: string;
-  application: string;
+  /** Null on a project saved without one — see Project Images. */
+  application: string | null;
   applicationLabel: string | null;
   projectName: string | null;
   location: string | null;
