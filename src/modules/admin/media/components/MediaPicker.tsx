@@ -58,7 +58,8 @@ export function MediaPicker({ kind, value, onChange, label, hint, max = 40 }: Pr
           description: errors.map((e) => `${e.filename}: ${e.message}`).join("\n"),
         });
       } else {
-        toast.success(`${uploaded.length} image${uploaded.length === 1 ? "" : "s"} uploaded`);
+        const noun = kind === "video" ? "video" : "image";
+        toast.success(`${uploaded.length} ${noun}${uploaded.length === 1 ? "" : "s"} uploaded`);
       }
     },
     onError: (err) => toast.error(err instanceof Error ? err.message : "Upload failed"),
@@ -172,6 +173,15 @@ export function MediaPicker({ kind, value, onChange, label, hint, max = 40 }: Pr
         <button
           type="button"
           onClick={() => inputRef.current?.click()}
+          // The label promised drop, but nothing handled it: the browser opened
+          // the dropped file in the tab and the upload never happened.
+          onDragOver={(e) => e.preventDefault()}
+          onDrop={(e) => {
+            e.preventDefault();
+            const files = Array.from(e.dataTransfer.files);
+            if (files.length && !upload.isPending)
+              upload.mutate(files.slice(0, max - value.length));
+          }}
           className="mt-4 flex w-full items-center justify-center border border-dashed border-ink/20 py-10 text-[0.8rem] text-ink-faint transition-colors hover:border-ink/40 hover:text-ink-soft"
         >
           Drop files here, or click to choose
