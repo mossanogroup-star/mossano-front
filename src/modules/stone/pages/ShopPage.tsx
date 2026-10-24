@@ -14,6 +14,7 @@ const MULTI = [
   "colour",
   "whiteSubcategory",
   "graniteColour",
+  "landscapeColour",
   "originCountry",
   "look",
   "application",

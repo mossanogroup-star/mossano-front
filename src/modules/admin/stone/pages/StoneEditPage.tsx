@@ -17,6 +17,7 @@ interface FormValues {
   colour: string;
   whiteSubcategory: string;
   graniteColour: string;
+  landscapeColour: string;
   originCountry: string;
   origin: string;
   finish: string;
@@ -88,6 +89,7 @@ export function StoneEditPage() {
       colour: "",
       whiteSubcategory: "",
       graniteColour: "",
+      landscapeColour: "",
       originCountry: "it",
       origin: "",
       finish: "polished",
@@ -117,6 +119,7 @@ export function StoneEditPage() {
       colour: stone.colour ?? "",
       whiteSubcategory: stone.whiteSubcategory ?? "",
       graniteColour: stone.graniteColour ?? "",
+      landscapeColour: stone.landscapeColour ?? "",
       originCountry: stone.originCountry ?? "",
       origin: stone.origin ?? "",
       finish: stone.finish ?? "",
@@ -167,6 +170,7 @@ export function StoneEditPage() {
         // filed as "Black / Statuario".
         whiteSubcategory: v.colour === "white" ? str(v.whiteSubcategory) : undefined,
         graniteColour: v.material === "granite" ? str(v.graniteColour) : undefined,
+        landscapeColour: v.material === "landscape" ? str(v.landscapeColour) : undefined,
         originCountry: str(v.originCountry),
         origin: str(v.origin),
         finish: str(v.finish),
@@ -283,6 +287,21 @@ export function StoneEditPage() {
               <Select id="graniteColour" {...register("graniteColour")}>
                 <option value="">Not recorded</option>
                 {(taxonomies?.graniteColours ?? []).map((g) => (
+                  <option key={g.slug} value={g.slug}>
+                    {g.label}
+                  </option>
+                ))}
+              </Select>
+            </Field>
+          )}
+
+          {/* Client request (24 Oct 2026) — the shop's Landscape filter, shown
+              only when Landscape is the material, as Granite's is. */}
+          {material === "landscape" && (
+            <Field label="Landscape colour" htmlFor="landscapeColour">
+              <Select id="landscapeColour" {...register("landscapeColour")}>
+                <option value="">Not recorded</option>
+                {(taxonomies?.landscapeColours ?? []).map((g) => (
                   <option key={g.slug} value={g.slug}>
                     {g.label}
                   </option>

@@ -6,6 +6,12 @@ interface Group {
   key: keyof StoneFacets;
   param: string;
   title: string;
+  /**
+   * List every option in the taxonomy, counts of zero included, and never hide
+   * the group — the client wants the full colour list on show under Granite
+   * and Landscape even before lots are filed against it.
+   */
+  showAll?: keyof NonNullable<ReturnType<typeof useSiteConfig>["taxonomies"]>;
 }
 
 /**
@@ -37,8 +43,21 @@ const GROUPS: Group[] = [
   // none, like every other group here.
   { key: "whiteSubcategory", param: "whiteSubcategory", title: "White" },
   // Client request (22 Oct 2026) — every colour again, for granite lots.
-  { key: "graniteColour", param: "graniteColour", title: "Granite" },
-  { key: "material", param: "material", title: "Material" },
+  {
+    key: "graniteColour",
+    param: "graniteColour",
+    title: "Granite",
+    showAll: "graniteColours",
+  },
+  // Client request (24 Oct 2026) — and again for landscape stone. Material is
+  // gone from the rail at the same request: Marble Colour, Granite and
+  // Landscape now do its job.
+  {
+    key: "landscapeColour",
+    param: "landscapeColour",
+    title: "Landscape",
+    showAll: "landscapeColours",
+  },
   { key: "originCountry", param: "originCountry", title: "Origin" },
   { key: "applications", param: "application", title: "Application" },
   { key: "finish", param: "finish", title: "Finish" },
@@ -65,6 +84,7 @@ export function FilterRail({ facets, selected, onToggle, onClear, className }: P
       colour: taxonomies.colours,
       whiteSubcategory: taxonomies.whiteSubcategories,
       graniteColour: taxonomies.graniteColours,
+      landscapeColour: taxonomies.landscapeColours,
       finish: taxonomies.finishes,
     };
     if (param === "availability") {
@@ -80,15 +100,28 @@ export function FilterRail({ facets, selected, onToggle, onClear, className }: P
 
   const activeCount = Object.values(selected).reduce((n, list) => n + list.length, 0);
 
+  /** Every taxonomy option in its own order, with the facet's count or zero. */
+  const allBuckets = (group: Group): FacetBucket[] => {
+    const options = (group.showAll && taxonomies?.[group.showAll]) as
+      Array<{ slug: string }> | undefined;
+    const counts = new Map((facets?.[group.key] ?? []).map((b) => [b.value, b.count]));
+    return (options ?? []).map((o) => ({ value: o.slug, count: counts.get(o.slug) ?? 0 }));
+  };
+
   const visible = GROUPS.map((group) => ({
     ...group,
-    buckets: (facets?.[group.key] ?? []).filter(
-      (b: FacetBucket) =>
-        b.count > 0 && !(group.param === "availability" && HIDDEN_AVAILABILITY.includes(b.value)),
-    ),
+    buckets: group.showAll
+      ? allBuckets(group)
+      : (facets?.[group.key] ?? []).filter(
+          (b: FacetBucket) =>
+            b.count > 0 &&
+            !(group.param === "availability" && HIDDEN_AVAILABILITY.includes(b.value)),
+        ),
   })).filter(
     (group) =>
-      group.buckets.length > 1 || (group.buckets.length === 1 && selected[group.param]?.length),
+      (group.showAll && group.buckets.length > 0) ||
+      group.buckets.length > 1 ||
+      (group.buckets.length === 1 && selected[group.param]?.length),
   );
 
   return (

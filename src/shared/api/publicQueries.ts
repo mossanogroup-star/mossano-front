@@ -31,6 +31,7 @@ export interface ShopQuery {
   colour?: string[];
   whiteSubcategory?: string[];
   graniteColour?: string[];
+  landscapeColour?: string[];
   originCountry?: string[];
   look?: string[];
   application?: string[];
