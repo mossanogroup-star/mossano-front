@@ -127,7 +127,7 @@ export function StoneEditPage() {
       originCountry: stone.originCountry ?? "",
       origin: stone.origin ?? "",
       finish: stone.finish ?? "",
-      thicknessMm: stone.thicknessMm?.toString() ?? "",
+      thicknessMm: stone.thicknessMm ?? "",
       placements: stone.placements,
       slabLengthIn: stone.slabLengthIn?.toString() ?? "",
       slabWidthIn: stone.slabWidthIn?.toString() ?? "",
@@ -184,7 +184,7 @@ export function StoneEditPage() {
         originCountry: str(v.originCountry),
         origin: str(v.origin),
         finish: str(v.finish),
-        thicknessMm: num(v.thicknessMm),
+        thicknessMm: str(v.thicknessMm),
         placements: v.material === "granite" ? v.placements : [],
         slabLengthIn: num(v.slabLengthIn),
         slabWidthIn: num(v.slabWidthIn),
@@ -259,11 +259,12 @@ export function StoneEditPage() {
                 {...register("material", {
                   // Client request (24 Oct 2026) — granite is Indo Italian, so
                   // picking it fills the origin in when nothing is there yet.
+                  // Since 27 Oct it sets the thickness to granite's 17-100 too.
                   onChange: (e) => {
                     const spec = taxonomies?.graniteSpec;
-                    if (e.target.value === "granite" && spec && !getValues("origin").trim()) {
-                      setValue("origin", spec.origin);
-                    }
+                    if (e.target.value !== "granite" || !spec) return;
+                    if (!getValues("origin").trim()) setValue("origin", spec.origin);
+                    setValue("thicknessMm", spec.thickness);
                   },
                 })}
               >
@@ -380,11 +381,12 @@ export function StoneEditPage() {
                   : undefined
               }
             >
+              {/* Client request (27 Oct 2026) — text, so a range like 17-100
+                  can be entered as well as a single figure. */}
               <TextInput
                 id="thicknessMm"
-                type="number"
-                min={granite?.thicknessMm.min ?? 0}
-                max={granite?.thicknessMm.max}
+                inputMode="decimal"
+                placeholder="e.g. 18 or 17-100"
                 {...register("thicknessMm")}
               />
             </Field>

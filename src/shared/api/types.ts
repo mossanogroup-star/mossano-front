@@ -99,7 +99,8 @@ export interface Stone extends Omit<StoneCard, "whatsapp"> {
   landscapeColourLabel: string | null;
   finish: string | null;
   finishLabel: string | null;
-  thicknessMm: number | null;
+  /** In mm: one figure ("18") or a range ("17-100"). */
+  thicknessMm: string | null;
   /** Client request (24 Oct 2026) — interior, exterior or both. */
   placements: string[];
   placementLabels: string[];
@@ -377,6 +378,8 @@ export interface SiteConfig {
       origin: string;
       finishes: string[];
       thicknessMm: { min: number; max: number };
+      /** What picking Granite fills the thickness in with. */
+      thickness: string;
     };
     availability: Record<Availability, string>;
   };
