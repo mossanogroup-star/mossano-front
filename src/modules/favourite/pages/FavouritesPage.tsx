@@ -7,6 +7,7 @@ import { Section, EmptyState } from "@/shared/components/Section";
 import { StoneGrid } from "@/shared/components/StoneCard";
 import { WhatsAppButton } from "@/shared/components/WhatsAppButton";
 import { EnquiryForm } from "@/modules/enquiry/components/EnquiryForm";
+import { Field, TextInput } from "@/modules/enquiry/components/Field";
 import { useSiteConfig } from "@/shared/hooks/useSiteConfig";
 
 /**
@@ -24,6 +25,12 @@ export function FavouritesPage() {
   const { data, isLoading } = useQuery(publicQueries.favourites(slugs));
   const [downloading, setDownloading] = useState(false);
   const [sending, setSending] = useState(false);
+  /**
+   * Client request (27 Oct 2026) — who the PDF is for. It printed "Prepared
+   * for: —"; it now asks first and fills the PDF's Prepared for panel.
+   */
+  const [askingDetails, setAskingDetails] = useState(false);
+  const [details, setDetails] = useState({ name: "", phone: "", email: "", projectName: "" });
 
   const stones = data ?? [];
 
@@ -39,7 +46,13 @@ export function FavouritesPage() {
       const res = await fetch("/api/public/favourites/pdf", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ slugs }),
+        body: JSON.stringify({
+          slugs,
+          name: details.name.trim(),
+          phone: details.phone.trim() || undefined,
+          email: details.email.trim() || undefined,
+          projectName: details.projectName.trim() || undefined,
+        }),
       });
       if (!res.ok) throw new Error("The PDF could not be prepared.");
 
@@ -49,6 +62,7 @@ export function FavouritesPage() {
       link.download = "MOSSANO-Shortlist.pdf";
       link.click();
       URL.revokeObjectURL(url);
+      setAskingDetails(false);
     } finally {
       setDownloading(false);
     }
@@ -113,11 +127,11 @@ export function FavouritesPage() {
                 />
                 <button
                   type="button"
-                  onClick={() => void downloadPdf()}
-                  disabled={downloading}
-                  className="btn-outline disabled:opacity-50"
+                  onClick={() => setAskingDetails((v) => !v)}
+                  className="btn-outline"
+                  aria-expanded={askingDetails}
                 >
-                  {downloading ? "Preparing…" : "Download as PDF"}
+                  Download as PDF
                 </button>
                 <button
                   type="button"
@@ -128,6 +142,58 @@ export function FavouritesPage() {
                   Send it to MOSSANO
                 </button>
               </div>
+
+              {askingDetails && (
+                <form
+                  className="mt-12 max-w-xl"
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    void downloadPdf();
+                  }}
+                >
+                  <p className="label mb-5">Who is this shortlist for?</p>
+                  <div className="grid gap-x-6 sm:grid-cols-2">
+                    <Field label="Name" htmlFor="pdf-name" required>
+                      <TextInput
+                        id="pdf-name"
+                        required
+                        value={details.name}
+                        onChange={(e) => setDetails({ ...details, name: e.target.value })}
+                      />
+                    </Field>
+                    <Field label="Project" htmlFor="pdf-project">
+                      <TextInput
+                        id="pdf-project"
+                        value={details.projectName}
+                        onChange={(e) => setDetails({ ...details, projectName: e.target.value })}
+                      />
+                    </Field>
+                    <Field label="Phone" htmlFor="pdf-phone">
+                      <TextInput
+                        id="pdf-phone"
+                        type="tel"
+                        value={details.phone}
+                        onChange={(e) => setDetails({ ...details, phone: e.target.value })}
+                      />
+                    </Field>
+                    <Field label="Email" htmlFor="pdf-email">
+                      <TextInput
+                        id="pdf-email"
+                        type="email"
+                        value={details.email}
+                        onChange={(e) => setDetails({ ...details, email: e.target.value })}
+                      />
+                    </Field>
+                  </div>
+                  <button
+                    type="submit"
+                    disabled={downloading || !details.name.trim()}
+                    className="btn-solid mt-4 disabled:opacity-50"
+                  >
+                    {downloading ? "Preparing…" : "Download PDF"}
+                  </button>
+                </form>
+              )}
 
               {/* Phase-3 feedback — "if the client selects marble images, send
                   it to us". The WhatsApp route was the only one, and it needs
