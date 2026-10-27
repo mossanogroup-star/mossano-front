@@ -39,6 +39,8 @@ interface FormValues {
 
 /** Empty string means "not recorded" and must not become 0 or "". */
 const num = (v: string) => (v.trim() === "" ? undefined : Number(v));
+/** Granite and Landscape carry their own colour lists; everything else is marble's. */
+const marble = (material: string) => material !== "granite" && material !== "landscape";
 const str = (v: string) => (v.trim() === "" ? undefined : v.trim());
 
 /**
@@ -122,7 +124,9 @@ export function StoneEditPage() {
       material: stone.material ?? "",
       colour: stone.colour ?? "",
       whiteSubcategory: stone.whiteSubcategory ?? "",
-      graniteColour: stone.graniteColour ?? "",
+      // Granite lots saved before 27 Oct carry their colour in `colour` only.
+      graniteColour:
+        stone.graniteColour ?? (stone.material === "granite" ? (stone.colour ?? "") : ""),
       landscapeColour: stone.landscapeColour ?? "",
       originCountry: stone.originCountry ?? "",
       origin: stone.origin ?? "",
@@ -174,11 +178,14 @@ export function StoneEditPage() {
         name: v.name,
         lotNumber: str(v.lotNumber),
         material: str(v.material),
-        colour: str(v.colour),
+        // Client request (27 Oct 2026) — a granite lot's colour is its Granite
+        // colour, so it can never land under Marble Colour in the shop.
+        colour: v.material === "granite" ? str(v.graniteColour) : str(v.colour),
         // Only meaningful under White — see stone.constants.js. Cleared rather
         // than left stale when the colour moves off White, so a lot cannot be
         // filed as "Black / Statuario".
-        whiteSubcategory: v.colour === "white" ? str(v.whiteSubcategory) : undefined,
+        whiteSubcategory:
+          v.colour === "white" && marble(v.material) ? str(v.whiteSubcategory) : undefined,
         graniteColour: v.material === "granite" ? str(v.graniteColour) : undefined,
         landscapeColour: v.material === "landscape" ? str(v.landscapeColour) : undefined,
         originCountry: str(v.originCountry),
@@ -276,22 +283,27 @@ export function StoneEditPage() {
                 ))}
               </Select>
             </Field>
-            <Field label="Colour family" htmlFor="colour">
-              <Select id="colour" {...register("colour")}>
-                <option value="">Not recorded</option>
-                {(taxonomies?.colours ?? []).map((c) => (
-                  <option key={c.slug} value={c.slug}>
-                    {c.label}
-                  </option>
-                ))}
-              </Select>
-            </Field>
+            {/* Client request (27 Oct 2026) — hidden for Granite and Landscape,
+                which have colour lists of their own below. Filling this one in
+                is what used to file a granite lot under Marble Colour. */}
+            {marble(material) && (
+              <Field label="Marble colour" htmlFor="colour">
+                <Select id="colour" {...register("colour")}>
+                  <option value="">Not recorded</option>
+                  {(taxonomies?.colours ?? []).map((c) => (
+                    <option key={c.slug} value={c.slug}>
+                      {c.label}
+                    </option>
+                  ))}
+                </Select>
+              </Field>
+            )}
           </div>
 
           {/* Phase-3 feedback — the sub-category under White. Shown only when
               White is chosen: on any other colour it is a field that can only
               be filled in wrongly. */}
-          {colour === "white" && (
+          {colour === "white" && marble(material) && (
             <Field label="White sub-category" htmlFor="whiteSubcategory">
               <Select id="whiteSubcategory" {...register("whiteSubcategory")}>
                 <option value="">Not recorded</option>
