@@ -61,10 +61,21 @@ export function ClientsPage() {
                 one-client category alone in a five-column row with the rest of
                 the width empty beside it; fixed-width cells that wrap keep every
                 category packed to the same left edge whatever its size. */}
-            <ul className="mt-12 flex flex-wrap items-center gap-x-6 gap-y-10 sm:mt-14 sm:gap-x-10 sm:gap-y-12">
+            {/* Client request (28 Oct 2026) — logos at the size MOSSANO
+                Atelier's team page shows them: square tiles, 180px on desktop. The
+                uploads are 280px squares with their own padding, so the 80px
+                strip the home page uses left each mark a thumbnail here. */}
+            <ul className="mt-12 flex flex-wrap items-center gap-x-4 gap-y-4 sm:mt-14 sm:gap-x-6 sm:gap-y-6">
               {category.clients.map((client) => (
-                <li key={client.id} className="w-[calc(50%-0.75rem)] sm:w-[150px] lg:w-[170px]">
-                  <ClientLogo client={client} />
+                <li
+                  key={client.id}
+                  className="w-[calc(33.333%-0.667rem)] sm:w-[150px] lg:w-[180px]"
+                >
+                  <ClientLogo
+                    client={client}
+                    className="aspect-square h-auto sm:h-auto lg:h-auto"
+                    sizes="(min-width: 1024px) 180px, (min-width: 640px) 150px, 33vw"
+                  />
                 </li>
               ))}
             </ul>

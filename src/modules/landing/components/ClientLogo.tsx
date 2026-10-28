@@ -17,7 +17,16 @@ import type { ClientTile } from "@/shared/api/types";
  * Without a logo the name is rendered instead. That is not a placeholder: a
  * category is never held up waiting for an image file.
  */
-export function ClientLogo({ client, className }: { client: ClientTile; className?: string }) {
+export function ClientLogo({
+  client,
+  className,
+  sizes = "180px",
+}: {
+  client: ClientTile;
+  className?: string;
+  /** The rendered width, for picking from the srcset. */
+  sizes?: string;
+}) {
   const logo = client.logo;
 
   const body = logo ? (
@@ -26,7 +35,7 @@ export function ClientLogo({ client, className }: { client: ClientTile; classNam
       srcSet={
         logo.srcset?.length ? logo.srcset.map((s) => `${s.url} ${s.width}w`).join(", ") : undefined
       }
-      sizes={logo.srcset?.length ? "180px" : undefined}
+      sizes={logo.srcset?.length ? sizes : undefined}
       alt={client.name}
       loading="lazy"
       decoding="async"
