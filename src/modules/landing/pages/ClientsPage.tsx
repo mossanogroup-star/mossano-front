@@ -65,11 +65,11 @@ export function ClientsPage() {
                 Atelier's team page shows them: square tiles, 180px on desktop. The
                 uploads are 280px squares with their own padding, so the 80px
                 strip the home page uses left each mark a thumbnail here. */}
-            <ul className="mt-12 flex flex-wrap items-center gap-x-4 gap-y-4 sm:mt-14 sm:gap-x-6 sm:gap-y-6">
+            <ul className="mt-12 flex flex-wrap items-center gap-x-5 gap-y-4 sm:mt-14 sm:gap-x-8 sm:gap-y-6 lg:gap-x-9">
               {category.clients.map((client) => (
                 <li
                   key={client.id}
-                  className="w-[calc(33.333%-0.667rem)] sm:w-[150px] lg:w-[180px]"
+                  className="w-[calc(33.333%-0.834rem)] sm:w-[150px] lg:w-[180px]"
                 >
                   <ClientLogo
                     client={client}
