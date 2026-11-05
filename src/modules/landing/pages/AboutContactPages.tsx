@@ -22,7 +22,6 @@ const cityLine = ({ city, state, postalCode }: BrandLocation) =>
  */
 const STATS = [
   { figure: "12+", label: "Years of experience", note: "In the natural stone industry" },
-  { figure: "30,000+", label: "Sq. ft.", note: "State-of-the-art manufacturing unit" },
   { figure: "6,000+", label: "Tons annually", note: "Imported premium white marble" },
   { figure: "Global", label: "Presence", note: "Strong networks across the world" },
 ];
@@ -106,7 +105,7 @@ export function AboutPage() {
           </p>
         </div>
 
-        <dl className="mt-16 grid gap-x-10 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
+        <dl className="mt-16 grid gap-x-10 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
           {STATS.map((stat) => (
             <div key={stat.label} className="border-t border-ivory/20 pt-6">
               <dt className="font-display text-[2rem] leading-none text-brass-light">
