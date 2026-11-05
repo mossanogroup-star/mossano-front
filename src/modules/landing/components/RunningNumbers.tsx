@@ -5,7 +5,7 @@ import { cn } from "@/shared/lib/cn";
  * Phase-3 feedback — the running numbers in the hero, in the client's own
  * words: "in past 15 years, 45 lakhs square feet +". Their figure leads,
  * because area delivered is the one number an architect can compare against
- * their own project; the brochure's two follow it.
+ * their own project; the brochure's tonnage follows it.
  *
  * ⚠ The 15 years here and the "12+ years of experience" on the About page
  * cannot both be right — that figure comes from the brochure (CLIENT-FACTS.md)
@@ -21,7 +21,6 @@ const STATS = [
     label: "Square feet delivered",
     note: "In the past 15 years",
   },
-  { value: 30000, suffix: "+", label: "Sq. ft. facility" },
   { value: 6000, suffix: "+", label: "Tons imported a year" },
 ];
 
