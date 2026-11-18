@@ -459,7 +459,8 @@ export type EnquiryType =
   | "register_interest"
   | "selection"
   | "chatbot"
-  | "reference_image";
+  | "reference_image"
+  | "visitor";
 
 export type EnquiryStatus =
   "new" | "contacted" | "interested" | "reserved" | "purchased" | "closed";

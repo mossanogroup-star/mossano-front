@@ -4,6 +4,7 @@ import { Footer } from "./Footer";
 import { ScrollToTop } from "./ScrollToTop";
 import { Chatbot } from "@/modules/chatbot/components/Chatbot";
 import { ReferenceImageLauncher } from "@/modules/enquiry/components/ReferenceImageLauncher";
+import { VisitorGate } from "@/modules/enquiry/components/VisitorGate";
 
 export function PublicLayout() {
   return (
@@ -26,6 +27,8 @@ export function PublicLayout() {
       <Chatbot />
       {/* Phase-3 feedback — stacked directly above the Sourcing Desk. */}
       <ReferenceImageLauncher />
+      {/* Asks a new visitor for name + phone after they open two images. */}
+      <VisitorGate />
     </>
   );
 }
