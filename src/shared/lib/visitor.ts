@@ -1,6 +1,6 @@
 /**
  * Remembers, in this browser, whether the visitor has already given MOSSANO
- * their name and phone number — so the image-view popup is asked once and
+ * their email and phone number — so the image-view popup is asked once and
  * never again on a later visit.
  *
  * localStorage only: it can be missing or throw (private windows, blocked site
@@ -31,7 +31,7 @@ export function isVisitorKnown(): boolean {
   return read(KNOWN_KEY) !== null;
 }
 
-export function markVisitorKnown(details: { name?: string; phone?: string }) {
+export function markVisitorKnown(details: { email?: string; phone?: string }) {
   write(KNOWN_KEY, JSON.stringify({ ...details, at: new Date().toISOString() }));
 }
 

@@ -10,7 +10,7 @@ import { Field, TextInput } from "./Field";
 import { useSubmitEnquiry } from "../api/submitEnquiry";
 
 /**
- * Asks a new visitor for their name and phone number when they go to open a
+ * Asks a new visitor for their email and phone number when they go to open a
  * third image — a stone, a project, any photograph on the storefront. The first
  * two are free.
  *
@@ -142,15 +142,16 @@ export function VisitorGate() {
 
 function VisitorForm({ onDone }: { onDone: () => void }) {
   const submit = useSubmitEnquiry();
-  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [error, setError] = useState<string | null>(null);
 
   const send = (event: React.FormEvent) => {
     event.preventDefault();
-    const visitorName = name.trim();
+    const address = email.trim();
     const mobile = phone.trim();
-    if (!visitorName) return setError("Please give your name");
+    if (!address) return setError("Add your email address");
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(address)) return setError("Enter a valid email address");
     if (!mobile) return setError("Add your phone number");
     // Same rule as the server's phoneSchema, so the visitor hears it here.
     if (mobile.replace(/\D/g, "").length < 8) return setError("Enter a valid phone number");
@@ -159,20 +160,20 @@ function VisitorForm({ onDone }: { onDone: () => void }) {
     submit.mutate(
       {
         type: "visitor",
-        name: visitorName,
+        email: address,
         phone: mobile,
         message: "Shared their details after viewing images on the website.",
       },
       {
         onSuccess: () => {
-          markVisitorKnown({ name: visitorName, phone: mobile });
+          markVisitorKnown({ email: address, phone: mobile });
           onDone();
         },
         onError: (err) => {
           // A 400/422 is something the visitor can fix — show it. Anything else
           // is our side failing, and they are let through rather than trapped.
           if (err.status === 400 || err.status === 422) return;
-          markVisitorKnown({ name: visitorName, phone: mobile });
+          markVisitorKnown({ email: address, phone: mobile });
           onDone();
         },
       },
@@ -193,17 +194,20 @@ function VisitorForm({ onDone }: { onDone: () => void }) {
         Before you see more
       </h2>
       <p className="mt-2 text-[0.9rem] leading-relaxed text-ink-soft">
-        Share your name and phone number to keep browsing our stones and projects. We only ask once.
+        Share your email and phone number to keep browsing our stones and projects. We only ask
+        once.
       </p>
 
-      <Field label="Name" htmlFor="visitor-gate-name" required className="mt-5">
+      <Field label="Email" htmlFor="visitor-gate-email" required className="mt-5">
         <TextInput
-          id="visitor-gate-name"
-          autoComplete="name"
-          maxLength={120}
+          id="visitor-gate-email"
+          type="email"
+          autoComplete="email"
+          inputMode="email"
+          maxLength={160}
           autoFocus
-          value={name}
-          onChange={(event) => setName(event.target.value)}
+          value={email}
+          onChange={(event) => setEmail(event.target.value)}
         />
       </Field>
       <Field label="Phone number" htmlFor="visitor-gate-phone" required className="mt-2">

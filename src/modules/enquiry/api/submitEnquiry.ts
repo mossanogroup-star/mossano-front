@@ -22,10 +22,10 @@ export function useSubmitEnquiry() {
             (typeof window !== "undefined" ? window.location.pathname : undefined),
         }),
       ),
-    // Anyone who has already left a name and number on any form is known, and
+    // Anyone who has already left an email and number on any form is known, and
     // the image-view popup (VisitorGate) never asks them again.
     onSuccess: (_receipt, input) => {
-      if (input.name && input.phone) markVisitorKnown({ name: input.name, phone: input.phone });
+      if (input.email && input.phone) markVisitorKnown({ email: input.email, phone: input.phone });
     },
   });
 }
