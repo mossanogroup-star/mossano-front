@@ -150,11 +150,12 @@ function VisitorForm({ onDone }: { onDone: () => void }) {
     event.preventDefault();
     const address = email.trim();
     const mobile = phone.trim();
-    if (!address) return setError("Add your email address");
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(address)) return setError("Enter a valid email address");
-    if (!mobile) return setError("Add your phone number");
+    if (!address) return setError("Please add your email address");
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(address))
+      return setError("Please check your email address");
+    if (!mobile) return setError("Please add your phone number");
     // Same rule as the server's phoneSchema, so the visitor hears it here.
-    if (mobile.replace(/\D/g, "").length < 8) return setError("Enter a valid phone number");
+    if (mobile.replace(/\D/g, "").length < 8) return setError("Please check your phone number");
     setError(null);
 
     submit.mutate(
@@ -191,11 +192,10 @@ function VisitorForm({ onDone }: { onDone: () => void }) {
         id="visitor-gate-title"
         className="mt-4 font-display text-[1.3rem] uppercase leading-tight tracking-wide"
       >
-        Before you see more
+        Thank you for visiting
       </h2>
       <p className="mt-2 text-[0.9rem] leading-relaxed text-ink-soft">
-        Share your email and phone number to keep browsing our stones and projects. We only ask
-        once.
+        We are glad to have you here. Please share your details to be a part of MOSSANO.
       </p>
 
       <Field label="Email" htmlFor="visitor-gate-email" required className="mt-5">
@@ -228,7 +228,7 @@ function VisitorForm({ onDone }: { onDone: () => void }) {
       )}
 
       <button type="submit" className="btn-solid mt-5 w-full" disabled={submit.isPending}>
-        {submit.isPending ? "Sending…" : "Continue"}
+        {submit.isPending ? "Sending…" : "Share my details"}
       </button>
     </form>
   );
