@@ -40,6 +40,8 @@ export interface ShopQuery {
   origin?: string;
   sort?: string;
   page?: number;
+  /** Rail picks as `param:value`, most recent first — ranks their stones first. */
+  priority?: string[];
 }
 
 export interface ShopResult {

@@ -22,6 +22,31 @@ const MULTI = [
   "finish",
 ] as const;
 
+const isMulti = (key: string): boolean => (MULTI as readonly string[]).includes(key);
+
+/**
+ * The rail's picks, one `[param, value]` per ticked option, in URL order.
+ *
+ * Client request (20 Nov 2026) — the option ticked last shows its stones
+ * first, so the URL keeps picks most-recent-first: `?colour=black&colour=white`
+ * is "Black, then (earlier) White". Comma lists from links shared before this
+ * (`?colour=white,black`) still read the same way.
+ */
+function readPicks(params: URLSearchParams): Array<[string, string]> {
+  const picks: Array<[string, string]> = [];
+  const seen = new Set<string>();
+  for (const [key, raw] of params.entries()) {
+    if (!isMulti(key)) continue;
+    for (const value of raw.split(",")) {
+      const id = `${key}:${value}`;
+      if (!value || seen.has(id)) continue;
+      seen.add(id);
+      picks.push([key, value]);
+    }
+  }
+  return picks;
+}
+
 /**
  * Phase-1 feedback §2 dropped "Largest lot". The server still accepts
  * `?sort=area-desc`, deliberately — filtered shop links get forwarded on
@@ -47,12 +72,22 @@ export function ShopPage() {
   const [railOpen, setRailOpen] = useState(false);
   const { whatsapp } = useSiteConfig();
 
+  const picks = useMemo(() => readPicks(params), [params]);
+
+  const selected = useMemo(() => {
+    const out: Record<string, string[]> = {};
+    for (const key of MULTI) out[key] = [];
+    for (const [key, value] of picks) out[key].push(value);
+    return out;
+  }, [picks]);
+
   const query = useMemo<ShopQuery>(() => {
     const q: ShopQuery = {};
     for (const key of MULTI) {
-      const raw = params.get(key);
-      if (raw) q[key] = raw.split(",").filter(Boolean);
+      if (selected[key].length) q[key] = selected[key];
     }
+    // Lets the server put the latest pick's stones first.
+    if (picks.length > 1) q.priority = picks.map(([key, value]) => `${key}:${value}`);
     const search = params.get("search");
     if (search) q.search = search;
     const sort = params.get("sort");
@@ -60,13 +95,7 @@ export function ShopPage() {
     const page = Number(params.get("page") || 1);
     if (page > 1) q.page = page;
     return q;
-  }, [params]);
-
-  const selected = useMemo(() => {
-    const out: Record<string, string[]> = {};
-    for (const key of MULTI) out[key] = (params.get(key) ?? "").split(",").filter(Boolean);
-    return out;
-  }, [params]);
+  }, [params, picks, selected]);
 
   const { data, isFetching } = useQuery({
     ...publicQueries.shop(query),
@@ -90,12 +119,16 @@ export function ShopPage() {
   const toggle = useCallback(
     (param: string, value: string) =>
       update((next) => {
-        const current = (next.get(param) ?? "").split(",").filter(Boolean);
-        const after = current.includes(value)
-          ? current.filter((v) => v !== value)
-          : [...current, value];
-        if (after.length) next.set(param, after.join(","));
-        else next.delete(param);
+        const picks = readPicks(next);
+        const wasOn = picks.some(([k, v]) => k === param && v === value);
+        const after = wasOn
+          ? picks.filter(([k, v]) => !(k === param && v === value))
+          : [[param, value] as [string, string], ...picks];
+        // Rewrite every pick as its own entry, newest first, ahead of
+        // search and sort.
+        const rest = [...next.entries()].filter(([key]) => !isMulti(key));
+        for (const key of [...next.keys()]) next.delete(key);
+        for (const [k, v] of [...after, ...rest]) next.append(k, v);
       }),
     [update],
   );
