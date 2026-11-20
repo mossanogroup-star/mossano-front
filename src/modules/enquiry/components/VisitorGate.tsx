@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { Wordmark } from "@/shared/components/Wordmark";
 import {
+  checkVisitorKnownOnServer,
   isVisitorKnown,
   markVisitorKnown,
+  recogniseVisitor,
   recordImageView,
   viewedImageCount,
 } from "@/shared/lib/visitor";
@@ -18,8 +20,11 @@ import { useSubmitEnquiry } from "../api/submitEnquiry";
  * zooming into that same stone's photograph is one image, not two. An image is
  * identified by its file name, which is the same whatever size it is served at.
  *
- * It is asked once per browser. When the details are sent the popup goes away
- * and is never shown again, on this visit or the next. Until then it cannot be
+ * It is asked once per person. When the details are sent the popup goes away
+ * and is never shown again in this browser; the server also remembers the
+ * network they came from, so another device or a private window on the same
+ * Wi-Fi is not asked either. Elsewhere (mobile data, say) the popup offers
+ * "Already shared your details?", where the email or phone alone is enough. Until then it cannot be
  * dismissed: that is the point of it. The details land in the enquiry inbox as
  * a "Website visitor" lead, with the page they were on.
  *
@@ -103,10 +108,17 @@ export function VisitorGate() {
       if (!image) return;
 
       recordImageView(image);
+      // Asked on the first image, not on page load, so a visitor who never
+      // opens one costs no request — and by the third the answer is in.
+      const known = checkVisitorKnownOnServer();
       if (viewedImageCount() > FREE_IMAGES) {
         // After the click has done its own work — opened the lightbox or
         // navigated — so the popup is stacked on top of it, not under it.
-        window.setTimeout(() => setOpen(true), 250);
+        const shown = Date.now();
+        void known.then((isKnown) => {
+          if (isKnown) return;
+          window.setTimeout(() => setOpen(true), Math.max(0, 250 - (Date.now() - shown)));
+        });
       }
     };
 
@@ -141,6 +153,21 @@ export function VisitorGate() {
 }
 
 function VisitorForm({ onDone }: { onDone: () => void }) {
+  const [mode, setMode] = useState<"share" | "recognise">("share");
+  return mode === "share" ? (
+    <ShareForm onDone={onDone} onAlreadyShared={() => setMode("recognise")} />
+  ) : (
+    <RecogniseForm onDone={onDone} onBack={() => setMode("share")} />
+  );
+}
+
+function ShareForm({
+  onDone,
+  onAlreadyShared,
+}: {
+  onDone: () => void;
+  onAlreadyShared: () => void;
+}) {
   const submit = useSubmitEnquiry();
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -229,6 +256,91 @@ function VisitorForm({ onDone }: { onDone: () => void }) {
 
       <button type="submit" className="btn-solid mt-5 w-full" disabled={submit.isPending}>
         {submit.isPending ? "Sending…" : "Share my details"}
+      </button>
+
+      <button
+        type="button"
+        onClick={onAlreadyShared}
+        className="mt-4 w-full text-center font-sans text-[0.72rem] uppercase tracking-label text-ink-faint underline-offset-4 transition-colors hover:text-ink hover:underline"
+      >
+        Already shared your details?
+      </button>
+    </form>
+  );
+}
+
+/**
+ * For someone who gave their details on another device: the email or phone
+ * they used is enough. Not found → back to the full form with a note. If the
+ * server cannot answer (down, offline) they are let through, as with the form.
+ */
+function RecogniseForm({ onDone, onBack }: { onDone: () => void; onBack: () => void }) {
+  const [contact, setContact] = useState("");
+  const [pending, setPending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const send = async (event: React.FormEvent) => {
+    event.preventDefault();
+    const value = contact.trim();
+    if (!value) return setError("Please add the email or phone number you shared");
+    setError(null);
+    setPending(true);
+    try {
+      if (await recogniseVisitor(value)) return onDone();
+      setError("We could not find those details. Please check them, or share them again.");
+    } catch (err) {
+      const status = (err as { status?: number }).status;
+      if (status === 400 || status === 422 || status === 429) {
+        setError((err as Error).message || "Please check the details and try again");
+      } else {
+        markVisitorKnown({});
+        onDone();
+      }
+    } finally {
+      setPending(false);
+    }
+  };
+
+  return (
+    <form onSubmit={send} noValidate className="px-6 py-6" data-visitor-gate-ignore>
+      <Wordmark className="block text-[0.8rem]" />
+      <h2
+        id="visitor-gate-title"
+        className="mt-4 font-display text-[1.3rem] uppercase leading-tight tracking-wide"
+      >
+        Welcome back
+      </h2>
+      <p className="mt-2 text-[0.9rem] leading-relaxed text-ink-soft">
+        Enter the email or phone number you shared with us before.
+      </p>
+
+      <Field label="Email or phone number" htmlFor="visitor-gate-contact" required className="mt-5">
+        <TextInput
+          id="visitor-gate-contact"
+          autoComplete="email"
+          maxLength={160}
+          autoFocus
+          value={contact}
+          onChange={(event) => setContact(event.target.value)}
+        />
+      </Field>
+
+      {error && (
+        <p className="mt-1 text-[0.8rem] text-[#b23b2e]" role="alert">
+          {error}
+        </p>
+      )}
+
+      <button type="submit" className="btn-solid mt-5 w-full" disabled={pending}>
+        {pending ? "Checking…" : "Continue"}
+      </button>
+
+      <button
+        type="button"
+        onClick={onBack}
+        className="mt-4 w-full text-center font-sans text-[0.72rem] uppercase tracking-label text-ink-faint underline-offset-4 transition-colors hover:text-ink hover:underline"
+      >
+        Share my details instead
       </button>
     </form>
   );
